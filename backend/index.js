@@ -13,14 +13,13 @@ const express = require('express')
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+console.log(process.env.MONGO_URI);
+
 const app = express()
 const port = 3000
 
-
-
 app.use(cors());
 app.use(express.json());
-
 
 app.get('/api/documents', (req, res) => {
   res.json([
@@ -29,6 +28,8 @@ app.get('/api/documents', (req, res) => {
   ]);
 });
 
+console.log(process.env.MONGO_URI);
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('Connected to MongoDB');
@@ -36,6 +37,8 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((error) => {
     console.log(error);
   });
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
