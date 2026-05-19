@@ -9,13 +9,11 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const createUserIfNotExists = require("./seeds/users");
-const Users = require('./models/Users');
 
 const express = require('express')
+const cors = require('cors');
 const mongoose = require('mongoose');
-const Users = require('./models/Users'); // Adjust the path if your Users model is in a different location
 
-console.log(process.env.MONGO_URI);
 console.log(process.env.MONGO_URI);
 
 const app = express()
@@ -27,16 +25,6 @@ app.use(express.json());
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   //atrast lietotāju datubāzē pēc username
-
-    Users.findOne({ username: username}, function(err, user) {
-    if (err){
-      console.log(err);
-    }
-    else{
-      console.log(user);
-    }
-  });
-
   //ja lietotājs nav atrasts, atgriezt kļūdu
   //ja lietotājs ir atrasts, salīdzināt paroli ar datubāzē saglabāto hash paroli
   //ja parole nesakrīt, atgriezt kļūdu
