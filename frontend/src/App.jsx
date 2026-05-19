@@ -28,15 +28,12 @@ function Login() {
       setError(null);
 
       try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          username: username,
-          password: password
-        })
+        body: JSON.stringify({ username, password})
       });
 
       const data = await response.json();
@@ -50,7 +47,7 @@ function Login() {
       setPassword("");
       setError(null);
   
-      // react router puch to home page or ex: props.history.push('/home');
+    // react router to home page or ex: props.history.push('/home');
     } catch (err) 
     { setError(err.message);
     }finally {
