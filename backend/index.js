@@ -29,9 +29,8 @@ app.post('/api/login', async (req, res) => {
     if (!passwordMatch) {
       return res.json({ message: "Invalid password" });
     }
-    //TODO: Labot,jo šobrīd atriež Login successful arī ja user not found
+
     if (user && passwordMatch) {
-      // Šeit varētu ģenerēt un atgriezt JWT tokenu, ja nepieciešams
       
       console.log(username, password);
       console.log(req.body.username);
