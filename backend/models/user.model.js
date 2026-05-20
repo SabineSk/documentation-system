@@ -18,12 +18,5 @@ const userSchema = new Schema(
 
 const User = mongoose.model("user", userSchema);
 
-// const user = new User({
-//   username: "john_doe",
-//   password: "password123",
-//   role: "admin"
-// });
-
-// user.save()
 
 module.exports = User;

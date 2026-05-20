@@ -9,8 +9,7 @@ const bcrypt = require('bcrypt');
 // Users.find() // atrast visus ierakstus
 
 
-// izveidot funkciju, kas izveidos lietotāju datubāzē, ja tāds neeksistē. 
-
+// Create user in database if not exists
 const createUserIfNotExists = async () => {
     try {
         //parbaudīt vai jau pastāv

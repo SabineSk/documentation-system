@@ -1,11 +1,11 @@
 require('dotenv').config();
-const bcrypt = require('bcrypt');
-const createUserIfNotExists = require("./seeds/users");
 
-const User = require("./models/user.model");
 const express = require('express')
 const cors = require('cors');
 const mongoose = require('mongoose');
+
+const createUserIfNotExists = require("./seeds/users");
+const authRoutes = require("./routes/auth")
 
 console.log(process.env.MONGO_URI);
 
@@ -13,55 +13,22 @@ const app = express()
 const port = 3000
 
 app.use(cors());
+// Middleware to parse JSON request bodies (important for APIs)
 app.use(express.json());
-
-app.post('/api/login', async (req, res) => {
-  const { username, password } = req.body;
-//the login route waits for User.findOne(...) and returns a response only once, inside the try/catch
-  try {
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.json({ message: "User not found" });
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch) {
-      return res.json({ message: "Invalid password" });
-    }
-
-    if (user && passwordMatch) {
-      
-      console.log(username, password);
-      console.log(req.body.username);
-
-      return res.json({ message: "Login successful, username and password correct", username: user.username, role: user.role });
-  }
-    
-  } catch (error) {
-    console.error(error);
-    return res.json({ message: "Error occurred while logging in" });
-  }
-});
-
-app.get('/api/documents', (req, res) => {
-  res.json([
-    { id: 1, title: 'Document title', description: 'Short description...' },
-    { id: 2, title: 'Another document', description: 'Short description...' }
-  ]);
-});
+app.use("/api/auth", authRoutes);
 
 console.log(process.env.MONGO_URI);
-
++
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
+  .then(async() => {
     console.log('Connected to MongoDB');
+    await createUserIfNotExists();
   })
   .catch((error) => {
     console.log(error);
   });
 
-createUserIfNotExists();
+
 
 
 app.listen(port, () => {
