@@ -30,8 +30,12 @@ router.post('/login', async (req, res) => {
       
       console.log(username, password);
       console.log(req.body.username);
-  
-      return res.json({ message: "Login successful", username: user.username, role: user.role, token: token });
+       
+      //Name, tas, kas middleware var jāizpilda pirms galvenā route handler, šajā gadījumā tas ir authMiddleware, kas pārbauda JWT derīgumu un pievieno lietotāja informāciju pieprasījuma objektam (req.user). Ja token nav derīgs, middleware atbild ar 401 statusu un neļauj piekļūt aizsargātajām maršrutēm.
+      //httpOnly: true nodrošina, ka token nevar piekļūt no JavaScript, kas palielina drošību pret uzbrukumiem.
+      res.cookie("token", token, { httpOnly: true });
+
+      return res.json({ message: "Login successful", username: user.username, role: user.role});
   }
     
   } catch (error) {
@@ -40,14 +44,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Protected profile route??????????????????????????????????????????????????????
-// exports.profile = (req, res) => {
-//   // req.user is set by auth middleware after token verification
-//   res.json({
-//     message: "Welcome to your profile!",
-//     user: req.user,
-//   });
-// };
 
 
 
