@@ -6,6 +6,7 @@ import Signup from './signup.jsx';
 import Login from './login.jsx';
 import Home from './home.jsx';
 import Footer from './footer.jsx';
+import Profile from './profile.jsx';
 
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            
+
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
         <Footer />

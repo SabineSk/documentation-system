@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 const User = require("../models/user.model");
 const { generateToken } = require("../services/jwtService");
 const authMiddleware = require("../middlewares/authMiddleware");
+const UserToken = require("../models/user.token");
+
 
 //LOGIN ROUTE
 router.post('/login', async (req, res) => {
@@ -14,20 +16,25 @@ router.post('/login', async (req, res) => {
     //Find user by email
     const user = await User.findOne({ username });
     if (!user) {
-      return res.json({ message: "User not found" });
+      return res.json({ message: "User not found", status: "error" });
     }
     //Compare provided password with hashed password in database using bcrypt.
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      return res.json({ message: "Invalid password" });
+      return res.json({ message: "Invalid password", status: "error" });
     }
 
     //If user exists and password matches, generate JWT using jwtService
     if (user && passwordMatch) {
+        //If user already has a token, delete it and generate new on
+        
+    await UserToken.deleteMany({ user: user._id });
 
-      const token = generateToken({ id: user._id, username: user.username, role: user.role });
-      
+    const token = await generateToken({ id: user._id, username: user.username, role: user.role });
+    const dbToken = new UserToken({ user: user._id, token });
+    await dbToken.save();
+
       console.log(username, password);
       console.log(req.body.username);
        
@@ -35,7 +42,7 @@ router.post('/login', async (req, res) => {
       //httpOnly: true nodrošina, ka token nevar piekļūt no JavaScript, kas palielina drošību pret uzbrukumiem.
       res.cookie("token", token, { httpOnly: true });
 
-      return res.json({ message: "Login successful", username: user.username, role: user.role});
+      return res.json({ message: "Login successful", status: "success", username: user.username, role: user.role});
   }
     
   } catch (error) {
@@ -43,8 +50,6 @@ router.post('/login', async (req, res) => {
     return res.json({ message: "Error occurred while logging in" });
   }
 });
-
-
 
 
 module.exports = router;

@@ -1,9 +1,11 @@
 import { useState } from "react";
+import {useNavigate} from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
 
   const onSubmit = async (e) => {
@@ -12,7 +14,7 @@ function Login() {
       setError(null);
 
       try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -22,14 +24,17 @@ function Login() {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+      if (data.status === 'error') {
+        setError('nepareiza parole vai lietotājvārds');
+        return;
       }
 
       console.log("Login successful:", data);
       setUsername("");
       setPassword("");
       setError(null);
+
+    navigate("/profile");
   
     // react router to home page or ex: props.history.push('/home');
     } catch (err) 

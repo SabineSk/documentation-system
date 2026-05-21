@@ -5,21 +5,20 @@ const { verifyToken } = require("../services/jwtService");
 // Middleware to protect routes
 module.exports = (req, res, next) => {
   //Get Authorization header
-  const authHeader = req.headers["authorization"];
-  if (!authHeader)
+  const authCookie = req.cookies.token;
+  if (!authCookie)
     return res.status(401).json({ message: "No token provided" });
 
   //Extract token from format 'Bearer <token>'
-  const token = authHeader.split(" ")[1];
+  const token = authCookie;
   if (!token) return res.status(401).json({ message: "Malformed token" });
 
   try {
     //Verify token using jwtService
     const decoded = verifyToken(token);
-
+    
     //Attach decoded user info to request object
     req.user = decoded;
-
     // Proceed to next middleware or route handler
     next();
   } catch (err) {

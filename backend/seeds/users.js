@@ -1,5 +1,6 @@
 const Users = require("../models/user.model");
 const bcrypt = require('bcrypt');
+const { generateToken } = require("../services/jwtService");
 
 // Users.findOne() // atrast vienu ierakstu
 // Users.deleteOne({ username: "john_doe" }) // izdzēst vienu ierakstu
@@ -27,20 +28,22 @@ const createUserIfNotExists = async () => {
         user = new Users({
            username: "admin",
            password,
-           role: "admin"
+           role: "admin",
         });
+
         let hashedPassword = await bcrypt.hash(password, 10);
         user.password = hashedPassword;
-
-
+        
+        
         await user.save()
         console.log("Admin user created");
         return;
-        
+
         
     } catch (ex) {
         console.log(ex);
     }
+
 }
 
 
