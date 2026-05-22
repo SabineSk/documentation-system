@@ -7,6 +7,7 @@ import Login from './login.jsx';
 import Home from './home.jsx';
 import Footer from './footer.jsx';
 import Profile from './profile.jsx';
+import ProtectedRoute from './components/protectedRoute.jsx';
 
 
 function App() {
@@ -19,9 +20,14 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
-            
-
-            <Route path="/profile" element={<Profile />} />
+            <Route 
+            path="/profile" 
+            element={
+                <ProtectedRoute>
+                    <Profile />
+                </ProtectedRoute>
+            } 
+            />  
           </Routes>
         </main>
         <Footer />
