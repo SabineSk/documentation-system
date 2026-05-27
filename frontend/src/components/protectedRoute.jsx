@@ -4,7 +4,7 @@ import {useAuth} from '../auth/useAuth';
 export default function ProtectedRoute({ children }) {
     const { isAuthenticated, user, isLoading } = useAuth();
     console.log('lietotājs ', user)
-    //kamēr vēl tiek parbaudīts sesija, nerāda neko
+    //kamēr vēl tiek parbaudīts, sesija nerāda neko
     //bez šī lietotās uz sekundi redzētu /login, pat ja ir pieslēdzies
     if(isLoading){
         return <div>Lādējas...</div>;

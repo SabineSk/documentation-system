@@ -22,34 +22,12 @@ export function useAuth() {
         } else {
             setUser(null)
         }
-        setIsLoading(false); //Pārbaude pabeita
+        setIsLoading(false); //Pārbaude pabeigta
 
     }
 
     checkAuth();
     }, [location])
-    // useEffect(() => {
-    //     //Izpildās vienu reizi, kad komponents ielādējas
-    //     //Jautā backend, vai šim pārlūkam ir derīga sesija
-    //     fetch("/api/me", {
-    //         credentials: 'include', //Liek pārlūkam iekļaut cookies pieprasījumā, lai backend varētu pārbaudīt sesiju
-    // })
-    // .then((response) => {
-    //     if (response.ok) {
-    //         return response.json(); //Pārveido atbildi par JSON, ja status ir 200-299   
-    //     }
-    //     return null; //Ja nav derīga sesija, atgriež null
-    // })
-    // .then((userData) => {
-    //     setUser(userData); //saglabā user vai null
-    //     setIsLoading(false); //Pārbaude pabeita
-    // })
-    // .catch(() => {
-    //     //ja kļūda
-    //     setIsLoading(false);
-    // });
-
-    // }, [])
 
     return  { user, isAuthenticated: user !== null, isLoading };
 }

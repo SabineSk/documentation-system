@@ -15,7 +15,7 @@ const createUserIfNotExists = async () => {
     try {
         //parbaudīt vai jau pastāv
         let user = await Users.findOne({
-            username: "admin",
+            username: "sabine",
         });
 
         if (user) {
@@ -26,7 +26,7 @@ const createUserIfNotExists = async () => {
         const password = "password123";
         //ja neeksistē, izveido
         user = new Users({
-           username: "admin",
+           username: "sabine",
            password,
            role: "admin",
         });

@@ -1,7 +1,22 @@
+import {Link, Outlet} from 'react-router-dom'
+//import {useAuth} from './auth/useAuth';
+
 function Home() {
+  //const {user} = useAuth();
   return ( 
-    <div>
-      <p>Welcome! Please sign up or log in to access your documentation.</p>
+    <div class="content">
+      <>
+      <h2> Home Page </h2>
+      <nav style={{ marginBottom: '20px' }}>
+        <Link to="/userTable"> Find users </Link>
+      </nav>
+      <Outlet />
+      <ul>
+        <li>
+          Some text for user
+        </li>
+      </ul>
+      </>
     
     </div>
 
@@ -9,3 +24,5 @@ function Home() {
 }
 
 export default Home;
+
+
