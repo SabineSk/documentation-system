@@ -32,8 +32,7 @@ function UserTable() {
   
   return (
     <div class='content'>
-      <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p> //condition ? ifTrue : ifFalse
-      <div class="usertable">
+      <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p> 
         <tbody class="tbody">
           <tr>
               <th>ID</th>
@@ -53,7 +52,7 @@ function UserTable() {
           ))}
         </tbody>
       </div>
-    </div>
+    
 
   );
 }

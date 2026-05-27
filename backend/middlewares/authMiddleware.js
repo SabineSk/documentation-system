@@ -23,6 +23,6 @@ module.exports = (req, res, next) => {
     next();
   } catch (err) {
     // If token is invalid or expired
-    res.status(401).json({ message: "Invalid or expired token" });
+    res.status(401).json({ message: "Invalid or expired token", status: 'unauthorized' });
   }
 };

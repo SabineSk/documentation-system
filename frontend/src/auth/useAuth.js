@@ -8,7 +8,7 @@ export function useAuth() {
     useEffect(() => { 
     async function checkAuth() {
         setIsLoading(true)
-        const response = await fetch("/api/me", {
+        const response = await fetch("/api/auth/check", {
             method: "GET",
             headers: {
             "Content-Type": "application/json"

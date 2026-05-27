@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import {useNavigate} from 'react-router-dom';
+import {Navigate} from "react-router-dom";
+import {useAuth} from './auth/useAuth';
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -7,6 +9,8 @@ function Login() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
+  const {isAuthenticated} = useAuth();
+ 
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -44,6 +48,12 @@ function Login() {
     }
   };
   
+  if (isAuthenticated){
+    return <Navigate to="/Home" replace/>
+  }
+
+  
+
   return (
     <div className="content">
       <h2>Login</h2>

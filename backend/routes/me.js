@@ -11,7 +11,7 @@ const UserToken = require("../models/user.token");
 //LOGIN ROUTE
 router.get('/me', authMiddleware, async (req, res) => {//the login route waits for User.findOne(...) and returns a response only once, inside the try/catch
   try {
-    res.send({ message: "User info retrieved successfully", user: req.user });
+    res.send({ message: "User info retrieved successfully", user: req.user, status: 'success' });
   } catch (error) {
 
   }

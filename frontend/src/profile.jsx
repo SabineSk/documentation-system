@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import {useAuth} from './auth/useAuth';
+import {useNavigate} from "react-router-dom";
 //import { Link } from 'react-router-dom';
+
 
 
 function Profile() {
     const { user } = useAuth();
-    const {logout} = useAuth()
+    // const navigate = useNavigate();
+    // const [processing, setProcessing] = useState(false);
+    // const [error, setError] = useState(null);
 
     return (
         <div className="content">
@@ -15,11 +19,8 @@ function Profile() {
             </nav>
             <div>
 
-                <p>This is your profile: {user?.username}</p>
-
-                <button onClick={logout} className="logout-button">
-                Log Out
-                </button>
+                <p>Your username: {user?.username}</p>
+                <p>Your role: {user?.role}</p>                
             </div>
         </div>
     )

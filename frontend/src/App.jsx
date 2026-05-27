@@ -16,9 +16,9 @@ function App() {
 
   return (
     
-      <div>
+      <div className="app">
         <Header />
-        <main>
+        <main className="main-app">
           <Routes>
             
             <Route path="/about" element={<About />} />

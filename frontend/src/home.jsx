@@ -8,7 +8,8 @@ function Home() {
       <>
       <h2> Home Page </h2>
       <nav style={{ marginBottom: '20px' }}>
-        <Link to="/userTable"> Find users </Link>
+        <Link to="/userTable"> Find users</Link> | {' '}
+        <Link to= "/addDocument">Add document</Link>
       </nav>
       <Outlet />
       <ul>

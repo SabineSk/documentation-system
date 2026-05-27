@@ -42,6 +42,7 @@ router.post('/login', async (req, res) => {
       //httpOnly: true nodrošina, ka token nevar piekļūt no JavaScript, kas palielina drošību pret uzbrukumiem.
       res.cookie("token", token, { httpOnly: true });
 
+
       return res.json({ message: "Login successful", status: "success", username: user.username, role: user.role});
   }
     
@@ -51,6 +52,24 @@ router.post('/login', async (req, res) => {
   }
 });
 
+//routeris lai izlogotos
+router.post('/logout', async(req,res) => {
+  res.clearCookie('token');
+  res.json({
+    message: "Logout successful",
+    status: "success"
+  })
+});
+
+
+// izveidot jaunu route .get(/check)
+router.get('/check', authMiddleware, async(req, res) => {
+  try{
+    res.send({user: req.user, status: 'success' }); 
+  }catch(error){
+    console.error(error);
+  }
+});
 
 module.exports = router;
 
