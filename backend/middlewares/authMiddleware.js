@@ -6,6 +6,8 @@ const { verifyToken } = require("../services/jwtService");
 module.exports = (req, res, next) => {
   //Get Authorization header
   const authCookie = req.cookies.token;
+
+
   if (!authCookie)
     return res.status(401).json({ message: "No token provided" });
 

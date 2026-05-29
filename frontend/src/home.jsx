@@ -4,19 +4,14 @@ import {Link, Outlet} from 'react-router-dom'
 function Home() {
   //const {user} = useAuth();
   return ( 
-    <div class="content">
+    <div className="content">
       <>
       <h2> Home Page </h2>
-      <nav style={{ marginBottom: '20px' }}>
-        <Link to="/userTable"> Find users</Link> | {' '}
-        <Link to= "/addDocument">Add document</Link>
+      <nav className="home-nav">
+        <Link to="/userTable"> Find users</Link>
+        <Link to= "/addFile">Add a file</Link>
       </nav>
       <Outlet />
-      <ul>
-        <li>
-          Some text for user
-        </li>
-      </ul>
       </>
     
     </div>

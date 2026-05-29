@@ -45,7 +45,7 @@
   
 }
 
-.nav-links a:hover {
+.nav-links> a:hover {
   background-color: #aeccc6;
   border-radius: 0%;
 }
@@ -76,10 +76,14 @@
   box-shadow: 0 10px 14px -6px rgba(0, 0, 0, 0.25);
   padding: 0px 0px;
 }
+
 .dropdown:hover {
   background-color:#aeccc6;
 }
 
+.dropdown-content> a:hover {
+  background-color:#dad9d9;
+}
 
 .dropdown:hover .dropdown-content {
   display: flex;
@@ -91,7 +95,27 @@
   padding: 12px 18px;
 }
 
+.content>.home-nav>a{
+text-decoration: none;
+color:rgb(0, 0, 0);
+border: 1px solid #aeccc6;
+margin: 10px 10px 10px 0px;
+padding: 10px;
+}
 
+.content>.home-nav>a:hover{
+  background-color:#aeccc6;
+}
+
+.profile-img{
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+}
+.profile-img:hover {
+  box-shadow: 0 0 2px 1px #aeccc6;
+}
 
 /* 
 

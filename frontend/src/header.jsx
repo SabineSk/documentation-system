@@ -46,7 +46,7 @@ function Header() {
                                 
                                 <div className="dropdown-content">
                                     <Link to="/Profile">Profile</Link>
-                                    <a onClick={logout}>Logout</a>
+                                    <Link onClick={logout}>Logout</Link>
                                 </div>
                             </div>
                         </nav>
