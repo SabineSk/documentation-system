@@ -55,12 +55,13 @@ function Login() {
   
 
   return (
-    <div className="content">
-      <h2>Login</h2>
-        <div className="login">
+    <div className="login">
+      
+        <div className="login-form">
+          <h2>Login</h2>
             <form onSubmit={onSubmit}>
-                <div>
-                <label htmlFor="username">Username:</label>
+                <div className="login-form-group">
+                <label htmlFor="username">Username: </label>
                 <input 
                     type="text" 
                     id="username" 
@@ -69,8 +70,8 @@ function Login() {
                 />
                 </div>
                 
-                <div>
-                <label htmlFor="password">Password:</label>
+                <div className="login-form-group">
+                <label htmlFor="password">Password: </label>
                 <input 
                     type="password" 
                     id="password" 
