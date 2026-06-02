@@ -6,7 +6,7 @@ import About from './about.jsx';
 import Login from './login.jsx';
 import Home from './home.jsx';
 import UserTable from './userTable.jsx';
-import AddFile from './addFile.jsx';
+// import AddFile from './addFile.jsx';
 import Footer from './footer.jsx';
 import Profile from './profile.jsx';
 
@@ -33,10 +33,9 @@ function App() {
                 </ProtectedRoute>
             } 
             >  
-                {/* <Route path='/home/userTable' element={<UserTable/>}/> */}
             </Route>
             <Route path='/userTable' element={<UserTable/>}/>
-            <Route path='/AddFile' element={<AddFile/>}/>
+
             <Route 
             path="/home" 
             element={
