@@ -1,25 +1,35 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
-const documentSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
-  },
+// const documentSchema = new mongoose.Schema({
+//   title: {
+//     type: String,
+//     required: true
+//   },
 
-  description: {
-    type: String,
-    required: true
-  },
+//   description: {
+//     type: String,
+//   },
 
-  content: {
-    type: String,
-    required: true
-  },
+//   content: {
+//     type: String,
+//     required: true
+//   },
 
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+//   filePath: {
+//   type: String,
+//   required: true
+//   },
 
-module.exports = mongoose.model('Document', documentSchema);
+//   uploadedBy{
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: 'User',
+//     required: true
+//   },
+
+//   createdAt: {
+//     type: Date,
+//     default: Date.now
+//   }
+// });
+
+// module.exports = mongoose.model('Document', documentSchema);

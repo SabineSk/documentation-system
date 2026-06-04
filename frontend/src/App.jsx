@@ -9,6 +9,7 @@ import UserTable from './userTable.jsx';
 // import AddFile from './addFile.jsx';
 import Footer from './footer.jsx';
 import Profile from './profile.jsx';
+import Users from './users.jsx';
 
 import ProtectedRoute from './components/protectedRoute.jsx';
 
@@ -23,7 +24,9 @@ function App() {
           <Routes>
             
             <Route path="/about" element={<About />} />
+            <Route path="/users" element={<Users />} />
             <Route path="/login" element={<Login />} />
+            
                        
             <Route 
             path="/profile" 

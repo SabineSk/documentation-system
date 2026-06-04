@@ -35,28 +35,29 @@ function Header() {
     
     if (isAuthenticated){
         return (
-            <header className="content">
+            <header className="nav-content">
                     <div className="navigation-bar">
                         <h1 > Documentation System</h1>  
                         <nav className="nav-links">        
                             <Link to="/Home">Home</Link>
                             <Link to="/About">About</Link>
+                            <Link to="/users">Users</Link>
                             <div className="dropdown">
                                 <a className="dropdown-link">Profile</a>
                                 
                                 <div className="dropdown-content">
                                     <Link to="/Profile">Profile</Link>
+                                    
                                     <Link onClick={logout}>Logout</Link>
                                 </div>
                             </div>
                         </nav>
                     </div>
-                <hr /> 
             </header>
         );
     }else{
         return (
-            <header className="content">
+            <header className="nav-content">
                     <div className="navigation-bar">
                         <h1 > Documentation System</h1>  
                         <nav className="nav-links">        
@@ -65,7 +66,6 @@ function Header() {
                             <Link to="/login">Login</Link>
                         </nav>
                     </div>
-                <hr /> 
             </header>
 
         );

@@ -66,36 +66,6 @@ function Profile() {
           
     };
 
-    // const FetchProfilePicture = async () =>{
-        
-    //     setProcessing(true);
-    //     setError(null);
-    //     try{
-    //         const response = await fetch("/api/users/profileImage", {
-    //             method: "GET",
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             },
-    //             credentials: "include",
-    //         });
-
-    //         const data = await response.json();
-
-    //         if (data.status === 'error') {
-    //             setError('Kļūda, atgiežot bildi');
-    //             return;
-    //         }
-
-    //         setUserImage(data.data);
-    //         setError(null);
-
-        
-    //     }catch(error){
-    //         setError(error.message);
-    //     }finally{
-    //         setProcessing(false);
-    //     }
-    // };
 
     useEffect (() =>{
         const FetchProfilePicture = async () =>{

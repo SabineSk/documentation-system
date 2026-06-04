@@ -7,7 +7,8 @@ export default function ProtectedRoute({ children }) {
     //kamēr vēl tiek parbaudīts, sesija nerāda neko
     //bez šī lietotās uz sekundi redzētu /login, pat ja ir pieslēdzies
     if(isLoading){
-        return <div>Lādējas...</div>;
+        return;
+    //     return<div className="content">Lādējas...</div>;
     }
 
     if(!isAuthenticated){

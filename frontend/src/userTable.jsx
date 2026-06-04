@@ -28,18 +28,24 @@ function UserTable() {
         }
   
       getUsers();
-      }, [])
+      }, []);
+
+    function handleDelete(userID){
+      setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userID));
+
+    };
   
   return (
     <div class='content'>
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p> 
-        <tbody class="tbody">
+        <tbody className="tbody">
           <tr>
               <th>ID</th>
               <th>Username</th>
               <th>Role</th>
               <th>Created at</th>
               <th>Updated at</th>
+              <th>Delete</th>
           </tr>
           {users?.map((val, key) => (
               <tr key = {key}>
@@ -48,6 +54,9 @@ function UserTable() {
               <td>{val.role}</td>
               <td>{val.createdAt}</td>
               <td>{val.updatedAt}</td>
+              <td>
+                <button onClick={() => handleDelete(val._id)}>X</button>
+              </td>
             </tr>
           ))}
         </tbody>

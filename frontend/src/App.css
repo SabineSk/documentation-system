@@ -1,3 +1,9 @@
+html,
+body,
+#root{
+  height: 100%;
+  margin: 0;
+}
 
 .main-app {
   min-height: 100vh;
@@ -5,12 +11,9 @@
   flex-direction: column;
 }
 
-
 .footer {
   margin-top: auto;
 }
-
-
 
 .content {
     width: 75%; 
@@ -29,19 +32,18 @@
   background-color: rgb(225, 225, 247);
  }
 
-
-
-
 .main-app{
   height: 800px;
 }
 
 .navigation-bar{
     display: flex;
+    
     flex-direction: row;
     justify-content: space-between;
     align-items:center;
-       
+    background-color: #f0f0f0;
+    padding: 0px 10px;
 }
 
 .nav-links{
@@ -76,7 +78,6 @@
   border-radius: 8px;
 }
 
-
 .dropdown-content {
   display: none;
   position: absolute;
@@ -106,10 +107,8 @@
   padding: 12px 18px;
 }
 
-
-
-.content>.home-nav>a,
-.content>.home-nav>button{
+.content>.nav> a,
+.content>.nav>button{
 text-decoration: none;
 color:rgb(0, 0, 0);
 border: 1px solid #aeccc6;
@@ -121,12 +120,16 @@ font: inherit;
 line-height: inherit;
 }
 
-.content>.home-nav> a:hover,
-.content>.home-nav>button:hover{
+.content>.nav> a:hover,
+.content>.nav>button:hover{
   background-color:#aeccc6;
   cursor: pointer;
 }
 
+.content .nav button{
+  margin-bottom: 10px;
+  margin-right:10px;
+}
 
 .profile-img{
   border: 1px solid #ddd;
@@ -137,8 +140,6 @@ line-height: inherit;
 .profile-img:hover {
   box-shadow: 0 0 2px 1px #aeccc6;
 }
-
-
 
 .login {
   min-height: 70vh;
@@ -164,7 +165,6 @@ line-height: inherit;
   font-size: 32px;
   
 }
-
 
 .login-form form {
   display: flex;
@@ -204,11 +204,21 @@ line-height: inherit;
 .login-form button:hover {
   background-color: #8fb8b0;
 }
+#addUserForm{
+  width: 100%;
+  max-width: 350px;
+  padding: 25px 30px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background-color: white;
+}
 
-
-
-
-
+.newUser-FormGroup{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
 
 .fileUploadForm {
   position: fixed;
