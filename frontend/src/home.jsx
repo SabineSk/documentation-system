@@ -12,21 +12,8 @@ function Home() {
       <>
       <h2> Home Page </h2>
       <nav className="nav">
-        <Link to="/userTable"> Find users</Link>
+        
         <button onClick={() => setShowPopup(true)}>Add a file</button>
-
-        {showPopup && (
-          <>
-            <div className="overlay" onClick={() => setShowPopup(false)}></div>
-              <form className="fileUploadForm" method="post" encType="multipart/form-data">
-                <div>
-                    <label htmlFor="file">Choose file to upload </label>
-                    <input type="file" id="file" name="file" multiple />
-                </div>
-                <button>Submit</button>
-              </form>
-          </>
-        )}
 
       </nav>
       <Outlet />

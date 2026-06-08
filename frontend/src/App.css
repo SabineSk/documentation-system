@@ -107,6 +107,8 @@ body,
   padding: 12px 18px;
 }
 
+
+.clickable,
 .content>.nav> a,
 .content>.nav>button{
 text-decoration: none;
@@ -120,6 +122,7 @@ font: inherit;
 line-height: inherit;
 }
 
+.clickable,
 .content>.nav> a:hover,
 .content>.nav>button:hover{
   background-color:#aeccc6;

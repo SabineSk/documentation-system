@@ -10,6 +10,7 @@ import UserTable from './userTable.jsx';
 import Footer from './footer.jsx';
 import Profile from './profile.jsx';
 import Users from './users.jsx';
+import UserEdit from './userEdit.jsx';
 
 import ProtectedRoute from './components/protectedRoute.jsx';
 
@@ -26,7 +27,8 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/users" element={<Users />} />
             <Route path="/login" element={<Login />} />
-            
+            {/* :id nozīmē: “šajā URL vietā būs mainīga vērtība”. */}
+            <Route path="/userEdit/:id" element={<UserEdit />} /> 
                        
             <Route 
             path="/profile" 

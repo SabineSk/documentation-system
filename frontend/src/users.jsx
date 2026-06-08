@@ -40,11 +40,12 @@ function Users() {
         setStatus(status)
 
 
-        if (data.status === 'error') {
+        if (status === 'error') {
             setError("Kļūda, pievienojot lietotāju");
             return;
         }
         console.log("User added successfully:", data);
+        setNewUsername("");
         setNewPassword(""); 
         setNewPasswordConfirm("");
         setNewRole("");
@@ -66,6 +67,10 @@ function Users() {
     //     setNewPasswordConfirm("");
     //     // setNewRole("");
     // }
+
+    if(processing){
+        return <div></div>
+    }
 
   return ( 
     <div className="content">
@@ -110,6 +115,7 @@ function Users() {
                                 type="text" 
                                 id="newUsername" 
                                 name="newUsername"
+                                value={newUsername}
                                 required 
                                 onChange={(e) => setNewUsername(e.target.value)} />
                         </div>
@@ -168,3 +174,5 @@ function Users() {
 }
 
 export default Users;
+
+
