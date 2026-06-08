@@ -145,33 +145,6 @@ router.post('/addUser', authMiddleware, async (req, res) => {
   }
 });
 
-///FOR EDITING?
-// router.get("/:id", authMiddleware, async(req, res) =>{
-//   const { id } = req.params;
-  
-//   try{
-//     const user = await User.findById(id).select("-password");
-//     if(!user){
-//       return res.send({
-//         data: null,
-//         status: "error",
-//         message: "User not found"
-//       });
-//     }
-//     return res.send({
-//       data: user,
-//       status: "success",
-//       message: "User retrieved"
-//     });
-//   }catch(err){
-//     console.log(err);
-//     return res.send({
-//       data: null,
-//       status: "error",
-//       message: "Error retrieving user"
-//     });
-//   }
-// });
 
 //FOR USER EDIT FIND ONE USER BY ID
 router.get("/:id", authMiddleware, async (req, res) => {
@@ -187,16 +160,14 @@ router.get("/:id", authMiddleware, async (req, res) => {
     }
     return res.send({
       data: existingUser,
-      status: "success",
-      message: "User retrieved"
+      status: "success"
     });
 
   }catch(err){
     console.log(err);
     return res.send({
       data: null,
-      status: "error",
-      message: "Error retrieving user"
+      status: "error"
     });
   }
 }
@@ -210,6 +181,7 @@ router.patch("/:id", authMiddleware, async (req, res) => {
   const { editUsername, editPassword, editPasswordConfirm, editRole } = req.body;
   const updateData = {};
 
+  //ja nav tukšs, to ieliek updateData objektā
   if (editUsername) updateData.username = editUsername;
   if (editRole) updateData.role = editRole;
 
@@ -231,7 +203,8 @@ router.patch("/:id", authMiddleware, async (req, res) => {
   updateData.password = await bcrypt.hash(editPassword, 10);
 
 }
-  const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true }).select("-password");
+  const updatedUser = await User.findByIdAndUpdate(
+    id, updateData, { new: true }).select("-password");
   return res.send({
     data: updatedUser,
     status: "success",

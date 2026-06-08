@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 //import { useState } from "react";
 import Header from './header.jsx';
@@ -49,9 +49,6 @@ function App() {
                 </ProtectedRoute>
             } 
             />  
-
-
-
           </Routes>
         </main>
         <Footer />
