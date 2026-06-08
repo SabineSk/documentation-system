@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
     //Verify token using jwtService
     const decoded = verifyToken(token);
     
-    //Attach decoded user info to request object
+    //Attach decoded user info to request object: req.user.id req.user.username req.user.role
     req.user = decoded;
     // Proceed to next middleware or route handler
     next();

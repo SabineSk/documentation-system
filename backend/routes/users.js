@@ -29,6 +29,7 @@ router.get('/list', authMiddleware, async (req, res) => {//the login route waits
    
 });
 
+
 // get. Uses.id data vietā imag. Izmantojo find one
 router.get('/profileImage', authMiddleware, async(req,res) => {
   const { id } = req.user;
@@ -63,7 +64,6 @@ router.post('/addImg', authMiddleware, async (req, res) => {
   const { id } = req.user;
   
   try{
-    
     // await UserImages.deleteMany({user: id});
     await UserImages.updateOne({ user: id }, { $set: { image: image}}, { upsert: true })
     //   const userImage = new UserImages(
@@ -72,7 +72,6 @@ router.post('/addImg', authMiddleware, async (req, res) => {
     //     image: image
     //   }
     // )
-    
     // await userImage.save();
 
      res.send({
@@ -91,9 +90,19 @@ router.post('/addImg', authMiddleware, async (req, res) => {
   }
 }) 
 
+
 //Create new user
 router.post('/addUser', authMiddleware, async (req, res) => {
   const {newUsername, newPassword, newPasswordConfirm, newRole} = req.body;
+    
+  if (req.user.role !== "admin") {
+    return res.status(403).send({
+        data: null,
+        status: "error",
+        message: "Access denied"
+    });}  
+  
+  
   if (newPassword !== newPasswordConfirm) {
     return res.send({
       data:null,
@@ -102,18 +111,11 @@ router.post('/addUser', authMiddleware, async (req, res) => {
     });
   }
   
-  // if (req.user.role !== "admin") {
-  //   return res.status(403).send({
-  //       data: null,
-  //       status: "error",
-  //       message: "Access denied"
-  //   });}
-
-
   try{
     const existingUser = await User.findOne({username: newUsername});
+
     if (existingUser){
-      console.log("JAU EKSISTĒ USERIS AR TĀDU USERNAME")
+      console.log("JAU EKSISTĒ LIETOTĀJS AR TĀDU USERNAME")
       return res.send({
         data:null,
         status: 'error',
@@ -131,6 +133,7 @@ router.post('/addUser', authMiddleware, async (req, res) => {
     user.password = hashedPassword;
 
     await user.save()
+
     console.log("User created");
     return res.send({
       data:null,
@@ -142,7 +145,122 @@ router.post('/addUser', authMiddleware, async (req, res) => {
   }
 });
 
+///FOR EDITING?
+// router.get("/:id", authMiddleware, async(req, res) =>{
+//   const { id } = req.params;
   
+//   try{
+//     const user = await User.findById(id).select("-password");
+//     if(!user){
+//       return res.send({
+//         data: null,
+//         status: "error",
+//         message: "User not found"
+//       });
+//     }
+//     return res.send({
+//       data: user,
+//       status: "success",
+//       message: "User retrieved"
+//     });
+//   }catch(err){
+//     console.log(err);
+//     return res.send({
+//       data: null,
+//       status: "error",
+//       message: "Error retrieving user"
+//     });
+//   }
+// });
+
+//FOR USER EDIT FIND ONE USER BY ID
+router.get("/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params; 
+  try{
+    const existingUser = await User.findOne({_id: id}).select("-password");
+    if(!existingUser){
+      return res.send({
+        data: null,
+        status: "error",
+        message: "User not found"
+      });
+    }
+    return res.send({
+      data: existingUser,
+      status: "success",
+      message: "User retrieved"
+    });
+
+  }catch(err){
+    console.log(err);
+    return res.send({
+      data: null,
+      status: "error",
+      message: "Error retrieving user"
+    });
+  }
+}
+);
+
+//FOR USER EDIT update ONE USER BY ID
+router.patch("/:id", authMiddleware, async (req, res) => {
+  console.log("PATCH HIT");
+  //edit user 
+  const { id } = req.params; 
+  const { editUsername, editPassword, editPasswordConfirm, editRole } = req.body;
+  const updateData = {};
+
+  if (editUsername) updateData.username = editUsername;
+  if (editRole) updateData.role = editRole;
+
+  if (req.user.role !== "admin") {
+  return res.status(403).send({
+      data: null,
+      status: "error",
+      message: "Access denied"
+  });}  
+  
+  if (editPassword){
+  if (editPassword !== editPasswordConfirm) {
+    return res.send({
+      data:null,
+      status: 'error',
+      message: "Passwords don't match"
+    });
+  }
+  updateData.password = await bcrypt.hash(editPassword, 10);
+
+}
+  const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true }).select("-password");
+  return res.send({
+    data: updatedUser,
+    status: "success",
+    message: "User updated"
+  });
+})
+
+
+router.delete("/:id", async(req, res) =>{
+  //backend ņem id no url, ko nosūta userTable frontends
+  const { id } = req.params; 
+
+  try{
+    const deleteUser = await User.deleteOne({_id: id});
+    return res.send({
+      data:null,
+      status: "success",
+      message: "user deleted"
+    })
+
+    }catch(err){
+      console.log(err);
+      return res.send({
+        data:null,
+        staus: "error",
+        message: "User can't be deleted"
+    });
+    }
+});
 
 
 // express.json() neprot nolasīt failus. Faili nāk kā multipart/form-data, 
@@ -171,48 +289,3 @@ router.post('/addUser', authMiddleware, async (req, res) => {
 
 module.exports = router;
 
-
-
-
-
-
-
-
-
-
-
-
-
-// router.post('/addImg', authMiddleware, async (req, res) => {
-//   const { image } = req.body;
-//   const { id } = req.user;
-//   console.log(image);
-//   try{
-
-
-//     const userImage = new UserImages(
-//       {
-//         user: id,
-//         image: image
-//       }
-//     )
-    
-//     await userImage.save();
-
-//      res.send({
-//         data: null,
-//         status: 'success',
-//         message: "Data retrieved"
-//     });
-//   }catch(error){
-//     console.log(error);
-//     res.send({
-//       data:null,
-//       status: 'error',
-//       message: "Data error"
-//     });
-//   }
-// })
-
-
-// module.exports = router;

@@ -8,7 +8,6 @@ const createUserIfNotExists = require("./seeds/users");
 const authRoutes = require("./routes/auth");
 const meRoutes = require("./routes/me");
 const userRoutes = require("./routes/users");
-const getAllUsers = require ('./routes/users')
 console.log(process.env.MONGO_URI);
 
 
