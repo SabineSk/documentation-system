@@ -23,6 +23,7 @@ function UserEdit() {
             },
             credentials:'include'
         }); 
+        
     }
 
     
@@ -163,7 +164,7 @@ function UserEdit() {
                         <div className="newUser-FormGroup">
                             <label htmlFor="editPassword">Change password: </label>
                             <input 
-                                type="text" 
+                                type="password" 
                                 id="editPassword" 
                                 name="editPassword"
                                 value={editPassword}
@@ -173,7 +174,7 @@ function UserEdit() {
                         <div className="newUser-FormGroup">
                             <label htmlFor="editPasswordConfirm">Confirm changed password: </label>
                             <input 
-                                type="text" 
+                                type="password" 
                                 id="editPasswordConfirm" 
                                 name="editPasswordConfirm"
                                 value={editPasswordConfirm} 
