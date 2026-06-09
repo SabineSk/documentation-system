@@ -2,22 +2,27 @@
 import UserTable from './userTable.jsx';
 import { useState } from 'react';
 import {useAuth} from './auth/useAuth';
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Users() {
+    const [type, setType] = useState('password');
+
     const {user} = useAuth();
 
     const [showUserTable, setShowUserTable] = useState(false);
     const [showAddNewUser, setShowAddNewUser] = useState(false);
+
     const [newUsername, setNewUsername] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
     const [newRole, setNewRole] = useState("");
+
     const [message, setMessage] = useState("")
     const [status, setStatus] =useState("")
 
     const [error, setError] = useState(null);
     const [processing, setProcessing] = useState(false);
+
 
 
     const onSubmit = async (e) => {
@@ -67,6 +72,10 @@ function Users() {
     //     setNewPasswordConfirm("");
     //     // setNewRole("");
     // }
+    const handleToggle = () => {
+        setType(type ==='password' ? 'text': "password" );
+    };
+
 
     if(processing){
         return <div></div>
@@ -122,7 +131,7 @@ function Users() {
                         <div className="newUser-FormGroup">
                             <label htmlFor="newPassword">Password: </label>
                             <input 
-                                type="password" 
+                                type={type} 
                                 id="newPassword" 
                                 name="newPassword" 
                                 required 
@@ -131,12 +140,16 @@ function Users() {
                         <div className="newUser-FormGroup">
                             <label htmlFor="newPasswordConfirm">Confirm password: </label>
                             <input 
-                                type="password" 
+                                type={type}
                                 id="newPasswordConfirm" 
                                 name="newPasswordConfirm" 
                                 required 
                                 onChange={(e) => setNewPasswordConfirm(e.target.value)} />
                         </div>
+                        <span onClick={handleToggle}>
+                            {/* <Icon icon={icon} size={25}/> */}
+                            {type === "password" ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                        </span>                           
                         <div className="newUser-FormGroup">
                             <label htmlFor="newRole">Role: </label>
                             <select name="newRole" id="newRole" value={newRole} required onChange={(e) => setNewRole(e.target.value)}>

@@ -2,15 +2,16 @@ import { useState, useEffect} from "react";
 import {useNavigate} from 'react-router-dom';
 import {Navigate} from "react-router-dom";
 import {useAuth} from './auth/useAuth';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
   const {isAuthenticated} = useAuth();
- 
+  const [type, setType] = useState('password');
+  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -52,6 +53,10 @@ function Login() {
     return <Navigate to="/Home" replace/>
   }
 
+  const handleToggle = () => {
+    setType(type ==='password' ? 'text': "password" );
+  };
+
   
 
   return (
@@ -73,11 +78,14 @@ function Login() {
                 <div className="login-form-group">
                 <label htmlFor="password">Password: </label>
                 <input 
-                    type="password" 
+                    type={type}
                     id="password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
                 />
+                <span onClick={handleToggle}>
+                  {type === "password" ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                </span>   
                 </div>
 
                 {error && <p style={{ color: 'red' }}>{error}</p>}

@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
 import { useParams } from "react-router-dom";
+
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function UserEdit() {
     const [error, setError] = useState(null);
@@ -13,18 +15,26 @@ function UserEdit() {
     const [user, setUser ] = useState(null)
     const [status, setStatus] =useState("")
 
+    const [type, setType] = useState('password');
+    // const [icon, setIcon] = useState(eyeOff);
+    
+    // when the type is equal to 'password', have the icon set as eye open icon and show the password in text form, 
+    // and when the type is anything else, have the icon set as the eyeOff icon and hid the password.
 
 
-    const handleGetUser = async(userID) => {
-        const response = await fetch(`/api/users/${userID}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            credentials:'include'
-        }); 
-        
-    }
+
+
+    // const handleGetUser = async(userID) => {
+    //     const response = await fetch(`/api/users/${userID}`, {
+    //         method: "GET",
+    //         headers: {
+    //           "Content-Type": "application/json"
+    //         },
+    //         credentials:'include'
+    //     }); 
+    // }
+
+
 
     
     const { id } = useParams();
@@ -50,6 +60,7 @@ function UserEdit() {
   
       getEditUsers();
     }, []);
+
 
 
     const onSubmit = async (e) => {
@@ -137,6 +148,13 @@ function UserEdit() {
     }
     };
 
+    //sākumā type ir "password", tātad input paslēpts.  
+    //Spiežot ikonu, izsauc handleToggle, kas pārbauda vai sākumā type ir password
+    //Ja ir password, tad pārslēdz uz tekstu. Ja nav password, pārslēdz uz password.
+    const handleToggle = () => {
+        setType(type ==='password' ? 'text': "password" );
+    };
+
 
     return(
         <div className="content">
@@ -152,6 +170,7 @@ function UserEdit() {
                         type="text" 
                         id="editUsername" 
                         name="editUsername"
+                        minlength="9"
                         value={editUsername}
                         onChange={(e) => setEditUsername(e.target.value)} />
                     )}
@@ -164,25 +183,29 @@ function UserEdit() {
                         <div className="newUser-FormGroup">
                             <label htmlFor="editPassword">Change password: </label>
                             <input 
-                                type="password" 
+                                type={type} 
                                 id="editPassword" 
                                 name="editPassword"
                                 value={editPassword}
-                                onChange={(e) => setEditPassword(e.target.value)} />
-
+                                onChange={(e) => setEditPassword(e.target.value)} 
+                                autoComplete="current-password"/>
                         </div>
                         <div className="newUser-FormGroup">
                             <label htmlFor="editPasswordConfirm">Confirm changed password: </label>
                             <input 
-                                type="password" 
+                                type={type}
                                 id="editPasswordConfirm" 
                                 name="editPasswordConfirm"
                                 value={editPasswordConfirm} 
                                 onChange={(e) => setEditPasswordConfirm(e.target.value)} />
 
                         </div>
+                        <span onClick={handleToggle}>
+                            {type === "password" ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                        </span>    
                     </>
                     )}
+                    
                 </div>
 
                 <div className="newUser-FormGroup">
