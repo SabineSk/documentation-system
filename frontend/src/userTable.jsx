@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import { FaFilter } from "react-icons/fa";
+import { FaSort } from "react-icons/fa";
 
 function UserTable() {
       const [users, setUsers ] = useState([])
@@ -28,7 +29,7 @@ function UserTable() {
           if (status === 'success') {
             setUsers(data);
           } else {
-            setUsers(null)
+            setUsers([])
           }
         }
   
@@ -59,22 +60,81 @@ function UserTable() {
 
 
     //   setShowPopup({type: null, user: null})
-    // }
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
+
+    const sortedData = [...users].sort((a,b) => {
+      if (!sortConfig.key) return 0
+
+      let aValue = a[sortConfig.key]
+      let bValue = b[sortConfig.key]
+
+      if (sortConfig.key === 'createdAt' || sortConfig.key === 'updatedAt' ){
+        aValue = new Date(aValue)
+        bValue = new Date(bValue)
+      }
+      
+      if (aValue < bValue) {
+      return sortConfig.direction === 'asc' ? -1 : 1
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1
+      }
+      return 0
+    });
+
+    const handleSort = (key) => {
+      setSortConfig({
+        key,
+        direction: sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc'
+      })
+    }
   
   return (
     <div className='content'>
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p> 
         <tbody className="tbody">
           <tr>
-              <th>ID</th>
-              <th>Username</th>
-              <th>Role</th>
-              <th>Created at</th>
-              <th>Updated at</th>
+              <th>
+                <div className="th-content">
+                  <span>ID</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('_id')} style={{ cursor: 'pointer', }} />
+                </div>
+              </th>
+
+              <th>
+                <div className="th-content">
+                  <span>Username</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('username')}/>
+                </div>
+              </th>
+
+              <th>
+                 <div className="th-content">
+                  <span>Role</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('role')}/>
+                </div>
+              </th>
+
+              <th>
+                <div className="th-content">
+                  <span>Created at</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('createdAt')}/>
+                </div>
+              </th>
+
+              <th>
+                <div className="th-content">
+                  <span>Updated at</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('updatedAt')}/>
+                </div>
+              </th>
+
               <th>Edit user</th>
+
               <th>Delete</th>
           </tr>
-          {users?.map((val, key) => (
+
+          {sortedData?.map((val, key) => (
               <tr key = {key}>
               <td>{val._id}</td>
               <td>{val.username}</td>

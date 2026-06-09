@@ -16,7 +16,7 @@ body,
 }
 
 .content {
-    width: 75%; 
+    min-width: 75%; 
     margin: auto; /* This is what center the content div itself. */
     /* flex 1 nozīmē, ka aizņem visu pieejamo brīvo vietu  */
     flex: 1;
@@ -28,9 +28,31 @@ body,
 
 }
 
-.tbody{
+.th-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.sort-icon{
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
+}
+.sort-icon:hover {
+  transform: scale(1.25);
+  color: #555;
+}
+
+
+.content .tbody{
   background-color: rgb(225, 225, 247);
  }
+/* 
+ .tbody tr>th{
+  min-width: auto;
+ } */
 
 .main-app{
   height: 800px;

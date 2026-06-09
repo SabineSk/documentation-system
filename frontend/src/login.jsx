@@ -80,6 +80,7 @@ function Login() {
                 <input 
                     type={type}
                     id="password" 
+                    minlength="4"
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
                 />

@@ -93,13 +93,6 @@ function Users() {
             Find users
             </button>
 
-            {/* <button onClick={() => {
-                setShowAddNewUser(true);
-                setShowUserTable(false);
-            }}>
-                Add new user
-            </button> */}
-
             {user?.role === "admin" && (
                 <button onClick={() => {
                 setShowAddNewUser(true);
@@ -133,6 +126,7 @@ function Users() {
                             <input 
                                 type={type} 
                                 id="newPassword" 
+                                minlength="4"
                                 name="newPassword" 
                                 required 
                                 onChange={(e) => setNewPassword(e.target.value)} />
@@ -142,6 +136,7 @@ function Users() {
                             <input 
                                 type={type}
                                 id="newPasswordConfirm" 
+                                minlength="4"
                                 name="newPasswordConfirm" 
                                 required 
                                 onChange={(e) => setNewPasswordConfirm(e.target.value)} />

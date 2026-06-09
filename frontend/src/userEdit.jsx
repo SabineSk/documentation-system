@@ -170,7 +170,6 @@ function UserEdit() {
                         type="text" 
                         id="editUsername" 
                         name="editUsername"
-                        minlength="9"
                         value={editUsername}
                         onChange={(e) => setEditUsername(e.target.value)} />
                     )}
@@ -185,6 +184,7 @@ function UserEdit() {
                             <input 
                                 type={type} 
                                 id="editPassword" 
+                                minlength="4"
                                 name="editPassword"
                                 value={editPassword}
                                 onChange={(e) => setEditPassword(e.target.value)} 
@@ -194,7 +194,8 @@ function UserEdit() {
                             <label htmlFor="editPasswordConfirm">Confirm changed password: </label>
                             <input 
                                 type={type}
-                                id="editPasswordConfirm" 
+                                id="editPasswordConfirm"
+                                minlength="4"
                                 name="editPasswordConfirm"
                                 value={editPasswordConfirm} 
                                 onChange={(e) => setEditPasswordConfirm(e.target.value)} />
