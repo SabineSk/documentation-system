@@ -23,9 +23,7 @@ function Users() {
     const [error, setError] = useState(null);
     const [processing, setProcessing] = useState(false);
 
-
-
-    const onSubmit = async (e) => {
+     const onSubmit = async (e) => {
         e.preventDefault();
         setProcessing(true);
         setError(null);
@@ -42,7 +40,8 @@ function Users() {
 
         const {data, status, message} = await response.json();
         setMessage(message);
-        setStatus(status)
+        setStatus(status);
+        console.log(message);
 
 
         if (status === 'error') {
@@ -55,7 +54,7 @@ function Users() {
         setNewPasswordConfirm("");
         setNewRole("");
         setError(null);
-        setMessage("");
+
 
       }catch (err)
       {console.log(err);
@@ -72,6 +71,8 @@ function Users() {
     //     setNewPasswordConfirm("");
     //     // setNewRole("");
     // }
+
+    //Paslpēpt/atklāt paroli
     const handleToggle = () => {
         setType(type ==='password' ? 'text': "password" );
     };
@@ -86,6 +87,8 @@ function Users() {
       <div>
         <h2>Users</h2>
         <nav className="nav">
+
+            {/* //Atverot vienu button, otra aizveras */}
             <button onClick={() => {
                 setShowUserTable(true);
                 setShowAddNewUser(false);
@@ -93,6 +96,7 @@ function Users() {
             Find users
             </button>
 
+            {/* //Tikai admin redz addNewUSer pogu */}
             {user?.role === "admin" && (
                 <button onClick={() => {
                 setShowAddNewUser(true);
@@ -116,6 +120,7 @@ function Users() {
                             <input 
                                 type="text" 
                                 id="newUsername" 
+                                maxLength={25}
                                 name="newUsername"
                                 value={newUsername}
                                 required 
@@ -170,10 +175,6 @@ function Users() {
                 </div>
             )}
         </nav>
-
-        
-
-
       </div>
     
     </div>
