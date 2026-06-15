@@ -98,90 +98,97 @@ function Holidays() {
       {showAddNewHoliday && (
         <div>
 
-          <button onClick={() => setShowAddNewHoliday(false)}>Aizvērt</button>
+          
           <form onSubmit={onSubmit} id="addHolidayForm" className="form">
-
+          <div className='row-holiday'>
             <div className="newHoliday-FormGroup">
-              <label htmlFor="newName">Nosaukums</label>
-              <input
-                type="text" 
-                id="newName" 
-                name="newName"
-                value={newName}
+              
+                <label htmlFor="newName">Nosaukums</label>
+                <input
+                  type="text" 
+                  id="newName" 
+                  name="newName"
+                  value={newName}
+                  required
+                  maxLength={50}
+                  onChange={(e) => setNewName(e.target.value)}/>
+              </div>
+
+              <div className="newHoliday-FormGroup"> 
+                <label htmlFor="newCountry">Valsts</label>
+                <select
+                id='newCountry' 
+                name='newCountry'
+                value={newCountry} 
                 required
-                maxLength={50}
-                onChange={(e) => setNewName(e.target.value)}/>
+                onChange={(e) => setNewCountry(e.target.value)}>
+                  <option value="">Izvēlēties</option>
+                  <option value="Latvia">Latvija (LV) </option>
+                  <option value="Lithuania">Lietuva (LT) </option>
+                </select>
+              </div>
+            </div>
+            <div className='row-holiday'> 
+              <div className="newHoliday-FormGroup">
+
+                <label htmlFor="newType">Tips</label>
+                <select
+                id='newType' 
+                name='newType'
+                value={newType} 
+                onChange={(e) => setNewType(e.target.value)}>
+                  <option value="">Izvēlēties</option>
+                  <option value="DN">Svētku diena</option>
+                  <option value="DY">Īpašā diena</option>
+                  <option value="TNH">Pārcelta brīvdiena</option>
+                  <option value="TWD">Pārcelta darba diena</option>
+                  <option value="WD"> Saīsināta darba diena</option>
+                </select>
+              </div>
+
+              <div className="newHoliday-FormGroup">
+                <label htmlFor="newDate">Datums</label>
+                <input 
+                aria-label="Date" 
+                type="date" 
+                required
+                value={newHolidayDate}
+                onChange={(e) => setNewHolidayDate(e.target.value)}/>
+              </div >
             </div>
 
-            <div className="newHoliday-FormGroup"> 
-              <label htmlFor="newCountry">Valsts</label>
-              <select
-              id='newCountry' 
-              name='newCountry'
-              value={newCountry} 
-              required
-              onChange={(e) => setNewCountry(e.target.value)}>
-                <option value="">Izvēlēties</option>
-                <option value="Latvia">Latvija (LV) </option>
-                <option value="Lithuania">Lietuva (LT) </option>
-              </select>
+            <div className='row-holiday'>
+              <div className="newHoliday-FormGroup">
+                <label htmlFor="newIgnoreForVacationYn">Ignorēt atvaļinājumā</label>
+                <select 
+                id='newIgnoreForVacationYn' 
+                name='newIgnoreForVacationYn'
+                value={newIgnoreForVacationYn} 
+                onChange={(e) => setNewIgnoreForVacationYn(e.target.value)}>
+                  <option value="">Izvēlēties</option>
+                  <option value="yes">yes</option>
+                  <option value="no">no</option>
+                </select>
+              </div>
+
+              <div className="newHoliday-FormGroup">
+                <label htmlFor="newIsWorkingDayYn">Darba diena</label>
+                <select 
+                id='newIsWorkingDayYn' 
+                name='newIsWorkingDayYn'
+                value={newIsWorkingDayYn} 
+                onChange={(e) => setNewIsWorkingDayYn(e.target.value)}>
+                  <option value="">Izvēlēties</option>
+                  <option value="yes">yes</option>
+                  <option value="no">no</option>
+                </select>
+              </div>
             </div>
-
-            <div className="newHoliday-FormGroup">
-              <label htmlFor="newType">Tips</label>
-              <select
-              id='newType' 
-              name='newType'
-              value={newType} 
-              onChange={(e) => setNewType(e.target.value)}>
-                <option value="">Izvēlēties</option>
-                <option value="DN">Svētku diena</option>
-                <option value="DY">Īpašā diena</option>
-                <option value="TNH">Pārcelta brīvdiena</option>
-                <option value="TWD">Pārcelta darba diena</option>
-                <option value="WD"> Saīsināta darba diena</option>
-
-              </select>
-            </div>
-
-            <div className="newHoliday-FormGroup">
-              <label htmlFor="newDate">Datums</label>
-              <input 
-              aria-label="Date" 
-              type="date" 
-              required
-              value={newHolidayDate}
-              onChange={(e) => setNewHolidayDate(e.target.value)}/>
-            </div >
-
-            <div className="newHoliday-FormGroup">
-              <label htmlFor="newIgnoreForVacationYn">Ignorēt atvaļinājumā</label>
-              <select 
-              id='newIgnoreForVacationYn' 
-              name='newIgnoreForVacationYn'
-              value={newIgnoreForVacationYn} 
-              onChange={(e) => setNewIgnoreForVacationYn(e.target.value)}>
-                <option value="">Izvēlēties</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
-              </select>
-            </div>
-
-            <div className="newHoliday-FormGroup">
-              <label htmlFor="newIsWorkingDayYn">Darba diena</label>
-              <select 
-              id='newIsWorkingDayYn' 
-              name='newIsWorkingDayYn'
-              value={newIsWorkingDayYn} 
-              onChange={(e) => setNewIsWorkingDayYn(e.target.value)}>
-                <option value="">Izvēlēties</option>
-                <option value="yes">yes</option>
-                <option value="no">no</option>
-              </select>
-            </div>
-            <button type="submit">Izveidot</button> 
+            <div id='holiday-form-bttn'>
+            <button id='submit-button' type="submit">Izveidot</button> 
+            <button id='close-button' onClick={() => setShowAddNewHoliday(false)}>Aizvērt</button>
+          </div>
           </form>
-
         </div>
       )}
       </div>

@@ -58,10 +58,6 @@ function UserTable() {
       setShowPopup({type: null, user: null})
     };
 
-    // const handleEdit = async(userID) => {
-    //   // const response = await fetch(`/api/users/${userID}`)
-    //   // method
-
     //Apskata katru lietotāju
     const filteredData = users.filter((user) => {
       //ja nav izvēlēts filtrs
@@ -140,8 +136,8 @@ function UserTable() {
       />
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
       <table>
-        <tbody className="tbody">
-          <tr>
+        <thead className='thead'>
+            <tr>
               <th>
                 <div className="th-content">
                   <span>ID</span>
@@ -184,7 +180,10 @@ function UserTable() {
               <th>Edit user</th>
 
               <th>Delete</th>
-          </tr>
+          </tr>          
+        </thead>
+        <tbody className="tbody">
+          
 
           {sortedData?.map((val, key) => (
               <tr key = {key}>
