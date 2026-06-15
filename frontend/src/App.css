@@ -46,12 +46,12 @@ body,
 }
 
 .thead{
-  background-color: rgb(171, 171, 199);
+  background-color: #dad8d8 ;
  }
 
-.content .tbody{
+/* .content .tbody{
   background-color: rgb(225, 225, 247);
- }
+ } */
 /* 
  .tbody tr>th{
   min-width: auto;

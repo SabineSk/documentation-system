@@ -7,7 +7,7 @@ function Holidays() {
   const [newName, setNewName] = useState('');
   const [newCountry, setNewCountry] = useState('');
   const [newHolidayDate, setNewHolidayDate] = useState('');
-  const [newType, setNewType] = useState('');
+  const [newHolidayType, setNewHolidayType] = useState('');
   const [newIgnoreForVacationYn, setNewIgnoreForVacationYn] = useState('');
   const [newIsWorkingDayYn, setNewIsWorkingDayYn ] = useState('');
 
@@ -34,7 +34,7 @@ function Holidays() {
           newName, 
           newCountry, 
           newHolidayDate,
-          newType, 
+          newHolidayType, 
           newIgnoreForVacationYn, 
           newIsWorkingDayYn
         })
@@ -52,7 +52,7 @@ function Holidays() {
       
       setNewName('');
       setNewCountry('');
-      setNewType('');
+      setNewHolidayType('');
       setNewIgnoreForVacationYn('');
       setNewIsWorkingDayYn('');
       setError(null);
@@ -130,13 +130,12 @@ function Holidays() {
             </div>
             <div className='row-holiday'> 
               <div className="newHoliday-FormGroup">
-
-                <label htmlFor="newType">Tips</label>
+                <label htmlFor="newHolidayType">Tips</label>
                 <select
-                id='newType' 
-                name='newType'
-                value={newType} 
-                onChange={(e) => setNewType(e.target.value)}>
+                id='newHolidayType' 
+                name='newHolidayType'
+                value={newHolidayType} 
+                onChange={(e) => setNewHolidayType(e.target.value)}>
                   <option value="">Izvēlēties</option>
                   <option value="DN">Svētku diena</option>
                   <option value="DY">Īpašā diena</option>

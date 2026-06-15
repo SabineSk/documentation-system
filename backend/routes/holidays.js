@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
 
 //Create new holiday if not exists in db
 router.post('/', authMiddleware, async (req, res) => {
-    const {newName, newCountry, newHolidayDate, newHolidayType, newIgnoreForVacation, newIsWorkingDayYn, newPreHolidayHoursOff, newTransfferedForm} = req.body;
+    const {newName, newCountry, newHolidayDate, newHolidayType, newIgnoreForVacationYn, newIsWorkingDayYn, newPreHolidayHoursOff, newTransfferedForm} = req.body;
 
     try{
         const existingHoliday = await Holiday.findOne({name: newName});
@@ -44,7 +44,7 @@ router.post('/', authMiddleware, async (req, res) => {
             country: newCountry,
             holidayDate: newHolidayDate,
             holidayType: newHolidayType,
-            ignoreForVacationYn: newIgnoreForVacation,
+            ignoreForVacationYn: newIgnoreForVacationYn,
             isWorkingDayYn: newIsWorkingDayYn,
             preHolidayHoursOff: newPreHolidayHoursOff,
             transferredFrom: newTransfferedForm,
