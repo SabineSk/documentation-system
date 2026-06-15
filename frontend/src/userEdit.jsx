@@ -22,9 +22,6 @@ function UserEdit() {
     // when the type is equal to 'password', have the icon set as eye open icon and show the password in text form, 
     // and when the type is anything else, have the icon set as the eyeOff icon and hid the password.
 
-
-
-
     // const handleGetUser = async(userID) => {
     //     const response = await fetch(`/api/users/${userID}`, {
     //         method: "GET",
@@ -34,9 +31,6 @@ function UserEdit() {
     //         credentials:'include'
     //     }); 
     // }
-
-
-
     
     const { id } = useParams();
     useEffect(() => { 

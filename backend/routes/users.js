@@ -139,7 +139,7 @@ router.post('/addUser', authMiddleware, async (req, res) => {
       data:null,
       status: 'success',
       message: "User created"
-    })
+    });
   }catch (err) {
     console.log(err);
   }
@@ -222,7 +222,7 @@ router.delete("/:id", async(req, res) =>{
     return res.send({
       data:null,
       status: "success",
-      message: "user deleted"
+      message: "User deleted"
     })
 
     }catch(err){

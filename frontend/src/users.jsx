@@ -86,7 +86,7 @@ function Users() {
     <div className="content">
       <div>
         <h2>Users</h2>
-        <nav className="nav">
+        <div className="nav">
 
             {/* //Atverot vienu button, otra aizveras */}
             <button onClick={() => {
@@ -147,7 +147,6 @@ function Users() {
                                 onChange={(e) => setNewPasswordConfirm(e.target.value)} />
                         </div>
                         <span onClick={handleToggle}>
-                            {/* <Icon icon={icon} size={25}/> */}
                             {type === "password" ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                         </span>                           
                         <div className="newUser-FormGroup">
@@ -174,7 +173,7 @@ function Users() {
                     <UserTable />
                 </div>
             )}
-        </nav>
+        </div>
       </div>
     
     </div>

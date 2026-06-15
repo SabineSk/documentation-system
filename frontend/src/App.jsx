@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 //import { useState } from "react";
 import Header from './header.jsx';
-import About from './about.jsx';
+import Holidays from './holidays.jsx';
 import Login from './login.jsx';
 import Home from './home.jsx';
 import UserTable from './userTable.jsx';
@@ -24,7 +24,7 @@ function App() {
         <main className="main-app">
           <Routes>
             
-            <Route path="/about" element={<About />} />
+            <Route path="/holidays" element={<Holidays />} />
             <Route path="/users" element={<Users />} />
             <Route path="/login" element={<Login />} />
             {/* :id nozīmē: “šajā URL vietā būs mainīga vērtība”. */}

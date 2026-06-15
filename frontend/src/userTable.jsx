@@ -139,75 +139,77 @@ function UserTable() {
           onChange={(e) => setSearchTable(e.target.value)}
       />
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
-      <tbody className="tbody">
-        <tr>
-            <th>
-              <div className="th-content">
-                <span>ID</span>
-                <FaSort className="sort-icon" onClick={() => handleSort('_id')} style={{ cursor: 'pointer', }} />
-                {/* <CiFilter className="sort-icon"/> */}
-              </div>
-            </th>
-
-            <th>
-              <div className="th-content">
-                <span>Username</span>
-                <FaSort className="sort-icon" onClick={() => handleSort('username')}/>
-                {/* <CiFilter className="sort-icon" id="dropdown-filter" /> */}
-                
-              </div>
-            </th>
-
-            <th>
+      <table>
+        <tbody className="tbody">
+          <tr>
+              <th>
                 <div className="th-content">
-                <span>Role</span>
-                <FaSort className="sort-icon" onClick={() => handleSort('role')}/>
-                {/* <CiFilter className="sort-icon"/> */}
-              </div>
-            </th>
+                  <span>ID</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('_id')} style={{ cursor: 'pointer', }} />
+                  {/* <CiFilter className="sort-icon"/> */}
+                </div>
+              </th>
 
-            <th>
-              <div className="th-content">
-                <span>Created at</span>
-                <FaSort className="sort-icon" onClick={() => handleSort('createdAt')}/>
-              </div>
-            </th>
+              <th>
+                <div className="th-content">
+                  <span>Username</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('username')}/>
+                  {/* <CiFilter className="sort-icon" id="dropdown-filter" /> */}
+                  
+                </div>
+              </th>
 
-            <th>
-              <div className="th-content">
-                <span>Updated at</span>
-                <FaSort className="sort-icon" onClick={() => handleSort('updatedAt')}/>
-              </div>
-            </th>
+              <th>
+                  <div className="th-content">
+                  <span>Role</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('role')}/>
+                  {/* <CiFilter className="sort-icon"/> */}
+                </div>
+              </th>
 
-            <th>Edit user</th>
+              <th>
+                <div className="th-content">
+                  <span>Created at</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('createdAt')}/>
+                </div>
+              </th>
 
-            <th>Delete</th>
-        </tr>
+              <th>
+                <div className="th-content">
+                  <span>Updated at</span>
+                  <FaSort className="sort-icon" onClick={() => handleSort('updatedAt')}/>
+                </div>
+              </th>
 
-        {sortedData?.map((val, key) => (
-            <tr key = {key}>
-            <td>{val._id}</td>
-            <td>{val.username}</td>
-            <td>{val.role}</td>
-            <td>{val.createdAt}</td>
-            <td>{val.updatedAt}</td>
-              <td>
-              <button onClick={() => setShowPopup({type: "edit", user: val})}>
-                Edit
-              </button>
-            </td>
-            <td>
-              <button onClick={() => setShowPopup({type: "delete", user: val})}>
-                X
-              </button>
-            </td>
+              <th>Edit user</th>
+
+              <th>Delete</th>
           </tr>
-        ))}
+
+          {sortedData?.map((val, key) => (
+              <tr key = {key}>
+              <td>{val._id}</td>
+              <td>{val.username}</td>
+              <td>{val.role}</td>
+              <td>{val.createdAt}</td>
+              <td>{val.updatedAt}</td>
+                <td>
+                <button onClick={() => setShowPopup({type: "edit", user: val})}>
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button onClick={() => setShowPopup({type: "delete", user: val})}>
+                  X
+                </button>
+              </td>
+            </tr>
+          ))}
 
 
-        
-      </tbody>
+          
+        </tbody>
+      </table>
       {showPopup.type == "edit" && (
         <>
           <div className="overlay" onClick={() => setShowPopup({type: null, user: null})}></div>

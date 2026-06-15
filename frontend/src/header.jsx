@@ -40,7 +40,7 @@ function Header() {
                         <h1 > Documentation System</h1>  
                         <nav className="nav-links">        
                             <Link to="/Home">Home</Link>
-                            <Link to="/About">About</Link>
+                            <Link to="/Holidays">Holidays</Link>
                             <Link to="/users">Users</Link>
                             <div className="dropdown">
                                 <a className="dropdown-link">Profile</a>
@@ -62,7 +62,7 @@ function Header() {
                         <h1 > Documentation System</h1>  
                         <nav className="nav-links">        
                             <Link to="/Home">Home</Link>
-                            <Link to="/About">About</Link>
+                            <Link to="/Holidays">Holidays</Link>
                             <Link to="/login">Login</Link>
                         </nav>
                     </div>
