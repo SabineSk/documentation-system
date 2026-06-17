@@ -22,11 +22,21 @@ body,
     flex: 1;
 }
 
+.content> table{
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
 .usertable>tr, th, td{
-   border: 1px solid;
    padding: 10px;
+   border-bottom: 1px solid #ddd;
 
 }
+
+.tbody>tr:hover {background-color: #aeccc6;}
+
+tr:nth-child(even){background-color: #f0f0f038}
 
 .th-content {
   display: flex;
@@ -81,6 +91,11 @@ body,
   font-weight: 500;
   padding: 10px 20px;
   
+}
+
+#language-select{
+  padding-right: 10px;
+  background-color: #6e0f68;
 }
 
 .nav-links> a:hover {
@@ -353,4 +368,34 @@ line-height: inherit;
   gap: 20px;
   margin-top: 12px;
 }
+
+
+.button-yes,
+.button-no {
+
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 105px;
+  height: 38px;
+  padding: 0;
+  margin: 0;
+
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+  border: 1px solid #aeccc6;
+  background-color: white;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.button-yes:hover,
+.button-no:hover {
+  background-color: #aeccc6;
+  cursor: pointer;
+}
+
+
 

@@ -9,17 +9,21 @@ function UserTable() {
 
       const [filterBy, setFilterBy] = useState("");
       const [searchTable, setSearchTable] = useState("");
-      const [users, setUsers ] = useState([])
-      const [message, setMessage] = useState("")
-      const [status, setStatus] =useState("")
+      const [users, setUsers ] = useState([]);
+      const [message, setMessage] = useState("");
+      const [status, setStatus] = useState("");
       const [showPopup, setShowPopup] = useState({
         type: null,
         user: null
       });
 
+      const [currentPage, setCurrentPage] = useState(1);
+      const [totalPages, setTotalPages] = useState(1);
+
+
       useEffect(() => { 
         async function getUsers() {
-          const response = await fetch('/api/users/list', {
+          const response = await fetch(`/api/users/list?page=${currentPage}&limit=10`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json"
@@ -29,16 +33,18 @@ function UserTable() {
           const {data, status, message} = await response.json();
             setMessage(message);
             setStatus(status)
-
+  
+            const {users, page, limit, totalCount, totalPages} = data;
           if (status === 'success') {
-            setUsers(data);
+            setUsers(users);
+            setTotalPages(totalPages);
           } else {
             setUsers([])
           }
         }
   
       getUsers();
-    }, []);
+    }, [currentPage]);
 
 
     const handleDelete = async(userID) =>{
@@ -116,6 +122,9 @@ function UserTable() {
         direction: sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc'
       })
     }
+
+    
+
   
   return (
     <div className='content'>
@@ -183,8 +192,8 @@ function UserTable() {
           </tr>          
         </thead>
         <tbody className="tbody">
-          
 
+    
           {sortedData?.map((val, key) => (
               <tr key = {key}>
               <td>{val._id}</td>
@@ -209,6 +218,9 @@ function UserTable() {
           
         </tbody>
       </table>
+      <div>
+        <span> {currentPage} / {totalPages} </span>
+      </div>
       {showPopup.type == "edit" && (
         <>
           <div className="overlay" onClick={() => setShowPopup({type: null, user: null})}></div>
@@ -218,11 +230,9 @@ function UserTable() {
               <p>Username: {showPopup.user?.username}</p>
               <p>ID: {showPopup.user?._id}</p>
               {/* userParams() ļauj userEdit.jsx nolasīt id no URL  */}
-              <Link className="clickable" to={`/userEdit/${showPopup.user._id}`}> YES </Link>
-              {/* <button type="button" onClick={() => handleEdit(showPopup.user._id)}>
-                YES
-              </button> */}
-              <button type="button" onClick={() => setShowPopup({type: null, user: null})}>
+              <Link className="button-yes" to={`/userEdit/${showPopup.user._id}`}> YES </Link>
+
+              <button className="button-no" type="button" onClick={() => setShowPopup({type: null, user: null})}>
                 NO
               </button>
             </form>

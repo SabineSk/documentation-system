@@ -84,10 +84,8 @@ function Users() {
 
   return ( 
     <div className="content">
-      <div>
-        <h2>Users</h2>
-        <div className="nav">
 
+        <div className="nav">
             {/* //Atverot vienu button, otra aizveras */}
             <button onClick={() => {
                 setShowUserTable(true);
@@ -176,8 +174,6 @@ function Users() {
         </div>
       </div>
     
-    </div>
-
    );
 }
 

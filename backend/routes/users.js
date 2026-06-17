@@ -6,20 +6,33 @@ const User = require('../models/user.model');
 const UserImg = require('../models/userImg');
 const UserImages = require('../models/userImg');
 const bcrypt = require('bcrypt');
-// const multer  = require('multer');
-// const upload = multer({ dest: 'uploads/' })
+
 
 
 // /api/users/list
 router.get('/list', authMiddleware, async (req, res) => {//the login route waits for User.findOne(...) and returns a response only once, inside the try/catch
   try {
-    const users = await User.find({}).select("-password");
+    const page = parseInt(req.query?.page) || 1;
+    const limit = parseInt(req.query?.limit) || 10;
+
+    // For page 1: skip = (1–1) * 10 = 0 (show first 10 items)
+    // For page 2: skip = (2–1) * 10 = 10 (skip first 10, show next 10)
+    // For page 3: skip = (3–1) * 10 = 20 (skip first 20, show next 10)
+    const skip = (page - 1) * limit;
+
+    const users = await User.find({}).select("-password").skip(skip).limit(limit);
+
+    const totalCount= await User.countDocuments();  
+    
+    const totalPages = Math.ceil(totalCount / limit);
+
     res.send({
-        data: users,
+        data: { users, page, limit, totalCount, totalPages},
         status: 'success',
         message: "Data retrieved"
     });
   } catch (error) {
+    console.log(error)
     res.send({
         data: null,
         status: 'error',

@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
+import {useState} from 'react';
+
 import './App.css';
-//import { useState } from "react";
 import Header from './header.jsx';
 import Holidays from './holidays.jsx';
 import Login from './login.jsx';
@@ -16,15 +17,15 @@ import ProtectedRoute from './components/protectedRoute.jsx';
 
 
 function App() {
+  const [language, setLanguage] = useState("en");
 
   return (
     
       <div className="app">
-        <Header />
+        <Header language={language} setLanguage={setLanguage}/>
         <main className="main-app">
           <Routes>
-            
-            <Route path="/holidays" element={<Holidays />} />
+            <Route path="/holidays" element={<Holidays language={language} />} />
             <Route path="/users" element={<Users />} />
             <Route path="/login" element={<Login />} />
             {/* :id nozīmē: “šajā URL vietā būs mainīga vērtība”. */}

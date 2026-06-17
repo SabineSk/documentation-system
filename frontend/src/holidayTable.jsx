@@ -2,11 +2,25 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 
-function HolidayTable(){
+function HolidayTable({language}){
     const [holidays, setHolidays ] = useState([])
     const [message, setMessage] = useState("")
     const [status, setStatus] =useState("")
 
+    const texts = {
+        lv: {
+            tableName: 'Nosaukums',
+            tableCountry: 'Valsts',
+            tableDate: 'Datums',
+            tableType: 'Tips'
+        },
+        en: {
+            tableName: 'Name',
+            tableCountry: 'Country',
+            tableDate: 'Date',
+            tableType: 'Type'
+        }
+    };
     useEffect(() => {
     async function getHolidays() {
       const response = await fetch('/api/holidays', {
@@ -48,22 +62,22 @@ function HolidayTable(){
                         </th>
                         <th>
                             <div className='th-content'>
-                                <span>Nosaukums</span>
+                                <span>{texts[language].tableName}</span>
                             </div>
                         </th>
                         <th>
                             <div className='th-content'>
-                                <span>Valsts</span>
+                                <span>{texts[language].tableCountry}</span>
                             </div>
                         </th>
                         <th>
                             <div className='th-content'>
-                                <span>Datums</span>
+                                <span>{texts[language].tableDate}</span>
                             </div>
                         </th>
                         <th>
                             <div className='th-content'>
-                                <span>Tips</span>
+                                <span>{texts[language].tableType}</span>
                             </div>
                         </th>
                     </tr>

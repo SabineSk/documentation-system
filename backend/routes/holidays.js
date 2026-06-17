@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
         res.send({
             data: holidays,
             status: "success",
-            message: "Holiday GET route works"
+            message: "Data retrieved"
         });        
     }catch (err) {
     console.log(err);
