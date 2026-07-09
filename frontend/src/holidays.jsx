@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import HolidayTable from './holidayTable.jsx'
-import texts from './header.jsx'
+import HolidayTable from './holidayTable.jsx';
+import { useTranslation } from "react-i18next";
 
-function Holidays({language}) {
+function Holidays() {
+  const { t, i18n } = useTranslation();
   const [showHolidays, setShowHolidays] = useState(false);
   const [showAddNewHoliday, setShowAddNewHoliday] = useState(false);
   const [newName, setNewName] = useState('');
@@ -18,56 +19,12 @@ function Holidays({language}) {
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
 
-  const texts = {
-        lv: {
-           BttnSearch: "Meklēt",
-           BttnAdd: 'Pievienot',
-           BttnClose: 'Aizvērt',
-           tableName: 'Nosaukums*',
-           tableCountry: 'Valsts*',
-           tableDate: 'Datums*',
-           tableType: 'Tips*',
-           tableIgnore: 'Ignorēt atvaļinājumā',
-           tableWorkDay: 'Darba diena',
-           choose: 'Izvēlēties',
-           LV: 'Latvija (LV)',
-           LT: 'Lietuva (LT)',
-           yes: 'Jā',
-           no: 'Nē',
-           celebrationDay: 'Svētku diena',
-           special: 'Īpašā diena',
-           postopnedHolid: 'Pārcelta brīvdiena',
-           postponedWorking: 'Pārcelta darba diena',
-           shortened: 'Saīsināta darba diena',
-           create: 'Izveidot',
-           close: 'Aizvērt'
+  console.log("language:", i18n.language);
+  console.log("BttnSearch:", t("BttnSearch"));
+  console.log("choose:", t("choose"));
+  console.log("postopnedHolid:", t("postopnedHolid"));
 
-        },
-        en: {
-           BttnSearch: "Search",
-           BttnAdd: 'Add new',
-           BttnClose: 'Close',
-           tableName: 'Name',
-           tableCountry: 'Country',
-           tableDate: 'Date',
-           tableType: 'Type',
-           tableIgnore: 'Ignore on vacation',
-           tableWorkDay: 'Work day',
-           choose: 'Select',
-           LV: 'Latvia (LV)',
-           LT: 'Lithuania (LT)',
-           yes: 'Yes',
-           no: 'No',
-           celebrationDay: 'Celebration day',
-           special: 'Special day',
-           postopnedHolid: 'Postponed holiday',
-           postponedWorking: 'Postponed working day',
-           shortened: 'Shortened working day',
-           create: 'Create',
-           close: 'Close'
-        }
-    };
-
+  
   const onSubmit = async (e) => {
     e.preventDefault();
     setProcessing(true);
@@ -127,22 +84,22 @@ function Holidays({language}) {
           setShowHolidays(true);
           setShowAddNewHoliday(false);
         }}>
-          {texts[language].BttnSearch}
+          {t('BttnSearch')}
         </button>
         <button onClick={() => {
           setShowAddNewHoliday(true);
           setShowHolidays(false);
         }}>
-          {texts[language].BttnAdd}
+          {t('BttnAdd')}
         </button>
 
         <hr></hr>  
 
       {showHolidays && (
         <div>
-          <button onClick={() => setShowHolidays(false)}>{texts[language].BttnClose}</button>
+          <button onClick={() => setShowHolidays(false)}>{t('BttnClose')}</button>
 
-          <HolidayTable language={language}/>
+          <HolidayTable/>
         </div>
       )}
       {showAddNewHoliday && (
@@ -153,7 +110,7 @@ function Holidays({language}) {
           <div className='row-holiday'>
             <div className="newHoliday-FormGroup">
               
-                <label htmlFor="newName">{texts[language].tableName}</label>
+                <label htmlFor="newName">{t('tableName')}</label>
                 <input
                   type="text" 
                   id="newName" 
@@ -165,39 +122,39 @@ function Holidays({language}) {
               </div>
 
               <div className="newHoliday-FormGroup"> 
-                <label htmlFor="newCountry">{texts[language].tableCountry}</label>
+                <label htmlFor="newCountry">{t('tableCountry')}</label>
                 <select
                 id='newCountry' 
                 name='newCountry'
                 value={newCountry} 
                 required
                 onChange={(e) => setNewCountry(e.target.value)}>
-                  <option value="">{texts[language].choose}</option>
-                  <option value="Latvia">{texts[language].LV}</option>
-                  <option value="Lithuania">{texts[language].LT}</option>
+                  <option value="">{t('choose')}</option>
+                  <option value="Latvia">{t('LV')}</option>
+                  <option value="Lithuania">{t('LT')}</option>
                 </select>
               </div>
             </div>
             <div className='row-holiday'> 
               <div className="newHoliday-FormGroup">
-                <label htmlFor="newHolidayType">{texts[language].tableType}</label>
+                <label htmlFor="newHolidayType">{t('tableType')}</label>
                 <select
                 id='newHolidayType' 
                 name='newHolidayType'
                 required
                 value={newHolidayType} 
                 onChange={(e) => setNewHolidayType(e.target.value)}>
-                  <option value="">{texts[language].choose}</option>
-                  <option value="DN">{texts[language].celebrationDay}</option>
-                  <option value="DY">{texts[language].special}</option>
-                  <option value="TNH">{texts[language].postopnedHolid}</option>
-                  <option value="TWD">{texts[language].postponedWorking}</option>
-                  <option value="WD"> {texts[language].shortened}</option>
+                  <option value="">{t('choose')}</option>
+                  <option value="DN">{t('celebrationDay')}</option>
+                  <option value="DY">{t('special')}</option>
+                  <option value="TNH">{t('postopnedHolid')}</option>
+                  <option value="TWD">{t('postponedWorking')}</option>
+                  <option value="WD"> {t('shortened')}</option>
                 </select>
               </div>
 
               <div className="newHoliday-FormGroup">
-                <label htmlFor="newDate">{texts[language].tableDate}</label>
+                <label htmlFor="newDate">{t('tableDate')}</label>
                 <input 
                 aria-label="Date" 
                 type="date" 
@@ -209,34 +166,34 @@ function Holidays({language}) {
 
             <div className='row-holiday'>
               <div className="newHoliday-FormGroup">
-                <label htmlFor="newIgnoreForVacationYn">{texts[language].tableIgnore}</label>
+                <label htmlFor="newIgnoreForVacationYn">{t('tableIgnore')}</label>
                 <select 
                 id='newIgnoreForVacationYn' 
                 name='newIgnoreForVacationYn'
                 value={newIgnoreForVacationYn} 
                 onChange={(e) => setNewIgnoreForVacationYn(e.target.value)}>
-                  <option value="">{texts[language].choose}</option>
-                  <option value="yes">{texts[language].yes}</option>
-                  <option value="no">{texts[language].no}</option>
+                  <option value="">{t('choose')}</option>
+                  <option value="yes">{t('yes')}</option>
+                  <option value="no">{t('no')}</option>
                 </select>
               </div>
 
               <div className="newHoliday-FormGroup">
-                <label htmlFor="newIsWorkingDayYn">{texts[language].tableWorkDay}</label>
+                <label htmlFor="newIsWorkingDayYn">{t('tableWorkDay')}</label>
                 <select 
                 id='newIsWorkingDayYn' 
                 name='newIsWorkingDayYn'
                 value={newIsWorkingDayYn} 
                 onChange={(e) => setNewIsWorkingDayYn(e.target.value)}>
-                  <option value="">{texts[language].choose}</option>
-                  <option value="yes">{texts[language].yes}</option>
-                  <option value="no">{texts[language].no}</option>
+                  <option value="">{t('choose')}</option>
+                  <option value="yes">{t('yes')}</option>
+                  <option value="no">{t('no')}</option>
                 </select>
               </div>
             </div>
             <div id='holiday-form-bttn'>
-            <button id='submit-button' type="submit">{texts[language].create}</button> 
-            <button id='close-button' onClick={() => setShowAddNewHoliday(false)}>{texts[language].close}</button>
+            <button id='submit-button' type="submit">{t('create')}</button> 
+            <button id='close-button' onClick={() => setShowAddNewHoliday(false)}>{t('close')}</button>
           </div>
           </form>
         </div>
@@ -246,7 +203,5 @@ function Holidays({language}) {
 
    );
 }
-
-
 
 export default Holidays;

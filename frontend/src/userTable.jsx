@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 // import { CiFilter } from "react-icons/ci";
 import { FaSort } from "react-icons/fa";
+import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
+import {useTranslation} from "react-i18next";
 
 
 function UserTable() {
@@ -10,6 +13,7 @@ function UserTable() {
       const [filterBy, setFilterBy] = useState("");
       const [searchTable, setSearchTable] = useState("");
       const [users, setUsers ] = useState([]);
+      // const [allUsers, setAllUsers] = useState([]);
       const [message, setMessage] = useState("");
       const [status, setStatus] = useState("");
       const [showPopup, setShowPopup] = useState({
@@ -19,11 +23,16 @@ function UserTable() {
 
       const [currentPage, setCurrentPage] = useState(1);
       const [totalPages, setTotalPages] = useState(1);
+      const [totalCount, setTotalCount] = useState('');
+      const [rowLimit, setRowLimit] = useState(10);
+      const currentlyShowing = users.length;
+
+      const { t, i18n } = useTranslation();
 
 
       useEffect(() => { 
         async function getUsers() {
-          const response = await fetch(`/api/users/list?page=${currentPage}&limit=10`, {
+          const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&search=${searchTable}&filter=${filterBy}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json"
@@ -34,17 +43,20 @@ function UserTable() {
             setMessage(message);
             setStatus(status)
   
-            const {users, page, limit, totalCount, totalPages} = data;
+          const {users, page, limit, totalCount, totalPages} = data;
           if (status === 'success') {
             setUsers(users);
             setTotalPages(totalPages);
+            setTotalCount(totalCount);
           } else {
             setUsers([])
           }
         }
   
       getUsers();
-    }, [currentPage]);
+    }, [currentPage, rowLimit]);
+
+
 
 
     const handleDelete = async(userID) =>{
@@ -79,8 +91,6 @@ function UserTable() {
 
       return valueText.includes(searchText);
     });
-
-
 
     //Sākumā useState({ key: null, direction: 'asc' })
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
@@ -123,28 +133,31 @@ function UserTable() {
       })
     }
 
-    
+    const handleLimitChange = (e) => {
+      setRowLimit(Number(e.target.value));
+    };
 
   
   return (
     <div className='content'>
       <select value={filterBy} onChange={(e) => setFilterBy(e.target.value)}>
-          <option value="">Filter</option>
+          <option value="">{t('Filter')}</option>
           <option value="_id">ID</option>
-          <option value="username">Username</option>
-          <option value="role">Role</option>
-          <option value="createdAt">Created at</option>
-          <option value="updatedAt">Updated at</option>
+          <option value="username">{t('username')}</option>
+          <option value="role">{t('role')}</option>
+          <option value="createdAt">{t('Created at')}</option>
+          <option value="updatedAt">{t('Updated at')}</option>
       </select>
       <input
           type="text"
           id="filter"
-          placeholder="Search"
+          placeholder={t('BttnSearch')}
           value={searchTable}
           onChange={(e) => setSearchTable(e.target.value)}
       />
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
-      <table>
+      <div className="table-wrapper">
+      <table ID="userTable">
         <thead className='thead'>
             <tr>
               <th>
@@ -157,7 +170,7 @@ function UserTable() {
 
               <th>
                 <div className="th-content">
-                  <span>Username</span>
+                  <span>{t('username')}</span>
                   <FaSort className="sort-icon" onClick={() => handleSort('username')}/>
                   {/* <CiFilter className="sort-icon" id="dropdown-filter" /> */}
                   
@@ -166,7 +179,7 @@ function UserTable() {
 
               <th>
                   <div className="th-content">
-                  <span>Role</span>
+                  <span>{t('role')}</span>
                   <FaSort className="sort-icon" onClick={() => handleSort('role')}/>
                   {/* <CiFilter className="sort-icon"/> */}
                 </div>
@@ -174,26 +187,24 @@ function UserTable() {
 
               <th>
                 <div className="th-content">
-                  <span>Created at</span>
+                  <span>{t('Created at')}</span>
                   <FaSort className="sort-icon" onClick={() => handleSort('createdAt')}/>
                 </div>
               </th>
 
               <th>
                 <div className="th-content">
-                  <span>Updated at</span>
+                  <span>{t('Updated at')}</span>
                   <FaSort className="sort-icon" onClick={() => handleSort('updatedAt')}/>
                 </div>
               </th>
 
-              <th>Edit user</th>
+              <th>{t('Edit')}</th>
 
-              <th>Delete</th>
+              <th>{t('Delete')}</th>
           </tr>          
         </thead>
-        <tbody className="tbody">
-
-    
+        <tbody className="tbody">    
           {sortedData?.map((val, key) => (
               <tr key = {key}>
               <td>{val._id}</td>
@@ -203,7 +214,7 @@ function UserTable() {
               <td>{val.updatedAt}</td>
                 <td>
                 <button onClick={() => setShowPopup({type: "edit", user: val})}>
-                  Edit
+                  {t('Edit')}
                 </button>
               </td>
               <td>
@@ -213,27 +224,59 @@ function UserTable() {
               </td>
             </tr>
           ))}
-
-
-          
         </tbody>
       </table>
-      <div>
-        <span> {currentPage} / {totalPages} </span>
       </div>
+      <div className="pagPages">
+        <div className="row-count-select">
+            <label htmlFor="row-select"> {t('row-select')}</label>
+            <select 
+                classname="selectPagination"
+                value={rowLimit}
+                onChange={(e) => {
+                  setRowLimit(e.target.value);
+                  setCurrentPage(1);
+                }}
+            > 
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+        <span className="totalCount">{t('totalRows', { currentlyShowing, totalCount })}</span>
+        <button
+          className="pagArrow"
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          <IoIosArrowBack />
+        </button>
+
+        <span>{currentPage} / {totalPages}</span>
+
+        <button
+          className="pagArrow"
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          <IoIosArrowForward />
+        </button>
+      </div>
+
+
       {showPopup.type == "edit" && (
         <>
           <div className="overlay" onClick={() => setShowPopup({type: null, user: null})}></div>
             <form className="fileUploadForm" method="post" encType="multipart/form-data">
-              <p>Edit this user?</p>
+              <p>{t('Edit')} {t('username')}?</p>
 
-              <p>Username: {showPopup.user?.username}</p>
+              <p>{t('username')}: {showPopup.user?.username}</p>
               <p>ID: {showPopup.user?._id}</p>
               {/* userParams() ļauj userEdit.jsx nolasīt id no URL  */}
               <Link className="button-yes" to={`/userEdit/${showPopup.user._id}`}> YES </Link>
 
               <button className="button-no" type="button" onClick={() => setShowPopup({type: null, user: null})}>
-                NO
+                {t('no')}
               </button>
             </form>
         </>
@@ -243,14 +286,14 @@ function UserTable() {
         <>
           <div className="overlay" onClick={() => setShowPopup({type: null, user: null})}></div>
           <form className="fileUploadForm" method="post" encType="multipart/form-data">
-              <p>Delete this user?</p>
-              <p>Username: {showPopup.user?.username}</p>
+              <p>{t('Delete')} {t('username')}?</p>
+              <p>{t('username')}: {showPopup.user?.username}</p>
               <p>ID: {showPopup.user?._id}</p>
               <button type="button" onClick={() => handleDelete(showPopup.user._id)}>
-                YES
+                {t('yes')}
               </button>
               <button type="button" onClick={() => setShowPopup({type: null, user: null})}>
-                NO
+                {t('no')}
               </button>
           </form>
         </>
@@ -260,3 +303,4 @@ function UserTable() {
 }
 
 export default UserTable ;
+

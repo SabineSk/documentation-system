@@ -7,8 +7,6 @@ const UserImg = require('../models/userImg');
 const UserImages = require('../models/userImg');
 const bcrypt = require('bcrypt');
 
-
-
 // /api/users/list
 router.get('/list', authMiddleware, async (req, res) => {//the login route waits for User.findOne(...) and returns a response only once, inside the try/catch
   try {
@@ -39,9 +37,7 @@ router.get('/list', authMiddleware, async (req, res) => {//the login route waits
         message: "Data error"
     });
   }
-   
 });
-
 
 // get. Uses.id data vietā imag. Izmantojo find one
 router.get('/profileImage', authMiddleware, async(req,res) => {

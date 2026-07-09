@@ -3,6 +3,7 @@ import UserTable from './userTable.jsx';
 import { useState } from 'react';
 import {useAuth} from './auth/useAuth';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {useTranslation} from "react-i18next";
 
 function Users() {
     const [type, setType] = useState('password');
@@ -22,6 +23,8 @@ function Users() {
 
     const [error, setError] = useState(null);
     const [processing, setProcessing] = useState(false);
+
+    const { t, i18n } = useTranslation();
 
      const onSubmit = async (e) => {
         e.preventDefault();
@@ -45,10 +48,10 @@ function Users() {
 
 
         if (status === 'error') {
-            setError("Kļūda, pievienojot lietotāju");
+            setError(t("errorAddingUser"));
             return;
         }
-        console.log("User added successfully:", data);
+        console.log(t("UserAdded"), data);
         setNewUsername("");
         setNewPassword(""); 
         setNewPasswordConfirm("");
@@ -58,7 +61,7 @@ function Users() {
 
       }catch (err)
       {console.log(err);
-        setError("Kļūda, pievienojot lietotāju");
+        setError(t("errorAddingUser"));
 
         }finally{
         setProcessing(false);
@@ -91,7 +94,7 @@ function Users() {
                 setShowUserTable(true);
                 setShowAddNewUser(false);
             }}> 
-            Find users
+            {t('BttnSearch')}
             </button>
 
             {/* //Tikai admin redz addNewUSer pogu */}
@@ -100,7 +103,7 @@ function Users() {
                 setShowAddNewUser(true);
                 setShowUserTable(false);
                 }}>
-                    Add new user
+                    {t('BttnAdd')}
                 </button>
             )}
         
@@ -109,12 +112,12 @@ function Users() {
 
             {showAddNewUser && (
                 <div>
-                    <button onClick={() => setShowAddNewUser(false)}>Close</button>
+                    <button onClick={() => setShowAddNewUser(false)}>{t('BttnClose')}</button>
                     <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p> 
                     
                     <form onSubmit={onSubmit} id="addUserForm" className="form" method="post">
                         <div className="newUser-FormGroup">
-                            <label htmlFor="newUsername">Username: </label>
+                            <label htmlFor="newUsername">{t('username')}: </label>
                             <input 
                                 type="text" 
                                 id="newUsername" 
@@ -125,7 +128,7 @@ function Users() {
                                 onChange={(e) => setNewUsername(e.target.value)} />
                         </div>
                         <div className="newUser-FormGroup">
-                            <label htmlFor="newPassword">Password: </label>
+                            <label htmlFor="newPassword">{t('password')}: </label>
                             <input 
                                 type={type} 
                                 id="newPassword" 
@@ -135,7 +138,7 @@ function Users() {
                                 onChange={(e) => setNewPassword(e.target.value)} />
                         </div>
                         <div className="newUser-FormGroup">
-                            <label htmlFor="newPasswordConfirm">Confirm password: </label>
+                            <label htmlFor="newPasswordConfirm">{t('confirmPassword')}: </label>
                             <input 
                                 type={type}
                                 id="newPasswordConfirm" 
@@ -148,17 +151,17 @@ function Users() {
                             {type === "password" ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                         </span>                           
                         <div className="newUser-FormGroup">
-                            <label htmlFor="newRole">Role: </label>
+                            <label htmlFor="newRole">{t('role')}: </label>
                             <select name="newRole" id="newRole" value={newRole} required onChange={(e) => setNewRole(e.target.value)}>
-                                <option value="">Select an option</option>
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
+                                <option value="">{t('SelectOption')}</option>
+                                <option value="admin">{t('admin')}</option>
+                                <option value="user">{t('user')}</option>
                             </select>
 
                         </div>
 
                         {/* <button type="submit" onClick={handleReset}>Submit</button> */}
-                        <button type="submit">Submit</button> 
+                        <button type="submit">{t('Submit')}</button> 
                     </form>
 
                 </div>
@@ -167,7 +170,7 @@ function Users() {
             }            
             {showUserTable && (
                 <div>
-                    <button onClick={() => setShowUserTable(false)}>Close</button>
+                    <button onClick={() => setShowUserTable(false)}>{t('BttnClose')}</button>
                     <UserTable />
                 </div>
             )}

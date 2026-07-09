@@ -1,0 +1,83 @@
+
+.table-wrapper {
+  width: 100%;
+  min-height: 600px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: 1px solid black;
+}
+
+.table-wrapper > table {
+  width: max-content;
+  text-align: center;
+  min-width: 100%;
+  border-collapse: collapse;
+}
+
+.content table{
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.usertable>tr, th, td{
+   padding: 10px;
+   border-bottom: 1px solid #ddd;
+}
+
+.tbody{
+    border-top: 2px solid rgb(0, 0, 0);
+}
+
+.tbody>tr:hover {background-color: #aeccc6;}
+
+tr:nth-child(even){background-color: #f0f0f038}
+
+.th-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.sort-icon{
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
+}
+.sort-icon:hover {
+  transform: scale(1.25);
+  color: #555;
+}
+
+.thead{
+  background-color: #dad8d8 ;
+ }
+
+ .pagPages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.pagArrow {
+    font-size:larger;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding:8px;
+    border: none;
+}
+
+.totalCount{
+    position: absolute;
+    left: 26%
+}
+
+.row-count-select{
+    position: absolute;
+    left:15%;
+}
+

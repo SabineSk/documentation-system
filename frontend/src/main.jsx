@@ -1,7 +1,9 @@
 
+import "./i18n"; //jābūt pirms create root, lai i18n būtu inicializēts pirms React komponentu renderēšanas
 import { createRoot } from 'react-dom/client'
 import { StrictMode } from 'react'
-import './index.css'
+
+
 import App from './App.jsx'
 import {BrowserRouter as Router} from 'react-router-dom'
 

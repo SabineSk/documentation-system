@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import {useAuth} from './auth/useAuth';
 import {useNavigate} from "react-router-dom";
 //import { Link } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 
 function Profile() {
@@ -11,6 +12,7 @@ function Profile() {
     const [error, setError] = useState(null);
     const [image, setImage] = useState('');
     const [userImage, setUserImage] = useState('');
+    const { t, i18n } = useTranslation();
     
     const HandleImageUpload = (e) =>{
         const file = e.target.files[0];
@@ -103,34 +105,36 @@ function Profile() {
 
     return (
         <div className="content">
-            <h2>Profile</h2>
-            <img className="profile-img" src={userImage} alt="profile picture"></img>
-            <div>
+            <div className="profile-card">
 
-                <p>Your username: {user?.username}</p>
-                <p>Your role: {user?.role}</p>                
-            </div>
-             <form onSubmit={onSubmit}>
-                <div>
-                    <label for="file">Choose file to upload</label>
-                    <input type="file" id="fileID" name="file" accept=".jpeg, .png, .jpg"  onChange={HandleImageUpload}/>
-                    {/* <div class="col">
-                        <h6>Base64 Output</h6>
-                        <textarea id="textArea" rows="30" cols="50"></textarea>
-                    </div> */}
+                <img className="profile-img" src={userImage} alt="profile picture" />
+
+                <div className="profile-info">
+                    <p><strong>{t('username')}:</strong> {user?.username}</p>
+                    <p><strong>{t('role')}:</strong> {user?.role}</p>
                 </div>
-                <div>
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                    <button type='submit' disabled={processing}>
-                        {processing ? "Adding file..." : "Submit"} 
+
+                <form className="profile-form" onSubmit={onSubmit}>
+                    <label htmlFor="fileID">{t('ChooseFile')}</label>
+
+                    <input
+                        type="file"
+                        id="fileID"
+                        name="file"
+                        accept=".jpeg, .png, .jpg"
+                        onChange={HandleImageUpload}
+                    />
+
+                    {error && <p className="error">{error}</p>}
+
+                    <button type="submit" disabled={processing}>
+                        {processing ? t('Adding file...') : t('Submit')}
                     </button>
-                </div>
-            </form>
+                </form>
 
+            </div>
         </div>
-
-        
-    )
+    );
 }
 
 export default Profile;
