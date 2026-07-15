@@ -29,8 +29,6 @@ function Profile() {
             setImage(reader.result); 
             
         };
-
-
     };
 
     
@@ -112,6 +110,7 @@ function Profile() {
                 <div className="profile-info">
                     <p><strong>{t('username')}:</strong> {user?.username}</p>
                     <p><strong>{t('role')}:</strong> {user?.role}</p>
+
                 </div>
 
                 <form className="profile-form" onSubmit={onSubmit}>

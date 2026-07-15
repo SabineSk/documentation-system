@@ -46,6 +46,8 @@
     "Submit": "Iesniegt",
     "Filter": "Filtrs",
     "ChooseFile": "Izvēlēties failu augšupielādei: ",
-    "Adding file...": "Augšupielādē failu..."
+    "Adding file...": "Augšupielādē failu...",
+    "Remove Filter": "Noņemt filtru",
+    "Add Filter": "Pievienot filtru"
 
 }

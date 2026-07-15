@@ -11,7 +11,8 @@ import {useTranslation} from "react-i18next";
 function UserTable() {
 
       const [filterBy, setFilterBy] = useState("");
-      const [searchTable, setSearchTable] = useState("");
+      const [searchTable, setSearchTable] = useState(""); //mainās pēc katra ievadītā simbola
+      const [submitSearch, setSubmitSearch] = useState(false); //mainīsies pēc pogas nospiešanas
       const [users, setUsers ] = useState([]);
       // const [allUsers, setAllUsers] = useState([]);
       const [message, setMessage] = useState("");
@@ -26,13 +27,15 @@ function UserTable() {
       const [totalCount, setTotalCount] = useState('');
       const [rowLimit, setRowLimit] = useState(10);
       const currentlyShowing = users.length;
+      const [filters, setFilters] = useState([{ name: "", label: "" }]);
+
 
       const { t, i18n } = useTranslation();
 
 
       useEffect(() => { 
         async function getUsers() {
-          const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&search=${searchTable}&filter=${filterBy}`, {
+          const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&search=${submitSearch}&filter=${filterBy}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json"
@@ -54,7 +57,8 @@ function UserTable() {
         }
   
       getUsers();
-    }, [currentPage, rowLimit]);
+    }, [currentPage, rowLimit, submitSearch, filterBy]);
+
 
 
 
@@ -77,26 +81,27 @@ function UserTable() {
     };
 
     //Apskata katru lietotāju
-    const filteredData = users.filter((user) => {
-      //ja nav izvēlēts filtrs
-      if (filterBy === "" || searchTable === ""){
-        return true;
-      }
-      //Izvēlētais lauks no user: ID, username, role
-      const value = user[filterBy];
-      //Pārvērš user info uz lowercase
-      const valueText = value.toLowerCase();
-      //Pārvērš ievadi uz lovercase
-      const searchText = searchTable.toLowerCase();
+    // const filteredData = users.filter((user) => {
+    //   //ja nav izvēlēts filtrs
+    //   if (filterBy === "" || searchTable === ""){
+    //     return true;
+    //   }
+    //   //Izvēlētais lauks no user: ID, username, role
+    //   const value = user[filterBy];
+    //   //Pārvērš user info uz lowercase
+    //   const valueText = value.toLowerCase();
+    //   //Pārvērš ievadi uz lovercase
+    //   const searchText = searchTable.toLowerCase();
 
-      return valueText.includes(searchText);
-    });
+    //   return valueText.includes(searchText);
+    // });
 
     //Sākumā useState({ key: null, direction: 'asc' })
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
 
     //veido sakārtotu kopiju
-    const sortedData = [...filteredData].sort((a,b) => {
+    // const sortedData = [...filteredData].sort((a,b) => {
+    const sortedData = [...users].sort((a,b) => {
 
       //ja vēl nav sortēšanas konfigurācija, tad nerosto vēl
       if (!sortConfig.key) return 0
@@ -137,24 +142,54 @@ function UserTable() {
       setRowLimit(Number(e.target.value));
     };
 
-  
+    const handleAddFilter = () => {
+      setFilters([...filters, { name: "", label: "" }]);
+    }
+
+    const handleRemoveFilter = (i) => {
+      const newFilters = [...filters];
+      newFilters.splice(i, 1);
+      setFilters(newFilters);
+    }
+
+    const handleSearchSubmit = (e) => {
+      e.preventDefault();
+      setSubmitSearch(searchTable);
+      setCurrentPage(1); // Reseto uz pirmo lapu kad iesniegts
+    }
+
+
+
   return (
     <div className='content'>
-      <select value={filterBy} onChange={(e) => setFilterBy(e.target.value)}>
-          <option value="">{t('Filter')}</option>
-          <option value="_id">ID</option>
-          <option value="username">{t('username')}</option>
-          <option value="role">{t('role')}</option>
-          <option value="createdAt">{t('Created at')}</option>
-          <option value="updatedAt">{t('Updated at')}</option>
-      </select>
-      <input
-          type="text"
-          id="filter"
-          placeholder={t('BttnSearch')}
-          value={searchTable}
-          onChange={(e) => setSearchTable(e.target.value)}
-      />
+      <form onSubmit={handleSearchSubmit} className="filter-form">
+        {filters.map((filter, index) => (
+          <div key={index} className="filter-group">
+            <select value={filterBy} onChange={(e) => setFilterBy(e.target.value)}>
+              <option value="">{t('Filter')}</option>
+              <option value="_id">ID</option>
+              <option value="username">{t('username')}</option>
+              <option value="role">{t('role')}</option>
+              <option value="createdAt">{t('Created at')}</option>
+              <option value="updatedAt">{t('Updated at')}</option>
+            </select>
+
+            <input
+                type="text"
+                id="filter"
+                placeholder={t('BttnSearch')}
+                value={searchTable}
+                onChange={(e) => setSearchTable(e.target.value)}
+            />
+            <button type="button" onClick={() => handleRemoveFilter(index)}>{t('Remove Filter')}</button>
+          </div>
+        ))}
+
+        <button type="button" onClick={handleAddFilter}>{t('Add Filter')}</button>
+        <button type="submit">{t('Submit')}</button>
+      </form>
+
+
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
       <div className="table-wrapper">
       <table ID="userTable">
@@ -268,16 +303,14 @@ function UserTable() {
         <>
           <div className="overlay" onClick={() => setShowPopup({type: null, user: null})}></div>
             <form className="fileUploadForm" method="post" encType="multipart/form-data">
-              <p>{t('Edit')} {t('username')}?</p>
-
-              <p>{t('username')}: {showPopup.user?.username}</p>
+              <p>{t('Edit')} {showPopup.user?.username} ?</p>
               <p>ID: {showPopup.user?._id}</p>
               {/* userParams() ļauj userEdit.jsx nolasīt id no URL  */}
               <Link className="button-yes" to={`/userEdit/${showPopup.user._id}`}> YES </Link>
 
-              <button className="button-no" type="button" onClick={() => setShowPopup({type: null, user: null})}>
+              <Link className="button-no" type="button" onClick={() => setShowPopup({type: null, user: null})}>
                 {t('no')}
-              </button>
+              </Link>
             </form>
         </>
       )}

@@ -46,6 +46,10 @@
     "Submit": "Submit",
     "Filter": "Filter",
     "ChooseFile": "Choose file to upload",
-    "Adding file...": "Adding file..."
+    "Adding file...": "Adding file...",
+    "LoggingIn": "Logging in...",
+    "Remove Filter": "Remove Filter",
+    "Add Filter": "Add Filter"
+
 
 }

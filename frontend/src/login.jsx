@@ -3,8 +3,10 @@ import {useNavigate} from 'react-router-dom';
 import {Navigate} from "react-router-dom";
 import {useAuth} from './auth/useAuth';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 function Login() {
+  const { t, i18n } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -12,6 +14,7 @@ function Login() {
   const {isAuthenticated} = useAuth();
   const [type, setType] = useState('password');
   const navigate = useNavigate();
+      
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -63,10 +66,10 @@ function Login() {
     <div className="login">
       
         <div className="login-form">
-          <h2>Login</h2>
+          <h2>{t('navLogin')}</h2>
             <form onSubmit={onSubmit}>
                 <div className="login-form-group">
-                <label htmlFor="username">Username: </label>
+                <label htmlFor="username">{t('username')}:</label>
                 <input 
                     type="text" 
                     id="username" 
@@ -76,7 +79,7 @@ function Login() {
                 </div>
                 
                 <div className="login-form-group">
-                <label htmlFor="password">Password: </label>
+                <label htmlFor="password">{t('password')}: </label>
                 <input 
                     type={type}
                     id="password" 
@@ -92,7 +95,7 @@ function Login() {
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 
                 <button type="submit" disabled={processing}>
-                {processing ? "Logging in..." : "Login"}
+                {processing ? t('LoggingIn') : t('navLogin')}
                 </button>
             </form>
         </div>

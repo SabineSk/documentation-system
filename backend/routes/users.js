@@ -13,14 +13,26 @@ router.get('/list', authMiddleware, async (req, res) => {//the login route waits
     const page = parseInt(req.query?.page) || 1;
     const limit = parseInt(req.query?.limit) || 10;
 
+    const search = req.query?.search || '';
+    const filter = req.query?.filter || '';
+
+    let query = {};
+
+    if (filter && search) {
+      query[filter] = { //meklēt pēc fitltra
+        $regex: search, //a sequence of characters that forms a search pattern
+        $options: 'i'  // I : ignore case sensitivity
+      };
+    }
+
     // For page 1: skip = (1–1) * 10 = 0 (show first 10 items)
     // For page 2: skip = (2–1) * 10 = 10 (skip first 10, show next 10)
     // For page 3: skip = (3–1) * 10 = 20 (skip first 20, show next 10)
     const skip = (page - 1) * limit;
 
-    const users = await User.find({}).select("-password").skip(skip).limit(limit);
+    const users = await User.find(query).select("-password").skip(skip).limit(limit);
 
-    const totalCount= await User.countDocuments();  
+    const totalCount= await User.countDocuments(query);  
     
     const totalPages = Math.ceil(totalCount / limit);
 

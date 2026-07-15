@@ -2,7 +2,9 @@
 .table-wrapper {
   width: 100%;
   min-height: 600px;
-  overflow-x: auto;
+  /* overflow-x: auto nozīmē, ja saturs ietilpst, ritjoslas nav, bet ja neietilpst, tad ir. X apzīmē asi*/
+  overflow-x: auto; 
+  
   overflow-y: hidden;
   border-bottom: 1px solid black;
 }
@@ -11,11 +13,11 @@
   width: max-content;
   text-align: center;
   min-width: 100%;
-  border-collapse: collapse;
 }
 
 .content table{
   width: 100%;
+  /* collapse noņem dubultās līnijas  */
   border-collapse: collapse;
   text-align: center;
 }
@@ -53,15 +55,6 @@ tr:nth-child(even){background-color: #f0f0f038}
 .thead{
   background-color: #dad8d8 ;
  }
-
- .pagPages {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: auto;
-}
-
 .pagArrow {
     font-size:larger;
     display: flex;
@@ -71,6 +64,15 @@ tr:nth-child(even){background-color: #f0f0f038}
     border: none;
 }
 
+ /* .pagPages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+}
+
+
 .totalCount{
     position: absolute;
     left: 26%
@@ -79,5 +81,34 @@ tr:nth-child(even){background-color: #f0f0f038}
 .row-count-select{
     position: absolute;
     left:15%;
+} */
+
+.pagPages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.row-count-select {
+  position: static;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.totalCount {
+  position: static;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .totalCount {
+    flex-basis: 100%;
+    text-align: center;
+  }
 }
 

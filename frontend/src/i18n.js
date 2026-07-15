@@ -8,7 +8,7 @@ import en from "./locales/en/translation.json";
 
 
 i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
+  .use(initReactI18next)
   .init({
     resources: {
       lv: {
@@ -19,9 +19,9 @@ i18n
       }
     },
     lng: "lv", // default language
-    fallbackLng: "lv", // use lv if detected lng is not available
+    fallbackLng: "lv", 
     interpolation: {
-      escapeValue: false // react already safes from xss
+      escapeValue: false 
     }
   });
 
