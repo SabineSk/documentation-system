@@ -27,7 +27,7 @@ function UserTable() {
       const [totalCount, setTotalCount] = useState('');
       const [rowLimit, setRowLimit] = useState(10);
       const currentlyShowing = users.length;
-      const [filters, setFilters] = useState([{ name: "", label: "" }]);
+      const [filters, setFilters] = useState([{ filter: "", search: "" }]);
 
 
       const { t, i18n } = useTranslation();
@@ -142,8 +142,15 @@ function UserTable() {
       setRowLimit(Number(e.target.value));
     };
 
+    const handleFilterChange = (e, i) => {
+      const fieldName = e.target.name;
+      const newFilters = [...filters];
+      newFilters[i][fieldName] = e.target.value;
+      setFilters(newFilters);
+    };
+
     const handleAddFilter = () => {
-      setFilters([...filters, { name: "", label: "" }]);
+      setFilters([...filters, { filter: "", search: "" }]);
     }
 
     const handleRemoveFilter = (i) => {
@@ -165,7 +172,16 @@ function UserTable() {
       <form onSubmit={handleSearchSubmit} className="filter-form">
         {filters.map((filter, index) => (
           <div key={index} className="filter-group">
-            <select value={filterBy} onChange={(e) => setFilterBy(e.target.value)}>
+            {/* <select value={filterBy} onChange={(e) => setFilterBy(e.target.value)}>
+              <option value="">{t('Filter')}</option>
+              <option value="_id">ID</option>
+              <option value="username">{t('username')}</option>
+              <option value="role">{t('role')}</option>
+              <option value="createdAt">{t('Created at')}</option>
+              <option value="updatedAt">{t('Updated at')}</option>
+            </select> */}
+
+            <select value={filter.field} onChange={(e) => handleFilterChange(e, index)}>
               <option value="">{t('Filter')}</option>
               <option value="_id">ID</option>
               <option value="username">{t('username')}</option>
@@ -174,14 +190,24 @@ function UserTable() {
               <option value="updatedAt">{t('Updated at')}</option>
             </select>
 
-            <input
+            {/* <input
                 type="text"
                 id="filter"
                 placeholder={t('BttnSearch')}
                 value={searchTable}
                 onChange={(e) => setSearchTable(e.target.value)}
+            /> */}
+            <input
+                type="text"
+                id="filter"
+                placeholder={t('BttnSearch')}
+                value={filter.search}
+                onChange={(e) => handleFilterChange(e, index)}
             />
-            <button type="button" onClick={() => handleRemoveFilter(index)}>{t('Remove Filter')}</button>
+
+            
+            {/* passing an inde­x parameter to specify which todo's information needs updating. */}
+            <button type="button" onClick={() => handleRemoveFilter(index)}>{t('Remove Filter')}</button> 
           </div>
         ))}
 
