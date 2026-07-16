@@ -183,16 +183,7 @@ function UserTable() {
       { value: "updatedAt", label: t('Updated at') }
     ];
 
-    
-    // const selectedFields = filters.map(filter => filter.field).filter(field => field !== "");
-    // const availableFilterOptions = allFilterOptions.filter(option => option.value === filter.field || !selectedFields.includes(option.value));
-
-    // const availableOptions = allFilterOptions.filter(option =>
-    //   option.value === filter.field ||
-    //   !selectedFields.includes(option.value)
-    // );
-
-
+  
   return (
     <div className='content'>
 
@@ -203,18 +194,25 @@ function UserTable() {
 
 
             <select name="field" value={filter.field} onChange={(e) => handleFilterChange(e, index)}>
-              {/*{availableOptions.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label} 
-                </option>
-              ))
-              } */}
-              <option value="">{t('Filter')}</option>
+              {allFilterOptions.map(eachFilter => {
+                const isFilterSelected = false; //Te PIEVNIENOT RINDAAS TURPINĀJUMU: 
+                if (!isFilterSelected) {
+                  return (
+                    <option key={eachFilter.value} value={eachFilter.value}>
+                      {eachFilter.label}
+                    </option>
+                  )
+            }
+              })
+              }
+              {/* <option value="">{t('Filter')}</option>
               <option value="_id">ID</option>
               <option value="username">{t('username')}</option>
-              <option value="role">{t('role')}</option>
+              <option value="role" disabled={filters.some(f => f.field === "role")}>
+                {t('role')}
+              </option>
               <option value="createdAt">{t('Created at')}</option>
-              <option value="updatedAt">{t('Updated at')}</option>
+              <option value="updatedAt">{t('Updated at')}</option> */}
             </select>
 
 
