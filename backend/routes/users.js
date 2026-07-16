@@ -15,25 +15,36 @@ router.get('/list', authMiddleware, async (req, res) => {//the login route waits
 
     const search = req.query?.search || '';
     const filter = req.query?.filter || '';
+    //Saņem filtlters '[{"field":"username","search":"sabine"}]', tāpēc parese pārveido par masīva objektu
+    const filters = JSON.parse(req.query?.filters || "[]");
+
+    console.log("Filters received:", filters);
 
     let query = {};
+    filters.forEach((filter) => {
+      if (filter.field && filter.search) { //jābūt abām vērtībām, lai veidotu query
+        query[filter.field] = { //meklēt pēc fitltra
+          $regex: filter.search, //a sequence of characters that forms a search pattern
+          $options: 'i'  // I : ignore case sensitivity
+        };
+      }
+    });
 
-    if (filter && search) {
-      query[filter] = { //meklēt pēc fitltra
-        $regex: search, //a sequence of characters that forms a search pattern
-        $options: 'i'  // I : ignore case sensitivity
-      };
-    }
+    
+    console.log("MongoDB query:", query);
+    
+    const totalCount= await User.countDocuments(query); 
 
     // For page 1: skip = (1–1) * 10 = 0 (show first 10 items)
     // For page 2: skip = (2–1) * 10 = 10 (skip first 10, show next 10)
     // For page 3: skip = (3–1) * 10 = 20 (skip first 20, show next 10)
     const skip = (page - 1) * limit;
 
-    const users = await User.find(query).select("-password").skip(skip).limit(limit);
+    const users = await User.find(query)
+      .select("-password")
+      .skip(skip)
+      .limit(limit);
 
-    const totalCount= await User.countDocuments(query);  
-    
     const totalPages = Math.ceil(totalCount / limit);
 
     res.send({

@@ -10,11 +10,11 @@ import {useTranslation} from "react-i18next";
 
 function UserTable() {
 
-      const [filterBy, setFilterBy] = useState("");
-      const [searchTable, setSearchTable] = useState(""); //mainās pēc katra ievadītā simbola
-      const [submitSearch, setSubmitSearch] = useState(false); //mainīsies pēc pogas nospiešanas
+      // const [filterBy, setFilterBy] = useState("");
+      // const [searchTable, setSearchTable] = useState(""); //mainās pēc katra ievadītā simbola
+      // const [submitSearch, setSubmitSearch] = useState(false); //mainīsies pēc pogas nospiešanas
       const [users, setUsers ] = useState([]);
-      // const [allUsers, setAllUsers] = useState([]);
+  
       const [message, setMessage] = useState("");
       const [status, setStatus] = useState("");
       const [showPopup, setShowPopup] = useState({
@@ -27,16 +27,20 @@ function UserTable() {
       const [totalCount, setTotalCount] = useState('');
       const [rowLimit, setRowLimit] = useState(10);
       const currentlyShowing = users.length;
-      const [filters, setFilters] = useState([{ filter: "", search: "" }]);
 
+      const [filters, setFilters] = useState([{ field: "", search: "" }]); //glabā visus filtrus ko lietoājs ievada sākotnēji
+      const [submittedFilters, setSubmittedFilters] = useState([]); //glabā apstipriātos filtrus pēc submit pogas nospiešanas => setSubmittedFilters(filters);
 
       const { t, i18n } = useTranslation();
 
 
       useEffect(() => { 
         async function getUsers() {
-          const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&search=${submitSearch}&filter=${filterBy}`, {
-            method: "GET",
+          // const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&search=${submitSearch}&filter=${filterBy}`, {
+          //pārvērš filter masīvu par JSON stringu, lai varētu nosūtīt kā query parametru
+          const filtersString = encodeURIComponent(JSON.stringify(submittedFilters));
+          const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&filters=${filtersString}`, {  
+          method: "GET",
             headers: {
               "Content-Type": "application/json"
             },
@@ -57,11 +61,7 @@ function UserTable() {
         }
   
       getUsers();
-    }, [currentPage, rowLimit, submitSearch, filterBy]);
-
-
-
-
+    }, [currentPage, rowLimit, submittedFilters]);
 
     const handleDelete = async(userID) =>{
 
@@ -142,46 +142,73 @@ function UserTable() {
       setRowLimit(Number(e.target.value));
     };
 
-    const handleFilterChange = (e, i) => {
-      const fieldName = e.target.name;
-      const newFilters = [...filters];
-      newFilters[i][fieldName] = e.target.value;
+
+    const handleFilterChange = (e, index) => { //Index norāda kurš filtrs tiek mainīts, jo var būt vairāki
+      const fieldName = e.target.name; //Target norāda uz konkrēto input lauku, name ir vai nu "field" vai "search"
+      const fieldValue = e.target.value; //Tiek iegūta lietotāja izvēlētā vai ievadītā vērtība.
+      const newFilters = [...filters]; //Izveido jaunu masīvu, lai saglabātu izmaiņas.
+      newFilters[index][fieldName] = fieldValue; //Atjauno konkrētā filtra lauku ar jauno vērtību.
       setFilters(newFilters);
     };
 
     const handleAddFilter = () => {
-      setFilters([...filters, { filter: "", search: "" }]);
+      // ...filters saglabā visas esošās rindas, bet jaunais objekts pievieno vēl vienu.
+      setFilters([
+        ...filters, 
+        { field: "", search: "" }
+      ]);
     }
 
-    const handleRemoveFilter = (i) => {
+    const handleRemoveFilter = (index) => {
       const newFilters = [...filters];
-      newFilters.splice(i, 1);
+      newFilters.splice(index, 1); //splice(no_kura_indeksa, cik_elementus_dzēst)
       setFilters(newFilters);
     }
 
+    //izsauc, kad tiek iesniegta forma
     const handleSearchSubmit = (e) => {
-      e.preventDefault();
-      setSubmitSearch(searchTable);
+      e.preventDefault();  //aptur lpas pārlādi, lai varētu saglabāt filtrus un izsaukt API pieprasījumu
+      setSubmittedFilters(filters); //submittedFilters ir useEffect atkarība, tādēļ izsauksies getUsers() un izsauks API pieprasījumu ar jaunajiem filtriem. 
+      // Ja izmantotu tkai filters, pieprasījums notiktu pēc katras rakstzīmes ievadīšanas.
+      console.log("Filters submitted:", filters);
+      // setSubmitSearch(searchTable);
       setCurrentPage(1); // Reseto uz pirmo lapu kad iesniegts
     }
 
+    const allFilterOptions = [
+      { value: "_id", label: t('ID') },
+      { value: "username", label: t('username') },
+      { value: "role", label: t('role') },
+      { value: "createdAt", label: t('Created at') },
+      { value: "updatedAt", label: t('Updated at') }
+    ];
+
+    
+    // const selectedFields = filters.map(filter => filter.field).filter(field => field !== "");
+    // const availableFilterOptions = allFilterOptions.filter(option => option.value === filter.field || !selectedFields.includes(option.value));
+
+    // const availableOptions = allFilterOptions.filter(option =>
+    //   option.value === filter.field ||
+    //   !selectedFields.includes(option.value)
+    // );
 
 
   return (
     <div className='content'>
+
+
       <form onSubmit={handleSearchSubmit} className="filter-form">
         {filters.map((filter, index) => (
           <div key={index} className="filter-group">
-            {/* <select value={filterBy} onChange={(e) => setFilterBy(e.target.value)}>
-              <option value="">{t('Filter')}</option>
-              <option value="_id">ID</option>
-              <option value="username">{t('username')}</option>
-              <option value="role">{t('role')}</option>
-              <option value="createdAt">{t('Created at')}</option>
-              <option value="updatedAt">{t('Updated at')}</option>
-            </select> */}
 
-            <select value={filter.field} onChange={(e) => handleFilterChange(e, index)}>
+
+            <select name="field" value={filter.field} onChange={(e) => handleFilterChange(e, index)}>
+              {/*{availableOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label} 
+                </option>
+              ))
+              } */}
               <option value="">{t('Filter')}</option>
               <option value="_id">ID</option>
               <option value="username">{t('username')}</option>
@@ -190,35 +217,43 @@ function UserTable() {
               <option value="updatedAt">{t('Updated at')}</option>
             </select>
 
-            {/* <input
+
+
+            {filter.field !== "createdAt" && filter.field !== "updatedAt" ? (            
+              <input
                 type="text"
-                id="filter"
-                placeholder={t('BttnSearch')}
-                value={searchTable}
-                onChange={(e) => setSearchTable(e.target.value)}
-            /> */}
-            <input
-                type="text"
+                name="search"
                 id="filter"
                 placeholder={t('BttnSearch')}
                 value={filter.search}
                 onChange={(e) => handleFilterChange(e, index)}
-            />
+              />
+            ) : null}
 
-            
+            {filter.field === "createdAt" || filter.field === "updatedAt" ? (
+              <input
+                type="date"
+                name="search"
+                id="filter"
+                placeholder={t('BttnSearch')}
+                value={filter.search}
+                onChange={(e) => handleFilterChange(e, index)}
+              />
+            ) : null}
+
+
             {/* passing an inde­x parameter to specify which todo's information needs updating. */}
             <button type="button" onClick={() => handleRemoveFilter(index)}>{t('Remove Filter')}</button> 
           </div>
         ))}
-
+  
         <button type="button" onClick={handleAddFilter}>{t('Add Filter')}</button>
         <button type="submit">{t('Submit')}</button>
       </form>
 
-
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
       <div className="table-wrapper">
-      <table ID="userTable">
+      <table id="userTable">
         <thead className='thead'>
             <tr>
               <th>
