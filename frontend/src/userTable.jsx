@@ -152,7 +152,9 @@ function UserTable() {
     };
 
     const handleAddFilter = () => {
-      // ...filters saglabā visas esošās rindas, bet jaunais objekts pievieno vēl vienu.
+      
+      if (filters.length >= 5) return;
+  // ...filters saglabā visas esošās rindas, bet jaunais objekts pievieno vēl vienu.
       setFilters([
         ...filters, 
         { field: "", search: "" }
@@ -163,6 +165,10 @@ function UserTable() {
       const newFilters = [...filters];
       newFilters.splice(index, 1); //splice(no_kura_indeksa, cik_elementus_dzēst)
       setFilters(newFilters);
+    }
+
+    const handleClearFilter = () => {
+      setFilters([{ field: "", search: "" }]);
     }
 
     //izsauc, kad tiek iesniegta forma
@@ -187,68 +193,73 @@ function UserTable() {
   return (
     <div className='content'>
 
+      <div id="sidebar"> 
+        <form onSubmit={handleSearchSubmit} className="filter-form">
+          {filters.map((filter, index) => (
+            <div key={index} className="filter-group">
 
-      <form onSubmit={handleSearchSubmit} className="filter-form">
-        {filters.map((filter, index) => (
-          <div key={index} className="filter-group">
 
+              <select name="field" value={filter.field} onChange={(e) => handleFilterChange(e, index)}>
 
-            <select name="field" value={filter.field} onChange={(e) => handleFilterChange(e, index)}>
-              {allFilterOptions.map(eachFilter => {
-                const isFilterSelected = false; //Te PIEVNIENOT RINDAAS TURPINĀJUMU: 
-                if (!isFilterSelected) {
-                  return (
-                    <option key={eachFilter.value} value={eachFilter.value}>
-                      {eachFilter.label}
-                    </option>
-                  )
-            }
-              })
+                  <option value="" disabled>
+                    {t("Filter")}
+                  </option>
+                {allFilterOptions.map(eachFilter => {
+                  
+                   //Ja kāds cits filtrs jau izmanto lauku un ir ievadīta meklēšanas vērtība, tad šo lauku nedrīkst piedāvāt izvēlēties
+                  //filters.some pārbauda vai vismaz viens elements atbilst nosacījumam
+                  //currentFilter.field === eachFilter.value pārbauda vai kāds filtrs jau izmanto šo lauku
+                  //filter ir pašreizējais filtrs ko zīmē, bet currentFilter ir filtrs, ko pārbauda some()
+                  //currentFilter !==filter lai filtrs nepārbauda pats sevi
+
+                  const isFilterSelected = filters.some(currentFilter => currentFilter.field === eachFilter.value && currentFilter !== filter); 
+
+                  if (!isFilterSelected) {
+                    return (
+                      <option key={eachFilter.value} value={eachFilter.value}>
+                        {eachFilter.label}
+                      </option>
+                    )
               }
-              {/* <option value="">{t('Filter')}</option>
-              <option value="_id">ID</option>
-              <option value="username">{t('username')}</option>
-              <option value="role" disabled={filters.some(f => f.field === "role")}>
-                {t('role')}
-              </option>
-              <option value="createdAt">{t('Created at')}</option>
-              <option value="updatedAt">{t('Updated at')}</option> */}
-            </select>
+                })
+                }
+
+              </select>
+
+              {filter.field !== "createdAt" && filter.field !== "updatedAt" ? (            
+                <input
+                  type="text"
+                  name="search"
+                  id="filter"
+                  placeholder={t('BttnSearch')}
+                  value={filter.search}
+                  onChange={(e) => handleFilterChange(e, index)}
+                  // required
+                />
+              ) : null}
+
+              {filter.field === "createdAt" || filter.field === "updatedAt" ? (
+                <input
+                  type="date"
+                  name="search"
+                  id="filter"
+                  placeholder={t('BttnSearch')}
+                  value={filter.search}
+                  onChange={(e) => handleFilterChange(e, index)}
+                />
+              ) : null}
 
 
 
-            {filter.field !== "createdAt" && filter.field !== "updatedAt" ? (            
-              <input
-                type="text"
-                name="search"
-                id="filter"
-                placeholder={t('BttnSearch')}
-                value={filter.search}
-                onChange={(e) => handleFilterChange(e, index)}
-              />
-            ) : null}
-
-            {filter.field === "createdAt" || filter.field === "updatedAt" ? (
-              <input
-                type="date"
-                name="search"
-                id="filter"
-                placeholder={t('BttnSearch')}
-                value={filter.search}
-                onChange={(e) => handleFilterChange(e, index)}
-              />
-            ) : null}
-
-
-            {/* passing an inde­x parameter to specify which todo's information needs updating. */}
-            <button type="button" onClick={() => handleRemoveFilter(index)}>{t('Remove Filter')}</button> 
-          </div>
-        ))}
-  
-        <button type="button" onClick={handleAddFilter}>{t('Add Filter')}</button>
-        <button type="submit">{t('Submit')}</button>
-      </form>
-
+              <button type="button" onClick={() => handleRemoveFilter(index)}>{t('Remove Filter')}</button> 
+            </div>
+          ))}
+    
+          <button type="button" onClick={handleAddFilter}>{t('Add Filter')}</button>
+          <button type="button" onClick={handleClearFilter}>{t('Clear Filter')}</button>
+          <button type="submit">{t('Submit')}</button>
+        </form>
+      </div>
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
       <div className="table-wrapper">
       <table id="userTable">

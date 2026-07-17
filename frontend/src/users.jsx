@@ -106,6 +106,8 @@ function Users() {
                     {t('BttnAdd')}
                 </button>
             )}
+
+            
         
 
             <hr></hr>
@@ -173,6 +175,7 @@ function Users() {
                     <button onClick={() => setShowUserTable(false)}>{t('BttnClose')}</button>
                     <UserTable />
                 </div>
+
             )}
         </div>
       </div>
