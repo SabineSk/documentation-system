@@ -6,7 +6,9 @@
   overflow-x: auto; 
   
   overflow-y: hidden;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgb(0, 0, 0);
+  margin-bottom: 20px;
+
 }
 
 .table-wrapper > table {
@@ -62,6 +64,7 @@ tr:nth-child(even){background-color: #f0f0f038}
     cursor: pointer;
     padding:8px;
     border: none;
+
 }
 
  /* .pagPages {

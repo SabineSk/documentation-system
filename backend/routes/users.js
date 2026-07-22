@@ -13,22 +13,38 @@ router.get('/list', authMiddleware, async (req, res) => {//the login route waits
     const page = parseInt(req.query?.page) || 1;
     const limit = parseInt(req.query?.limit) || 10;
 
-    const search = req.query?.search || '';
-    const filter = req.query?.filter || '';
-    //Saņem filtlters '[{"field":"username","search":"sabine"}]', tāpēc parese pārveido par masīva objektu
-    const filters = JSON.parse(req.query?.filters || "[]");
 
-    console.log("Filters received:", filters);
+    //Saņem filtlters '[{"field":"username","search":"sabine"}]', tāpēc parese pārveido par masīva objektu
+    const username = req.query.username || "";
+    const role = req.query.role || "";
+
+
 
     let query = {};
-    filters.forEach((filter) => {
-      if (filter.field && filter.search) { //jābūt abām vērtībām, lai veidotu query
-        query[filter.field] = { //meklēt pēc fitltra
-          $regex: filter.search, //a sequence of characters that forms a search pattern
-          $options: 'i'  // I : ignore case sensitivity
-        };
-      }
-    });
+
+    if (username) {
+      query.username = {
+        $regex: username,
+        $options: "i"
+      };
+    }
+
+    if (role) {
+      query.role = {
+        $regex: role,
+        $options: "i"
+      };
+    }
+
+
+    // filters.forEach((filter) => {
+    //   if (filter.field && filter.search) { //jābūt abām vērtībām, lai veidotu query
+    //     query[filter.field] = { //meklēt pēc fitltra
+    //       $regex: filter.search, //a sequence of characters that forms a search pattern
+    //       $options: 'i'  // I : ignore case sensitivity
+    //     };
+    //   }
+    // });
 
     
     console.log("MongoDB query:", query);

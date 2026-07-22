@@ -28,8 +28,13 @@ function UserTable() {
       const [rowLimit, setRowLimit] = useState(10);
       const currentlyShowing = users.length;
 
-      const [filters, setFilters] = useState([{ field: "", search: "" }]); //glabā visus filtrus ko lietoājs ievada sākotnēji
-      const [submittedFilters, setSubmittedFilters] = useState([]); //glabā apstipriātos filtrus pēc submit pogas nospiešanas => setSubmittedFilters(filters);
+      const [usernameInput, setUsernameInput] = useState("");
+      const [roleInput, setRoleInput] = useState("");
+
+      const [submittedUsername, setSubmittedUsername] = useState("");
+      const [submittedRole, setSubmittedRole] = useState("");
+
+
 
       const { t, i18n } = useTranslation();
 
@@ -38,8 +43,8 @@ function UserTable() {
         async function getUsers() {
           // const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&search=${submitSearch}&filter=${filterBy}`, {
           //pārvērš filter masīvu par JSON stringu, lai varētu nosūtīt kā query parametru
-          const filtersString = encodeURIComponent(JSON.stringify(submittedFilters));
-          const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&filters=${filtersString}`, {  
+          // const filtersString = encodeURIComponent(JSON.stringify(submittedFilters));
+          const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&username=${encodeURIComponent(submittedUsername)}&role=${encodeURIComponent(submittedRole)}`, {  
           method: "GET",
             headers: {
               "Content-Type": "application/json"
@@ -61,7 +66,7 @@ function UserTable() {
         }
   
       getUsers();
-    }, [currentPage, rowLimit, submittedFilters]);
+    }, [currentPage, rowLimit, submittedUsername, submittedRole]);
 
     const handleDelete = async(userID) =>{
 
@@ -80,21 +85,6 @@ function UserTable() {
       setShowPopup({type: null, user: null})
     };
 
-    //Apskata katru lietotāju
-    // const filteredData = users.filter((user) => {
-    //   //ja nav izvēlēts filtrs
-    //   if (filterBy === "" || searchTable === ""){
-    //     return true;
-    //   }
-    //   //Izvēlētais lauks no user: ID, username, role
-    //   const value = user[filterBy];
-    //   //Pārvērš user info uz lowercase
-    //   const valueText = value.toLowerCase();
-    //   //Pārvērš ievadi uz lovercase
-    //   const searchText = searchTable.toLowerCase();
-
-    //   return valueText.includes(searchText);
-    // });
 
     //Sākumā useState({ key: null, direction: 'asc' })
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
@@ -136,130 +126,95 @@ function UserTable() {
         key,
         direction: sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc'
       })
-    }
+    };
 
     const handleLimitChange = (e) => {
       setRowLimit(Number(e.target.value));
     };
 
 
-    const handleFilterChange = (e, index) => { //Index norāda kurš filtrs tiek mainīts, jo var būt vairāki
-      const fieldName = e.target.name; //Target norāda uz konkrēto input lauku, name ir vai nu "field" vai "search"
-      const fieldValue = e.target.value; //Tiek iegūta lietotāja izvēlētā vai ievadītā vērtība.
-      const newFilters = [...filters]; //Izveido jaunu masīvu, lai saglabātu izmaiņas.
-      newFilters[index][fieldName] = fieldValue; //Atjauno konkrētā filtra lauku ar jauno vērtību.
-      setFilters(newFilters);
-    };
-
-    const handleAddFilter = () => {
-      
-      if (filters.length >= 5) return;
-  // ...filters saglabā visas esošās rindas, bet jaunais objekts pievieno vēl vienu.
-      setFilters([
-        ...filters, 
-        { field: "", search: "" }
-      ]);
-    }
-
-    const handleRemoveFilter = (index) => {
-      const newFilters = [...filters];
-      newFilters.splice(index, 1); //splice(no_kura_indeksa, cik_elementus_dzēst)
-      setFilters(newFilters);
-    }
-
     const handleClearFilter = () => {
-      setFilters([{ field: "", search: "" }]);
-    }
+        setUsernameInput("");
+        setRoleInput("");
+
+        setSubmittedUsername("");
+        setSubmittedRole("");
+
+        setCurrentPage(1);
+      };
 
     //izsauc, kad tiek iesniegta forma
     const handleSearchSubmit = (e) => {
       e.preventDefault();  //aptur lpas pārlādi, lai varētu saglabāt filtrus un izsaukt API pieprasījumu
-      setSubmittedFilters(filters); //submittedFilters ir useEffect atkarība, tādēļ izsauksies getUsers() un izsauks API pieprasījumu ar jaunajiem filtriem. 
-      // Ja izmantotu tkai filters, pieprasījums notiktu pēc katras rakstzīmes ievadīšanas.
-      console.log("Filters submitted:", filters);
-      // setSubmitSearch(searchTable);
-      setCurrentPage(1); // Reseto uz pirmo lapu kad iesniegts
-    }
+      
+      setSubmittedUsername(usernameInput);
+      setSubmittedRole(roleInput);
+      setCurrentPage(1);
 
-    const allFilterOptions = [
-      { value: "_id", label: t('ID') },
-      { value: "username", label: t('username') },
-      { value: "role", label: t('role') },
-      { value: "createdAt", label: t('Created at') },
-      { value: "updatedAt", label: t('Updated at') }
-    ];
+    };
 
   
   return (
     <div className='content'>
-
-      <div id="sidebar"> 
-        <form onSubmit={handleSearchSubmit} className="filter-form">
-          {filters.map((filter, index) => (
-            <div key={index} className="filter-group">
-
-
-              <select name="field" value={filter.field} onChange={(e) => handleFilterChange(e, index)}>
-
-                  <option value="" disabled>
-                    {t("Filter")}
-                  </option>
-                {allFilterOptions.map(eachFilter => {
-                  
-                   //Ja kāds cits filtrs jau izmanto lauku un ir ievadīta meklēšanas vērtība, tad šo lauku nedrīkst piedāvāt izvēlēties
-                  //filters.some pārbauda vai vismaz viens elements atbilst nosacījumam
-                  //currentFilter.field === eachFilter.value pārbauda vai kāds filtrs jau izmanto šo lauku
-                  //filter ir pašreizējais filtrs ko zīmē, bet currentFilter ir filtrs, ko pārbauda some()
-                  //currentFilter !==filter lai filtrs nepārbauda pats sevi
-
-                  const isFilterSelected = filters.some(currentFilter => currentFilter.field === eachFilter.value && currentFilter !== filter); 
-
-                  if (!isFilterSelected) {
-                    return (
-                      <option key={eachFilter.value} value={eachFilter.value}>
-                        {eachFilter.label}
-                      </option>
-                    )
-              }
-                })
-                }
-
-              </select>
-
-              {filter.field !== "createdAt" && filter.field !== "updatedAt" ? (            
+      <div id="usertable-forms">
+      
+        <form onSubmit={handleSearchSubmit} className="usertable-form">
+            <div className="filter-fields">             
+              <div className="filter-field">
+                <label htmlFor="username-filter">Lietotājvārds: * </label>
                 <input
                   type="text"
-                  name="search"
-                  id="filter"
+                  name="username"
+                  id="username-filter"
+                  value={usernameInput}
                   placeholder={t('BttnSearch')}
-                  value={filter.search}
-                  onChange={(e) => handleFilterChange(e, index)}
-                  // required
+                  onChange={(e) => setUsernameInput(e.target.value)}
                 />
-              ) : null}
+              </div>
 
-              {filter.field === "createdAt" || filter.field === "updatedAt" ? (
+              <div className="filter-field">
+                <label htmlFor="role-filter">Loma: *</label>
                 <input
-                  type="date"
-                  name="search"
-                  id="filter"
-                  placeholder={t('BttnSearch')}
-                  value={filter.search}
-                  onChange={(e) => handleFilterChange(e, index)}
-                />
-              ) : null}
-
-
-
-              <button type="button" onClick={() => handleRemoveFilter(index)}>{t('Remove Filter')}</button> 
+                    type="text"
+                    name="role"
+                    id="role-filter"
+                    value={roleInput}
+                    placeholder={t('BttnSearch')}
+                    onChange={(e) => setRoleInput(e.target.value)}
+                  />
+              </div>
             </div>
-          ))}
-    
-          <button type="button" onClick={handleAddFilter}>{t('Add Filter')}</button>
-          <button type="button" onClick={handleClearFilter}>{t('Clear Filter')}</button>
-          <button type="submit">{t('Submit')}</button>
+            <div > 
+              <div className="filter-field">
+                <label>Filtra nosaukums: </label>
+                <input
+                    type="text"
+                    name="filterName"
+                    id="filterNameID"
+                    placeholder=""
+                />
+              </div>
+              
+
+              <div className="filter-actions">
+                <button type="button">Saglabāt filtru</button> 
+                <button type="button" onClick={handleClearFilter}>{t('Clear Filter')}</button>
+                <button type="submit">{t('Submit')}</button>
+              </div>
+
+              
+            </div>
         </form>
+
+        <div className="usertable-form" id="saved-filter-form">
+          <h3>Saglabātie filtri</h3>
+          
+
+        </div>
+        
+
       </div>
+
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
       <div className="table-wrapper">
       <table id="userTable">
