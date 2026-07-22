@@ -5,6 +5,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const User = require('../models/user.model');
 const UserImg = require('../models/userImg');
 const UserImages = require('../models/userImg');
+const UserFilter = require('../models/filters');
 const bcrypt = require('bcrypt');
 
 // /api/users/list
@@ -105,7 +106,26 @@ router.get('/profileImage', authMiddleware, async(req,res) => {
   };
 });
 
+router.get('/listFilters', authMiddleware, async(req, res) => {
+  const { id } = req.user;
 
+  try{
+    const userFilter = await UserFilter.find({user: id});
+
+        res.send({
+          data: userFilter,
+          status: 'success',
+          message: "Filter data retrieved"
+        });      
+    }catch(error){
+      console.log(error);        
+      res.send({
+          data: null,
+          status: 'error',
+          message: "Saved filters could not be retrieved"
+        });
+    };
+  });
 
 router.post('/addImg', authMiddleware, async (req, res) => {
   const { image } = req.body;
@@ -137,6 +157,40 @@ router.post('/addImg', authMiddleware, async (req, res) => {
     });
   }
 }) 
+
+router.post('/addFilter', authMiddleware, async(req, res) =>{
+  const {newFilter, newFilterName} = req.body;
+  const {id} = req.user;
+
+  console.log("Body:", req.body);
+  console.log("newFilterName:", newFilterName);
+  console.log("newFilter:", newFilter);
+
+  try{
+    const userFilter = new UserFilter(
+      {
+        user: id,
+        name: newFilterName,
+        filters: newFilter
+      }
+    )
+    await userFilter.save();
+
+    res.send({
+      data:null,
+      status: 'success',
+      message: 'Filter saved'
+    });
+
+  }catch(error){
+    console.log(error);
+    res.send({
+      data:null,
+      status: 'error',
+      message: "Data error"
+    });
+}
+})
 
 
 //Create new user

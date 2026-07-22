@@ -34,9 +34,101 @@ function UserTable() {
       const [submittedUsername, setSubmittedUsername] = useState("");
       const [submittedRole, setSubmittedRole] = useState("");
 
+      const [newFilter, setNewFilter] = useState({
+        username: "",
+        role: ""
+      });
+      const [newFilterName, setNewFilterName] = useState("");
+      const [savedFilters, setSavedFilters] = useState([]);
+
+
+      const [error, setError] = useState(null);
+      const [processing, setProcessing] = useState(false);
+
+
 
 
       const { t, i18n } = useTranslation();
+
+
+      const handleAddFilter = async (e) => {
+        e.preventDefault();
+        setProcessing(true);
+        setError(null);
+
+        try{
+          const response = await fetch("/api/users/addFilter", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                  newFilterName,
+                  newFilter: {
+                    username: usernameInput,
+                    role: roleInput
+                  }
+                })
+            });
+
+          const {data, status, message} = await response.json();
+
+          setMessage(message);
+          setStatus(status);
+          console.log(message);
+
+          if (status === 'error') {
+          setError('Kļūda, pievienojot filtru');
+          return;
+          }   
+          
+          setNewFilter({
+            username: "",
+            role: ""
+          });
+          setNewFilterName("")
+          setError(null);
+
+          }catch(err)
+          {console.log(err);
+
+          }finally{
+            setProcessing(false);
+          }
+          }
+      
+      useEffect(() => {
+        async function getFilters(){
+          try{
+          const response = await fetch(`/api/users/listFilters`, {
+          method: "GET",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            credentials:'include'
+          });
+
+          const {data, status, message} = await response.json();
+          setMessage(message);
+          setStatus(status);
+
+          if (status === 'success') {
+            savedFilters(data)
+          } else {
+            savedFilters([])
+          }
+        }catch (error) {
+      console.log(error);
+      setSavedFilters([]);
+      setError("Neizdevās ielādēt saglabātos filtrus");
+    }}
+    
+      getFilters();
+    }, []);
+        
+
+          
 
 
       useEffect(() => { 
@@ -64,12 +156,12 @@ function UserTable() {
             setUsers([])
           }
         }
-  
+    
       getUsers();
     }, [currentPage, rowLimit, submittedUsername, submittedRole]);
 
-    const handleDelete = async(userID) =>{
 
+    const handleDelete = async(userID) =>{
       //frontend sūta delete pieprasijumu ar id
       const response = await fetch(`/api/users/${userID}`, {
         method: "DELETE",
@@ -191,13 +283,14 @@ function UserTable() {
                     type="text"
                     name="filterName"
                     id="filterNameID"
-                    placeholder=""
+                    value={newFilterName}
+                    onChange={(e) => setNewFilterName(e.target.value)}
                 />
               </div>
               
 
               <div className="filter-actions">
-                <button type="button">Saglabāt filtru</button> 
+                <button type="button" onClick={handleAddFilter}>Saglabāt filtru</button> 
                 <button type="button" onClick={handleClearFilter}>{t('Clear Filter')}</button>
                 <button type="submit">{t('Submit')}</button>
               </div>
@@ -206,10 +299,27 @@ function UserTable() {
             </div>
         </form>
 
-        <div className="usertable-form" id="saved-filter-form">
+        <div className="usertable-form" >
           <h3>Saglabātie filtri</h3>
-          
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  Nosaukums
+                </th>
+                <th>
+                  Lietotājvārds
+                </th>
+                <th>
+                  Loma
+                </th>
+              </tr>
+              
+            </thead>
+            <tbody className="tbody">    
 
+            </tbody>
+          </table>
         </div>
         
 
@@ -291,7 +401,7 @@ function UserTable() {
         <div className="row-count-select">
             <label htmlFor="row-select"> {t('row-select')}</label>
             <select 
-                classname="selectPagination"
+                className="selectPagination"
                 value={rowLimit}
                 onChange={(e) => {
                   setRowLimit(e.target.value);
