@@ -106,30 +106,11 @@ router.get('/profileImage', authMiddleware, async(req,res) => {
   };
 });
 
-router.get('/listFilters', authMiddleware, async(req, res) => {
-  const { id } = req.user;
 
-  try{
-    const userFilter = await UserFilter.find({user: id});
-
-        res.send({
-          data: userFilter,
-          status: 'success',
-          message: "Filter data retrieved"
-        });      
-    }catch(error){
-      console.log(error);        
-      res.send({
-          data: null,
-          status: 'error',
-          message: "Saved filters could not be retrieved"
-        });
-    };
-  });
 
 router.post('/addImg', authMiddleware, async (req, res) => {
   const { image } = req.body;
-  const { id } = req.user;
+  const { id } = req.user;      //Jo frontend izmanto credentials:"include" jeb nosūta autentifikācijas cookie un auth midleware ievieto req.user = {id: "123456", username: "otto",role: "admin"};
   
   try{
     // await UserImages.deleteMany({user: id});
@@ -159,8 +140,20 @@ router.post('/addImg', authMiddleware, async (req, res) => {
 }) 
 
 router.post('/addFilter', authMiddleware, async(req, res) =>{
-  const {newFilter, newFilterName} = req.body;
-  const {id} = req.user;
+
+
+
+  const {newFilter, newFilterName} = req.body;  // Var arī šādi: const newFilter = req.body.newFilter; const newFilterName = req.body.newFilterName;
+  const {id} = req.user;       
+
+      //No frontend saņemto JSON express apstrādājot, iegūst:
+      //   req.body = {
+      //   newFilterName: "Administratori",
+      //   newFilter: {
+      //     username: "Otto",
+      //     role: "admin"
+      //   }
+      // };
 
   console.log("Body:", req.body);
   console.log("newFilterName:", newFilterName);
@@ -192,6 +185,28 @@ router.post('/addFilter', authMiddleware, async(req, res) =>{
 }
 })
 
+
+router.get('/listFilters', authMiddleware, async(req, res) => {
+  const { id } = req.user;
+
+  try{
+    //Atrast visus userFilter dokumentus, kur user lauks ir vienāds ar pašreizējā lietotāja id
+    const userFilter = await UserFilter.find({user: id}); //user ir lauka nosaukums UserFilter MongoDB modelī.
+
+        res.send({
+          data: userFilter,
+          status: 'success',
+          message: "Filter data retrieved"
+        });      
+    }catch(error){
+      console.log(error);        
+      res.send({
+          data: null,
+          status: 'error',
+          message: "Saved filters could not be retrieved"
+        });
+    };
+  });
 
 //Create new user
 router.post('/addUser', authMiddleware, async (req, res) => {

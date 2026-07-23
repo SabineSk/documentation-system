@@ -114,7 +114,7 @@ function Users() {
 
             {showAddNewUser && (
                 <div>
-                    <button onClick={() => setShowAddNewUser(false)}>{t('BttnClose')}</button>
+                    {/* <button onClick={() => setShowAddNewUser(false)}>{t('BttnClose')}</button> */}
                     <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p> 
                     
                     <form onSubmit={onSubmit} id="addUserForm" className="form" method="post">
@@ -172,7 +172,6 @@ function Users() {
             }            
             {showUserTable && (
                 <div>
-                    <button onClick={() => setShowUserTable(false)}>{t('BttnClose')}</button>
                     <UserTable />
                 </div>
 

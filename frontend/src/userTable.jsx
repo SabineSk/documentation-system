@@ -34,10 +34,10 @@ function UserTable() {
       const [submittedUsername, setSubmittedUsername] = useState("");
       const [submittedRole, setSubmittedRole] = useState("");
 
-      const [newFilter, setNewFilter] = useState({
-        username: "",
-        role: ""
-      });
+      // const [newFilter, setNewFilter] = useState({
+      //   username: "",
+      //   role: ""
+      // });
       const [newFilterName, setNewFilterName] = useState("");
       const [savedFilters, setSavedFilters] = useState([]);
 
@@ -72,6 +72,7 @@ function UserTable() {
                 })
             });
 
+
           const {data, status, message} = await response.json();
 
           setMessage(message);
@@ -83,12 +84,14 @@ function UserTable() {
           return;
           }   
           
-          setNewFilter({
-            username: "",
-            role: ""
-          });
-          setNewFilterName("")
+          setUsernameInput("");
+          setRoleInput("");
+          setNewFilterName("");
           setError(null);
+
+          await getFilters();
+
+    
 
           }catch(err)
           {console.log(err);
@@ -98,15 +101,12 @@ function UserTable() {
           }
           }
       
-      useEffect(() => {
         async function getFilters(){
           try{
           const response = await fetch(`/api/users/listFilters`, {
+          //Content-Type nav vajadzīgs, jo nesūta JSON body
           method: "GET",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            credentials:'include'
+          credentials:'include'
           });
 
           const {data, status, message} = await response.json();
@@ -114,21 +114,20 @@ function UserTable() {
           setStatus(status);
 
           if (status === 'success') {
-            savedFilters(data)
+            setSavedFilters(data)
           } else {
-            savedFilters([])
+            setSavedFilters([])
           }
         }catch (error) {
       console.log(error);
       setSavedFilters([]);
       setError("Neizdevās ielādēt saglabātos filtrus");
     }}
+
+    useEffect(() => {
     
       getFilters();
     }, []);
-        
-
-          
 
 
       useEffect(() => { 
@@ -181,18 +180,17 @@ function UserTable() {
     //Sākumā useState({ key: null, direction: 'asc' })
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
 
-    //veido sakārtotu kopiju
+    //Creating sorted copy
     // const sortedData = [...filteredData].sort((a,b) => {
     const sortedData = [...users].sort((a,b) => {
 
-      //ja vēl nav sortēšanas konfigurācija, tad nerosto vēl
       if (!sortConfig.key) return 0
 
       //paņem divu lietotāju vērtību
       let aValue = a[sortConfig.key]
       let bValue = b[sortConfig.key]
 
-      //CreatedAt un Updated at tekstu pārvērš par datumu
+      //CreatedAt and UpdatedAt text to date
       if (sortConfig.key === 'createdAt' || sortConfig.key === 'updatedAt' ){
         aValue = new Date(aValue)
         bValue = new Date(bValue)
@@ -245,15 +243,25 @@ function UserTable() {
 
     };
 
+    // *********************************** PABEIGT **********************************************
+    const handleUseSavedFilter = (name) => {
+      alert(`Jūs uzklikšķinājāt uz: ${name}`);
+
+    }
+
   
   return (
     <div className='content'>
       <div id="usertable-forms">
       
         <form onSubmit={handleSearchSubmit} className="usertable-form">
+            <div>
+              
+            </div>
+
             <div className="filter-fields">             
               <div className="filter-field">
-                <label htmlFor="username-filter">Lietotājvārds: * </label>
+                <label htmlFor="username-filter">Lietotājvārds:  </label>
                 <input
                   type="text"
                   name="username"
@@ -265,7 +273,7 @@ function UserTable() {
               </div>
 
               <div className="filter-field">
-                <label htmlFor="role-filter">Loma: *</label>
+                <label htmlFor="role-filter">Loma: </label>
                 <input
                     type="text"
                     name="role"
@@ -298,31 +306,36 @@ function UserTable() {
               
             </div>
         </form>
-
-        <div className="usertable-form" >
-          <h3>Saglabātie filtri</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  Nosaukums
-                </th>
-                <th>
-                  Lietotājvārds
-                </th>
-                <th>
-                  Loma
-                </th>
-              </tr>
-              
-            </thead>
-            <tbody className="tbody">    
-
-            </tbody>
-          </table>
+ 
+        {/* <div className="usertable-form" >
+            <h3>Saglabātie filtri</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Nosaukums
+                  </th>
+                  <th>
+                    Lietotājvārds
+                  </th>                
+                  <th>
+                    Loma
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {savedFilters.map((savedFilter, index) => (
+                  <tr key={index} className="saved-filter" onClick={() => handleUseSavedFilter(savedFilter)}>
+                    <td>{savedFilter.name}</td>
+                    <td>{savedFilter.filters?.username}</td>
+                    <td>{savedFilter.filters?.role}</td>
+                  </tr>
+                )
+              )}
+              </tbody>
+            </table>
         </div>
-        
-
+         */}
       </div>
 
       <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
