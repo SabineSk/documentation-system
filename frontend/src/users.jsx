@@ -10,7 +10,7 @@ function Users() {
 
     const {user} = useAuth();
 
-    const [showUserTable, setShowUserTable] = useState(false);
+    const [showUserTable, setShowUserTable] = useState(true);
     const [showAddNewUser, setShowAddNewUser] = useState(false);
 
     const [newUsername, setNewUsername] = useState("");
@@ -68,119 +68,121 @@ function Users() {
         }
     }
 
-    // const handleReset = () => {
-    //     setNewUsername("");
-    //     setNewPassword(""); 
-    //     setNewPasswordConfirm("");
-    //     // setNewRole("");
-    // }
 
-    //Paslpēpt/atklāt paroli
-    const handleToggle = () => {
+
+    const handleToggle = () => {    //Paslpēpt/atklāt paroli
         setType(type ==='password' ? 'text': "password" );
     };
-
 
     if(processing){
         return <div></div>
     }
 
-  return ( 
+return ( 
     <div className="content">
+        <div>
+            <UserTable />
+        </div>
+    </div>
+    
+   );
+}
 
-        <div className="nav">
-            {/* //Atverot vienu button, otra aizveras */}
-            <button onClick={() => {
-                setShowUserTable(true);
-                setShowAddNewUser(false);
-            }}> 
-            {t('BttnSearch')}
-            </button>
+//   return ( 
+//     <div className="content">
 
-            {/* //Tikai admin redz addNewUSer pogu */}
-            {user?.role === "admin" && (
-                <button onClick={() => {
-                setShowAddNewUser(true);
-                setShowUserTable(false);
-                }}>
-                    {t('BttnAdd')}
-                </button>
-            )}
+//         <div className="nav">
+//             {/* //Atverot vienu button, otra aizveras */}
+//             <button onClick={() => {
+//                 setShowUserTable(true);
+//                 setShowAddNewUser(false);
+//             }}> 
+//             {t('BttnSearch')}
+//             </button>
+
+//             {/* //Tikai admin redz addNewUSer pogu */}
+//             {user?.role === "admin" && (
+//                 <button onClick={() => {
+//                 setShowAddNewUser(true);
+//                 setShowUserTable(false);
+//                 }}>
+//                     {t('BttnAdd')}
+//                 </button>
+//             )}
 
             
         
 
-            <hr></hr>
+//             {/* <hr></hr> */}
 
-            {showAddNewUser && (
-                <div>
-                    {/* <button onClick={() => setShowAddNewUser(false)}>{t('BttnClose')}</button> */}
-                    <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p> 
+//             {showAddNewUser && (
+//                 <div>
+//                     <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p> 
                     
-                    <form onSubmit={onSubmit} id="addUserForm" className="form" method="post">
-                        <div className="newUser-FormGroup">
-                            <label htmlFor="newUsername">{t('username')}: </label>
-                            <input 
-                                type="text" 
-                                id="newUsername" 
-                                maxLength={25}
-                                name="newUsername"
-                                value={newUsername}
-                                required 
-                                onChange={(e) => setNewUsername(e.target.value)} />
-                        </div>
-                        <div className="newUser-FormGroup">
-                            <label htmlFor="newPassword">{t('password')}: </label>
-                            <input 
-                                type={type} 
-                                id="newPassword" 
-                                minlength="4"
-                                name="newPassword" 
-                                required 
-                                onChange={(e) => setNewPassword(e.target.value)} />
-                        </div>
-                        <div className="newUser-FormGroup">
-                            <label htmlFor="newPasswordConfirm">{t('confirmPassword')}: </label>
-                            <input 
-                                type={type}
-                                id="newPasswordConfirm" 
-                                minlength="4"
-                                name="newPasswordConfirm" 
-                                required 
-                                onChange={(e) => setNewPasswordConfirm(e.target.value)} />
-                        </div>
-                        <span onClick={handleToggle}>
-                            {type === "password" ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-                        </span>                           
-                        <div className="newUser-FormGroup">
-                            <label htmlFor="newRole">{t('role')}: </label>
-                            <select name="newRole" id="newRole" value={newRole} required onChange={(e) => setNewRole(e.target.value)}>
-                                <option value="">{t('SelectOption')}</option>
-                                <option value="admin">{t('admin')}</option>
-                                <option value="user">{t('user')}</option>
-                            </select>
+//                     <form onSubmit={onSubmit} id="addUserForm" className="form" method="post">
+//                         <div className="newUser-FormGroup">
+//                             <label htmlFor="newUsername">{t('username')}: </label>
+//                             <input 
+//                                 type="text" 
+//                                 id="newUsername" 
+//                                 maxLength={25}
+//                                 name="newUsername"
+//                                 value={newUsername}
+//                                 required 
+//                                 onChange={(e) => setNewUsername(e.target.value)} />
+//                         </div>
+//                         <div className="newUser-FormGroup">
+//                             <label htmlFor="newPassword">{t('password')}: </label>
+//                             <input 
+//                                 type={type} 
+//                                 id="newPassword" 
+//                                 minlength="4"
+//                                 name="newPassword" 
+//                                 required 
+//                                 onChange={(e) => setNewPassword(e.target.value)} />
+//                         </div>
+//                         <div className="newUser-FormGroup">
+//                             <label htmlFor="newPasswordConfirm">{t('confirmPassword')}: </label>
+//                             <input 
+//                                 type={type}
+//                                 id="newPasswordConfirm" 
+//                                 minlength="4"
+//                                 name="newPasswordConfirm" 
+//                                 required 
+//                                 onChange={(e) => setNewPasswordConfirm(e.target.value)} />
+//                         </div>
+//                         <span onClick={handleToggle}>
+//                             {type === "password" ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+//                         </span>                           
+//                         <div className="newUser-FormGroup">
+//                             <label htmlFor="newRole">{t('role')}: </label>
+//                             <select name="newRole" id="newRole" value={newRole} required onChange={(e) => setNewRole(e.target.value)}>
+//                                 <option value="">{t('SelectOption')}</option>
+//                                 <option value="admin">{t('admin')}</option>
+//                                 <option value="user">{t('user')}</option>
+//                             </select>
 
-                        </div>
+//                         </div>
 
-                        {/* <button type="submit" onClick={handleReset}>Submit</button> */}
-                        <button type="submit">{t('Submit')}</button> 
-                    </form>
+//                         {/* <button type="submit" onClick={handleReset}>Submit</button> */}
+//                         <button type="submit">{t('Submit')}</button> 
+//                     </form>
 
-                </div>
-            )
+//                 </div>
+//             )
 
-            }            
-            {showUserTable && (
-                <div>
-                    <UserTable />
-                </div>
+//             }            
+//             {showUserTable && (
+//                 <div>
+//                     <UserTable />
+//                 </div>
 
-            )}
-        </div>
-      </div>
+//             )}
+//         </div>
+//       </div>
     
-   );
-}
+//    );
+// }
 
 export default Users;
 

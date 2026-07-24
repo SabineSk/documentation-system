@@ -1,3 +1,62 @@
+.login-form button,
+#addUserForm > button[type="submit"],
+#holiday-form-bttn > button,
+.filter-actions button {
+  border-radius: 6px;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.login-form-group input,
+.filter-actions input,
+.newUser-FormGroup input,
+.newUser-FormGroup select,
+.newHoliday-FormGroup input,
+.newHoliday-FormGroup select,
+.filter-field input,
+.filter-field select {
+  width: 100%;
+  padding: 10px 12px;
+  box-sizing: border-box;
+
+  background-color: #fff;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  outline: none;
+
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.login-form-group input:hover,
+.newUser-FormGroup input:hover,
+.newUser-FormGroup select:hover,
+.newHoliday-FormGroup input:hover,
+.newHoliday-FormGroup select:hover,
+.filter-field input:hover,
+.filter-field select:hover {
+  border-color: #9ebbb5;
+}
+
+.login-form-group input:focus,
+.newUser-FormGroup input:focus,
+.newUser-FormGroup select:focus,
+.newHoliday-FormGroup input:focus,
+.newHoliday-FormGroup select:focus,
+.filter-field input:focus,
+.filter-field select:focus {
+  border-color: #7fa9a1;
+  box-shadow: 0 0 0 3px rgba(174, 204, 198, 0.35);
+}
+
+
 /* ******************************** LOGIN FORM *************************************************** */
 .login {
   min-height: 70vh;
@@ -28,32 +87,34 @@
   gap: 20px;
 }
 
-.login-form-group {
+
+.login-form-group,
+.newUser-FormGroup,
+.newHoliday-FormGroup,
+.filter-field {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
+.newHoliday-FormGroup {
+  flex: 1;
+}
+
+
 
 .login-form-group label {
   font-size: 16px;
   font-weight: 500;
 }
 
-.login-form-group input {
-  padding: 10px 12px;
-  font-size: 16px;
-  border: 1px solid #aaa;
-  border-radius: 6px;
-}
 
 .login-form button {
   margin-top: 10px;
   padding: 12px;
   font-size: 16px;
   border: 1px solid #8fb8b0;
-  border-radius: 8px;
   background-color: #aeccc6;
-  cursor: pointer;
 }
 
 .login-form button:hover {
@@ -62,23 +123,83 @@
 
 
 /* ******************************** ADD USER FORM *************************************************** */
-#addUserForm{
+#addUserForm {
   width: 100%;
-  max-width: 350px;
-  padding: 25px 30px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background-color: white;
+  /* height: auto;
+  min-height: 0; */
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 30px;
+  row-gap: 18px;
+
+  padding: 20px;
+
+  background-color: #f7f7f7;
+  border: 1px solid #d4d4d4;
+
 }
 
-.newUser-FormGroup{
+/* Katra no abām formas kolonnām */
+.addUserFormPairs {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 16px;
+}
+
+.newUser-FormGroup label {
+  font-weight: 500;
 }
 
 
+/* Acs ikona zem paroles laukiem, labajā pusē */
+#addUserForm > span {
+  grid-column: 2;
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+
+  margin-top: -8px;
+  cursor: pointer;
+}
+
+/* Iesniegšanas poga */
+#addUserForm > button[type="submit"] {
+  grid-column: 1 / -1;
+  justify-self: end;
+
+  width: 160px;
+  min-height: 42px;
+  padding: 8px 20px;
+
+  border: none;
+  background-color: #8dbbb3;
+  font-size: 14px;
+}
+
+#addUserForm > button[type="submit"]:hover {
+  background-color: #79aaa2;
+}
+
+
+/* Mazākos ekrānos viena kolonna */
+@media (max-width: 750px) {
+  #addUserForm {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  #addUserForm > span,
+  #addUserForm > button[type="submit"] {
+    grid-column: 1;
+  }
+
+  #addUserForm > button[type="submit"] {
+    width: 100%;
+  }
+}
 /* ******************************** FILE UPLOAD FORM *************************************************** */
 .fileUploadForm {
   position: fixed;
@@ -100,8 +221,7 @@
 
 
 /* ******************************** ADD HOLIDAY FORM *************************************************** */
-#addHolidayForm{
-  background-color: #11efff;
+#addHolidayForm {
   width: 100%;
   background-color: white;
 }
@@ -139,11 +259,6 @@
   background-color: #dc2626;
 }
 
-.newHoliday-FormGroup{ 
-  display:flex;
-  flex-direction: column;
-  flex:1;
-}
 
 .newHoliday-FormGroup>label{
   color: #555;
@@ -155,36 +270,49 @@
   margin-top: 12px;
 }
 
-/* *****************************usertable-forms*********************************** */
-/* 
-#usertable-forms{
-  display: flex;
-  flex-direction: column;
-  background-color: #11efff;
-} */
-
-
 
 /* ********************************************************FILTER FORM************************************************************************** */
-#usertable-forms{
+.saved-filter-container{
   display: flex;
   flex-direction: row;
   gap: 20px;
+  flex-wrap: wrap;
+
+
+}
+
+.saved-filter{
+  display: flex;
+  background-color: #f0f0f0;
+  border-color: #d5d5d5;
+  color: #333;
+  min-width: 150px;
+  height: 35px;
+  padding: 0px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  outline: none;
+}
+
+.saved-filter:hover {
+  background-color: #dad8d8;
+  border-color: #bcbcbc;
 }
 
 .usertable-form {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  
-
-  
+   
   padding: 24px 28px;
 
   background-color: #fff;
-  border: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  /* border: 1px solid #ddd;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
+
 }
 
 
@@ -194,60 +322,12 @@
 }
 
 
-
-
 .filter-fields {
   display: flex;
+  flex-direction: row;
   gap: 20px;
-  
-}
+  flex-wrap: wrap;
 
-.filter-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-
-.filter-field input {
-  width: 220px;
-  padding: 10px 12px;
-  background-color: #fff;
-  border: 1px solid #cfcfcf;
-  border-radius: 6px;
-  outline: none;
-
-  transition: 
-    border-color 0.2s ease, 
-    box-shadow 0.2s ease;
-}
-
-.filter-field input:hover {
-  border-color: #9ebbb5;
-}
-
-.filter-field input:focus {
-  border-color: #7fa9a1;
-  box-shadow: 0 0 0 3px rgba(174, 204, 198, 0.35);
-}
-
-.filter-actions input{
-  width: 150px;
-  height: 35px;;
-  padding: 0px;
-  background-color: #fff;
-  border: 1px solid #cfcfcf;
-  border-radius: 6px;
-  outline: none;
-
-  transition: 
-    border-color 0.2s ease, 
-    box-shadow 0.2s ease;
-}
-
-.filter-actions input:focus{
-  border-color: #7fa9a1;
-  box-shadow: 0 0 0 3px rgba(174, 204, 198, 0.35);
 }
 
 
@@ -255,7 +335,6 @@
   display: flex;
   margin-top: 40px;
   gap: 12px;
-
 }
 
 .filter-actions button {
@@ -315,9 +394,9 @@
     flex-direction: column;
   }
 
-  .filter-field input {
+  .filter-field input,
+  .filter-field select {
     width: 100%;
-    box-sizing: border-box;
   }
 
 

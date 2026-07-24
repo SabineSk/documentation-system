@@ -28,3 +28,4 @@ const UserFilter = mongoose.model("userFilter", filterSchema);
 
 
 module.exports = UserFilter;
+

@@ -6,13 +6,11 @@ import { FaSort } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import {useTranslation} from "react-i18next";
+import {useAuth} from './auth/useAuth';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 
 function UserTable() {
-
-      // const [filterBy, setFilterBy] = useState("");
-      // const [searchTable, setSearchTable] = useState(""); //mainās pēc katra ievadītā simbola
-      // const [submitSearch, setSubmitSearch] = useState(false); //mainīsies pēc pogas nospiešanas
       const [users, setUsers ] = useState([]);
   
       const [message, setMessage] = useState("");
@@ -34,22 +32,19 @@ function UserTable() {
       const [submittedUsername, setSubmittedUsername] = useState("");
       const [submittedRole, setSubmittedRole] = useState("");
 
-      // const [newFilter, setNewFilter] = useState({
-      //   username: "",
-      //   role: ""
-      // });
       const [newFilterName, setNewFilterName] = useState("");
       const [savedFilters, setSavedFilters] = useState([]);
-
 
       const [error, setError] = useState(null);
       const [processing, setProcessing] = useState(false);
 
-
-
-
       const { t, i18n } = useTranslation();
 
+
+      
+
+
+      // *********************************** FILTERS **********************************************
 
       const handleAddFilter = async (e) => {
         e.preventDefault();
@@ -72,7 +67,6 @@ function UserTable() {
                 })
             });
 
-
           const {data, status, message} = await response.json();
 
           setMessage(message);
@@ -91,73 +85,118 @@ function UserTable() {
 
           await getFilters();
 
-    
-
           }catch(err)
           {console.log(err);
 
           }finally{
             setProcessing(false);
           }
-          }
+        }
       
         async function getFilters(){
           try{
-          const response = await fetch(`/api/users/listFilters`, {
-          //Content-Type nav vajadzīgs, jo nesūta JSON body
-          method: "GET",
-          credentials:'include'
-          });
-
-          const {data, status, message} = await response.json();
-          setMessage(message);
-          setStatus(status);
-
-          if (status === 'success') {
-            setSavedFilters(data)
-          } else {
-            setSavedFilters([])
-          }
-        }catch (error) {
-      console.log(error);
-      setSavedFilters([]);
-      setError("Neizdevās ielādēt saglabātos filtrus");
-    }}
-
-    useEffect(() => {
-    
-      getFilters();
-    }, []);
-
-
-      useEffect(() => { 
-        async function getUsers() {
-          // const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&search=${submitSearch}&filter=${filterBy}`, {
-          //pārvērš filter masīvu par JSON stringu, lai varētu nosūtīt kā query parametru
-          // const filtersString = encodeURIComponent(JSON.stringify(submittedFilters));
-          const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&username=${encodeURIComponent(submittedUsername)}&role=${encodeURIComponent(submittedRole)}`, {  
-          method: "GET",
-            headers: {
-              "Content-Type": "application/json"
-            },
+            const response = await fetch(`/api/users/listFilters`, {
+            //Content-Type nav vajadzīgs, jo nesūta JSON body
+            method: "GET",
             credentials:'include'
-          });
-          const {data, status, message} = await response.json();
+            });
+
+            const {data, status, message} = await response.json();
             setMessage(message);
-            setStatus(status)
-  
-          const {users, page, limit, totalCount, totalPages} = data;
-          if (status === 'success') {
-            setUsers(users);
-            setTotalPages(totalPages);
-            setTotalCount(totalCount);
-          } else {
-            setUsers([])
+            setStatus(status);
+
+            if (status === 'success') {
+              setSavedFilters(data)
+            } else {
+              setSavedFilters([])
+            }
+          }catch (error) {
+            console.log(error);
+            setSavedFilters([]);
+            setError("Neizdevās ielādēt saglabātos filtrus");
           }
         }
-    
+
+      useEffect(() => {
+        getFilters();
+      }, []);
+
+      const handleClearFilter = () => {
+        setUsernameInput("");
+        setRoleInput("");
+        setSubmittedUsername("");
+        setSubmittedRole("");
+        setCurrentPage(1);
+      };
+        
+      const handleUseSavedFilter = (savedFilter) => {
+        setSubmittedUsername(savedFilter.filters?.username);
+        setSubmittedRole(savedFilter.filters?.role);
+        setCurrentPage(1);
+      };
+
+      const handleRemoveSavedFilter = async(filterID) => {
+        try {
+          const response = await fetch(`/api/filters/removeFilter/${filterID}`, { //frontend sūta delete pieprasijumu ar id
+            method: "DELETE",
+            credentials: 'include'
+        });
+
+        const { status, message } = await response.json();
+        setMessage(message);
+        setStatus(status);
+
+        if(status === 'success'){
+          //atjauno ekrānu ar filtru
+          setSavedFilters((prevFilters) => prevFilters.filter((savedFilter) => savedFilter._id !== filterID));
+        }
+      
+        }catch(error) {
+          console.error("Neizdevās izdzēst filtru:", error);
+          setError("Neizdevās izdzēst saglabāto filtru");
+        }
+      };
+
+      //izsauc, kad tiek iesniegta forma
+      const handleSearchSubmit = (e) => {
+        e.preventDefault();  //aptur lapas pārlādi, lai varētu saglabāt filtrus un izsaukt API pieprasījumu
+        
+        setSubmittedUsername(usernameInput);
+        setSubmittedRole(roleInput);
+        setCurrentPage(1);
+
+      };
+
+
+// ****************************************USERS*************************************************************************
+    useEffect(() => { 
+      async function getUsers() {
+        // const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&search=${submitSearch}&filter=${filterBy}`, {
+        //pārvērš filter masīvu par JSON stringu, lai varētu nosūtīt kā query parametru
+        // const filtersString = encodeURIComponent(JSON.stringify(submittedFilters));
+        const response = await fetch(`/api/users/list?page=${currentPage}&limit=${rowLimit}&username=${encodeURIComponent(submittedUsername)}&role=${encodeURIComponent(submittedRole)}`, {  
+        method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials:'include'
+        });
+
+        const {data, status, message} = await response.json();
+          setMessage(message);
+          setStatus(status)
+
+        const {users, page, limit, totalCount, totalPages} = data;
+        if (status === 'success') {
+          setUsers(users);
+          setTotalPages(totalPages);
+          setTotalCount(totalCount);
+        } else {
+          setUsers([])
+        }
+      }
       getUsers();
-    }, [currentPage, rowLimit, submittedUsername, submittedRole]);
+    }, [currentPage, rowLimit, submittedUsername, submittedRole, ]);
 
 
     const handleDelete = async(userID) =>{
@@ -166,36 +205,30 @@ function UserTable() {
         method: "DELETE",
         credentials: 'include'
       });
-
       const data = await response.json();
       if(data.status === 'success'){
         //atjauno ekrānu ar filtru
         setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userID));
       }
-      
       setShowPopup({type: null, user: null})
     };
 
 
     //Sākumā useState({ key: null, direction: 'asc' })
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
     //Creating sorted copy
     // const sortedData = [...filteredData].sort((a,b) => {
     const sortedData = [...users].sort((a,b) => {
-
       if (!sortConfig.key) return 0
-
       //paņem divu lietotāju vērtību
       let aValue = a[sortConfig.key]
       let bValue = b[sortConfig.key]
-
       //CreatedAt and UpdatedAt text to date
       if (sortConfig.key === 'createdAt' || sortConfig.key === 'updatedAt' ){
         aValue = new Date(aValue)
         bValue = new Date(bValue)
       }
-      
       //salīdzina kura vērtība lielāka/mazāka , tad atbilstoši pievieno augstāk, zemāk.
       if (aValue < bValue) {
       return sortConfig.direction === 'asc' ? -1 : 1
@@ -203,7 +236,6 @@ function UserTable() {
       if (aValue > bValue) {
         return sortConfig.direction === 'asc' ? 1 : -1
       }
-
       //neko nemaina, ja abas vērtības vienādas.
       return 0
     });
@@ -222,41 +254,100 @@ function UserTable() {
       setRowLimit(Number(e.target.value));
     };
 
+  // ***************************************Add user****************************************************
 
-    const handleClearFilter = () => {
-        setUsernameInput("");
-        setRoleInput("");
+    const [type, setType] = useState('password');
+    
+    const [showAddNewUser, setShowAddNewUser] = useState(false);
+    const [newUsername, setNewUsername] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
+    const [newRole, setNewRole] = useState("");
+    
+     const onSubmit = async (e) => {
+        e.preventDefault();
+        setProcessing(true);
+        setError(null);
 
-        setSubmittedUsername("");
-        setSubmittedRole("");
+        try {
+            const response = await fetch ("/api/users/addUser", {
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({newUsername, newPassword, newPasswordConfirm, newRole})
+        });
 
-        setCurrentPage(1);
-      };
+        const {data, status, message} = await response.json();
+        setMessage(message);
+        setStatus(status);
+        console.log(message);
 
-    //izsauc, kad tiek iesniegta forma
-    const handleSearchSubmit = (e) => {
-      e.preventDefault();  //aptur lpas pārlādi, lai varētu saglabāt filtrus un izsaukt API pieprasījumu
-      
-      setSubmittedUsername(usernameInput);
-      setSubmittedRole(roleInput);
-      setCurrentPage(1);
+        if (status === 'error') {
+            setError(t("errorAddingUser"));
+            return;
+        }
+        console.log(t("UserAdded"), data);
+        setNewUsername("");
+        setNewPassword(""); 
+        setNewPasswordConfirm("");
+        setNewRole("");
+        setError(null);
 
+        }catch (err)
+        {console.log(err);
+          setError(t("errorAddingUser"));
+        }finally{
+          setProcessing(false);
+        }
+      }
+
+    const handleToggle = () => {    //Paslpēpt/atklāt paroli
+        setType(type ==='password' ? 'text': "password" );
     };
 
-    // *********************************** PABEIGT **********************************************
-    const handleUseSavedFilter = (name) => {
-      alert(`Jūs uzklikšķinājāt uz: ${name}`);
-
+    if(processing){
+        return <div></div>
     }
+    
+
+
+    const handleShowAddUser = () => {
+      setShowAddNewUser((previousValue) => !previousValue);
+    };
+
+
+
 
   
   return (
-    <div className='content'>
+    <div className='user-content'>
+
+      {/* <div> 
+      {savedFilters.map((savedFilter, index) => (
+          <div key={index} className="saved-filter" onClick={() => handleUseSavedFilter(savedFilter)}>
+            {savedFilter.name}
+          </div>
+      ))}
+      </div> */}
+
       <div id="usertable-forms">
-      
+
         <form onSubmit={handleSearchSubmit} className="usertable-form">
-            <div>
-              
+            <div className="saved-filter-container">
+              {savedFilters.map((savedFilter) => (
+                <div key={savedFilter._id} className="saved-filter">
+                 
+                  <div onClick={() => handleUseSavedFilter(savedFilter)}>
+                    {savedFilter.name}
+                    
+                  </div>
+                  <button  type="button" onClick={() => handleRemoveSavedFilter(savedFilter._id)}>
+                    X
+                  </button>
+                </div>
+
+              ))}
             </div>
 
             <div className="filter-fields">             
@@ -283,9 +374,8 @@ function UserTable() {
                     onChange={(e) => setRoleInput(e.target.value)}
                   />
               </div>
-            </div>
-            <div > 
-              <div className="filter-field">
+              <div className="filter-actions">
+                <button type="button" onClick={handleAddFilter}>Saglabāt filtru</button>                 
                 <label>Filtra nosaukums: </label>
                 <input
                     type="text"
@@ -294,51 +384,93 @@ function UserTable() {
                     value={newFilterName}
                     onChange={(e) => setNewFilterName(e.target.value)}
                 />
-              </div>
-              
-
-              <div className="filter-actions">
-                <button type="button" onClick={handleAddFilter}>Saglabāt filtru</button> 
                 <button type="button" onClick={handleClearFilter}>{t('Clear Filter')}</button>
                 <button type="submit">{t('Submit')}</button>
               </div>
 
-              
             </div>
-        </form>
- 
-        {/* <div className="usertable-form" >
-            <h3>Saglabātie filtri</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>
-                    Nosaukums
-                  </th>
-                  <th>
-                    Lietotājvārds
-                  </th>                
-                  <th>
-                    Loma
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {savedFilters.map((savedFilter, index) => (
-                  <tr key={index} className="saved-filter" onClick={() => handleUseSavedFilter(savedFilter)}>
-                    <td>{savedFilter.name}</td>
-                    <td>{savedFilter.filters?.username}</td>
-                    <td>{savedFilter.filters?.role}</td>
-                  </tr>
-                )
-              )}
-              </tbody>
-            </table>
-        </div>
-         */}
+        </form>          
+        
+        <button 
+          type="button" 
+          id="addUserButton" 
+          onClick={handleShowAddUser}>
+            + {t('Add user')}
+        </button>
+
+        {showAddNewUser && (
+          <form onSubmit={onSubmit} id="addUserForm" className="form">
+            <div className="addUserFormPairs">
+              <div className="newUser-FormGroup">
+                <label htmlFor="newUsername">{t("username")}:</label>
+                <input
+                  type="text"
+                  id="newUsername"
+                  maxLength={25}
+                  name="newUsername"
+                  value={newUsername}
+                  required
+                  onChange={(e) => setNewUsername(e.target.value)}
+                />
+              </div>
+
+              <div className="newUser-FormGroup">
+                <label htmlFor="newRole">{t("role")}:</label>
+                <select
+                  name="newRole"
+                  id="newRole"
+                  value={newRole}
+                  required
+                  onChange={(e) => setNewRole(e.target.value)}
+                >
+                  <option value="">{t("SelectOption")}</option>
+                  <option value="admin">{t("admin")}</option>
+                  <option value="user">{t("user")}</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="addUserFormPairs">
+              <div className="newUser-FormGroup">
+                <label htmlFor="newPassword">{t("password")}:</label>
+                <input
+                  type={type}
+                  id="newPassword"
+                  minLength="4"
+                  name="newPassword"
+                  required
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+              </div>
+
+              <div className="newUser-FormGroup">
+                <label htmlFor="newPasswordConfirm">
+                  {t("confirmPassword")}:
+                </label>
+                <input
+                  type={type}
+                  id="newPasswordConfirm"
+                  minLength="4"
+                  name="newPasswordConfirm"
+                  required
+                  onChange={(e) => setNewPasswordConfirm(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <span onClick={handleToggle}>
+              {type === "password"
+                ? <FaEyeSlash size={20} />
+                : <FaEye size={20} />}
+            </span>
+
+            <button type="submit">{t("Submit")}</button>
+          </form>
+      )}
+    
       </div>
 
-      <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
+
       <div className="table-wrapper">
       <table id="userTable">
         <thead className='thead'>
@@ -444,6 +576,7 @@ function UserTable() {
         >
           <IoIosArrowForward />
         </button>
+        <p style={{ color: status === 'success' ? 'green': 'red' }}> {message} </p>
       </div>
 
 

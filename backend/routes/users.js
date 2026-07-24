@@ -353,6 +353,11 @@ router.delete("/:id", async(req, res) =>{
 });
 
 
+
+
+
+
+
 // express.json() neprot nolasīt failus. Faili nāk kā multipart/form-data, 
 // tāpēc backendā parasti izmanto multer. 
 // Multer ir Express middleware priekš multipart/form-data failu uploadiem.

@@ -14,56 +14,7 @@ function Header(){
     const {isAuthenticated} = useAuth();
     
     const { t, i18n } = useTranslation();
-
-
-
-    // const texts = {
-    //     lv: {
-    //        titleUsers: "Lietotāji",
-    //        titleHoliday: 'Svētku dienas',
-    //        titleHome: 'Sākums',
-    //        titleLogin: "Failu glabāšanas sistēma",
-    //        titleProfile: "Profils",
-    //        navLogin: "Pieslēgties",
-    //        navProfile: 'Profils',
-    //        navLogout: "Atslēgties",
-
-    //     },
-    //     en: {
-    //        titleUsers: 'Users',
-    //        titleHoliday: 'Holidays',
-    //        titleHome: 'Home',
-    //        titleLogin: "Documentation system",
-    //        titleProfile: 'Profile',
-    //        navLogin: "Login",
-    //        navProfile: 'Profile',
-    //        navLogout: 'Logout',
-    //     }
-    // };
-
-    // const changeLanguageEN = () => {
-    //     setLanguage("en");
-    // };
-
-    // const changeLanguageLV = () => {
-    //     setLanguage("lv");
-    // };
-
-
-    // let pageTitle = 'Documentation System';
-
-    // if (location.pathname === "/home") {
-    // pageTitle = texts[language].titleHome;
-    // }else if(location.pathname === "/holidays") {
-    // pageTitle = texts[language].titleHoliday;
-    // } else if (location.pathname === "/users") {
-    // pageTitle = texts[language].titleUsers;
-    // } else if (location.pathname === "/profile") {
-    // pageTitle = texts[language].titleProfile;
-    // } else if (location.pathname === "/login") {
-    // pageTitle = texts[language].titleLogin;
-    // }
-
+    
     //izveio mainīgo ar noklusējuma vērtību
     let pageTitle = t("titleLogin");
 
@@ -123,6 +74,7 @@ function Header(){
                             <Link to="/home">{t("titleHome")}</Link>
                             <Link to="/holidays">{t("titleHoliday")}</Link>
                             <Link to="/users">{t("titleUsers")}</Link>
+
                             <div className="dropdown">
                                 <a className="dropdown-link">{t("titleProfile")}</a>
                                 
