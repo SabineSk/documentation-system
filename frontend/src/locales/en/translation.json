@@ -48,9 +48,12 @@
     "ChooseFile": "Choose file to upload",
     "Adding file...": "Adding file...",
     "LoggingIn": "Logging in...",
-    "Remove Filter": "Remove Filter",
+    "Remove Filter": "Remove filter",
     "Add Filter": "Add Filter",
-    "Clear Filter": "Clear Filter"
+    "Clear Filter": "Clear Filter",
+    "Add user": "Add user",
+    "Filter name": "Filter name",
+    "Save Filter": "Save filter"
 
 
 }

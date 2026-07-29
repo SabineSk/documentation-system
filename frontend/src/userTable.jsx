@@ -8,6 +8,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import {useTranslation} from "react-i18next";
 import {useAuth} from './auth/useAuth';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 
 function UserTable() {
@@ -37,6 +38,9 @@ function UserTable() {
 
       const [error, setError] = useState(null);
       const [processing, setProcessing] = useState(false);
+
+      const [showAddFilterName, setShowAddFilterName] = useState(false);
+      const [hideFilterName, setHideFilterName] = useState(false);
 
       const { t, i18n } = useTranslation();
 
@@ -317,20 +321,22 @@ function UserTable() {
     };
 
 
+    const handleShowFilterName = () => {
+      setShowAddFilterName(true);
+    };
+
+    // mouseout
+
+    const handleHideFilterName = () => {
+      setShowAddFilterName(false);
+    };
+
+
 
 
   
   return (
     <div className='user-content'>
-
-      {/* <div> 
-      {savedFilters.map((savedFilter, index) => (
-          <div key={index} className="saved-filter" onClick={() => handleUseSavedFilter(savedFilter)}>
-            {savedFilter.name}
-          </div>
-      ))}
-      </div> */}
-
       <div id="usertable-forms">
 
         <form onSubmit={handleSearchSubmit} className="usertable-form">
@@ -343,7 +349,7 @@ function UserTable() {
                     
                   </div>
                   <button  type="button" onClick={() => handleRemoveSavedFilter(savedFilter._id)}>
-                    X
+                    <RiDeleteBinLine id="filteDeleteBttn"/>
                   </button>
                 </div>
 
@@ -352,7 +358,7 @@ function UserTable() {
 
             <div className="filter-fields">             
               <div className="filter-field">
-                <label htmlFor="username-filter">Lietotājvārds:  </label>
+                <label htmlFor="username-filter">{t('username')}: </label>
                 <input
                   type="text"
                   name="username"
@@ -364,7 +370,7 @@ function UserTable() {
               </div>
 
               <div className="filter-field">
-                <label htmlFor="role-filter">Loma: </label>
+                <label htmlFor="role-filter">{t('role')}: </label>
                 <input
                     type="text"
                     name="role"
@@ -375,15 +381,34 @@ function UserTable() {
                   />
               </div>
               <div className="filter-actions">
-                <button type="button" onClick={handleAddFilter}>Saglabāt filtru</button>                 
-                <label>Filtra nosaukums: </label>
-                <input
-                    type="text"
-                    name="filterName"
-                    id="filterNameID"
-                    value={newFilterName}
-                    onChange={(e) => setNewFilterName(e.target.value)}
-                />
+                <div    
+                  onMouseOver={handleShowFilterName} 
+                  onMouseOut={handleHideFilterName}
+                  classname="filter-container"
+                  > 
+                  <button 
+                    id="saveFilterButton" 
+                    type="button" 
+                    onClick={handleAddFilter}
+                  >
+                    {t('Save Filter')}
+                  </button>                 
+
+                  {showAddFilterName && (
+                    <div className="input-wrapper">
+                      <input
+                        type="text"
+                        maxLength={100}
+                        name="filterName"
+                        id="filterNameID"
+                        placeholder={t('Filter name')}
+                        value={newFilterName}
+                        onChange={(e) => setNewFilterName(e.target.value)}
+                      />
+                    </div>
+                  )}
+                </div>
+
                 <button type="button" onClick={handleClearFilter}>{t('Clear Filter')}</button>
                 <button type="submit">{t('Submit')}</button>
               </div>
@@ -395,7 +420,7 @@ function UserTable() {
           type="button" 
           id="addUserButton" 
           onClick={handleShowAddUser}>
-            + {t('Add user')}
+          + {t('Add user')}
         </button>
 
         {showAddNewUser && (

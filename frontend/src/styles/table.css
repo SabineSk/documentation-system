@@ -2,7 +2,6 @@
 .table-wrapper {
   width: 100%;
   min-height: 600px;
-  /* overflow-x: auto nozīmē, ja saturs ietilpst, ritjoslas nav, bet ja neietilpst, tad ir. X apzīmē asi*/
   overflow-x: auto; 
   
   overflow-y: hidden;
@@ -19,7 +18,6 @@
 
 .content table{
   width: 100%;
-  /* collapse noņem dubultās līnijas  */
   border-collapse: collapse;
   text-align: center;
 }

@@ -10,8 +10,8 @@ function Users() {
 
     const {user} = useAuth();
 
-    const [showUserTable, setShowUserTable] = useState(true);
-    const [showAddNewUser, setShowAddNewUser] = useState(false);
+    // const [showUserTable, setShowUserTable] = useState(true);
+    // const [showAddNewUser, setShowAddNewUser] = useState(false);
 
     const [newUsername, setNewUsername] = useState("");
     const [newPassword, setNewPassword] = useState("");
