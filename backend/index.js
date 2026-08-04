@@ -10,6 +10,7 @@ const meRoutes = require("./routes/me");
 const userRoutes = require("./routes/users");
 const holidayRoutes = require('./routes/holidays');
 const filterRoutes = require('./routes/filters');
+const fileRoutes = require('./routes/files');
 console.log(process.env.MONGO_URI);
 
 
@@ -26,6 +27,8 @@ app.use("/api", meRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/holidays", holidayRoutes);
 app.use("/api/filters", filterRoutes);
+app.use("/api/files", fileRoutes);
+
 
 
 console.log(process.env.MONGO_URI);
@@ -43,6 +46,11 @@ mongoose.connect(process.env.MONGO_URI)
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
+
+
+
+
 
 
 

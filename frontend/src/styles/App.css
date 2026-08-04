@@ -4,6 +4,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+
 }
 
 .footer {
@@ -14,7 +15,6 @@
     width: 85%;
     max-width: 2000px;
     margin: auto;
-    
     flex: 1;
 } 
 

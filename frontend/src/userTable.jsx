@@ -9,6 +9,7 @@ import {useTranslation} from "react-i18next";
 import {useAuth} from './auth/useAuth';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { CiEdit } from "react-icons/ci";
 
 
 function UserTable() {
@@ -40,7 +41,7 @@ function UserTable() {
       const [processing, setProcessing] = useState(false);
 
       const [showAddFilterName, setShowAddFilterName] = useState(false);
-      const [hideFilterName, setHideFilterName] = useState(false);
+
 
       const { t, i18n } = useTranslation();
 
@@ -130,7 +131,9 @@ function UserTable() {
         setRoleInput("");
         setSubmittedUsername("");
         setSubmittedRole("");
+        setNewFilterName("")
         setCurrentPage(1);
+
       };
         
       const handleUseSavedFilter = (savedFilter) => {
@@ -381,6 +384,8 @@ function UserTable() {
                   />
               </div>
               <div className="filter-actions">
+                <button type="submit">{t('Submit')}</button>
+                <button type="button" onClick={handleClearFilter}>{t('Clear Filter')}</button>
                 <div    
                   onMouseOver={handleShowFilterName} 
                   onMouseOut={handleHideFilterName}
@@ -391,7 +396,7 @@ function UserTable() {
                     type="button" 
                     onClick={handleAddFilter}
                   >
-                    {t('Save Filter')}
+                  {t('Save Filter')}
                   </button>                 
 
                   {showAddFilterName && (
@@ -409,8 +414,8 @@ function UserTable() {
                   )}
                 </div>
 
-                <button type="button" onClick={handleClearFilter}>{t('Clear Filter')}</button>
-                <button type="submit">{t('Submit')}</button>
+                
+                
               </div>
 
             </div>
@@ -553,13 +558,13 @@ function UserTable() {
               <td>{val.createdAt}</td>
               <td>{val.updatedAt}</td>
                 <td>
-                <button onClick={() => setShowPopup({type: "edit", user: val})}>
-                  {t('Edit')}
+                <button className="tableBttn" onClick={() => setShowPopup({type: "edit", user: val})}>
+                  <CiEdit />
                 </button>
               </td>
               <td>
-                <button onClick={() => setShowPopup({type: "delete", user: val})}>
-                  X
+                <button className="tableBttn" onClick={() => setShowPopup({type: "delete", user: val})}>
+                   <RiDeleteBinLine/>
                 </button>
               </td>
             </tr>
@@ -625,7 +630,7 @@ function UserTable() {
         <>
           <div className="overlay" onClick={() => setShowPopup({type: null, user: null})}></div>
           <form className="fileUploadForm" method="post" encType="multipart/form-data">
-              <p>{t('Delete')} {t('username')}?</p>
+              <p>{t('Delete')}?</p>
               <p>{t('username')}: {showPopup.user?.username}</p>
               <p>ID: {showPopup.user?._id}</p>
               <button type="button" onClick={() => handleDelete(showPopup.user._id)}>
