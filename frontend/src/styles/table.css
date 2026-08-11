@@ -52,8 +52,15 @@ tr:nth-child(even){background-color: #f0f0f038}
   color: #555;
 }
 
+.tableBttn{
+  padding: 6px 8px;
+  
+}
+
 .tableBttn:hover{
   cursor: pointer;
+
+  color: rgb(158, 16, 16);
 }
 
 .thead{
