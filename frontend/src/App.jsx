@@ -5,7 +5,6 @@ import './styles/App.css';
 
 import "./styles/global.css";
 import "./styles/layout.css";
-import "./styles/navbar.css";
 import "./styles/table.css";
 import "./styles/forms.css";
 import "./styles/popup.css";
@@ -59,8 +58,10 @@ function App() {
                     <Home />
                 </ProtectedRoute>
             } 
-            />  
+            /> 
+            
           </Routes>
+         
         </main>
         <Footer />
       </div> 

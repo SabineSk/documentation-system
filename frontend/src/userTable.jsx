@@ -558,12 +558,12 @@ function UserTable() {
               <td>{val.createdAt}</td>
               <td>{val.updatedAt}</td>
                 <td>
-                <button className="tableBttn" onClick={() => setShowPopup({type: "edit", user: val})}>
+                <button type="button" class="btn btn-outline-secondary" onClick={() => setShowPopup({type: "edit", user: val})}>
                   <CiEdit />
                 </button>
               </td>
               <td>
-                <button className="tableBttn" onClick={() => setShowPopup({type: "delete", user: val})}>
+                <button type="button" class="btn btn-outline-danger" onClick={() => setShowPopup({type: "delete", user: val})}>
                    <RiDeleteBinLine/>
                 </button>
               </td>
@@ -617,11 +617,14 @@ function UserTable() {
               <p>{t('Edit')} {showPopup.user?.username} ?</p>
               <p>ID: {showPopup.user?._id}</p>
               {/* userParams() ļauj userEdit.jsx nolasīt id no URL  */}
-              <Link className="button-yes" to={`/userEdit/${showPopup.user._id}`}> YES </Link>
+              <div className="d-flex gap-2">
+                <Link className="btn btn-success" to={`/userEdit/${showPopup.user._id}`}>{t('yes')}</Link>
 
-              <Link className="button-no" type="button" onClick={() => setShowPopup({type: null, user: null})}>
-                {t('no')}
-              </Link>
+                <button className="btn btn-secondary" type="button" onClick={() => setShowPopup({type: null, user: null})}>
+                  {t('no')}
+                </button>
+              </div>
+
             </form>
         </>
       )}
@@ -633,12 +636,14 @@ function UserTable() {
               <p>{t('Delete')}?</p>
               <p>{t('username')}: {showPopup.user?.username}</p>
               <p>ID: {showPopup.user?._id}</p>
-              <button type="button" onClick={() => handleDelete(showPopup.user._id)}>
-                {t('yes')}
-              </button>
-              <button type="button" onClick={() => setShowPopup({type: null, user: null})}>
-                {t('no')}
-              </button>
+              <div className="d-flex gap-2">
+                <button className="btn btn-success" onClick={() => handleDelete(showPopup.user._id)}>
+                  {t('yes')}
+                </button>
+                <button className="btn btn-secondary" onClick={() => setShowPopup({type: null, user: null})}>
+                  {t('no')}
+                </button>
+              </div>
           </form>
         </>
       )}

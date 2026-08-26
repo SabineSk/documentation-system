@@ -7,9 +7,6 @@
 
 }
 
-.footer {
-  margin-bottom: auto;
-}
 
 .content {
     width: 85%;
@@ -103,4 +100,40 @@
 
 #addUserButton:hover{
     background: #6fa79e;
+}
+
+/* ***************************File repository styles ******************************** */
+
+.file-list{
+    width: 100%;
+    margin: 20px auto;
+    border-top: 1px solid #ccc;
+    border-radius: 4px;
+    /* background-color: #f9f9f9; */
+    overflow-x:scroll;
+}
+
+.file-item{
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+   
+}
+
+.file-item div, span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex:1;
+}
+
+.file-box{
+  border: none;
+  background: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.file-box:hover{
+transform: translateY(-3px);
+cursor:pointer;
 }

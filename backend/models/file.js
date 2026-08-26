@@ -2,23 +2,14 @@ const mongoose = require("mongoose");
 
 const fileSchema = new mongoose.Schema(
   {
-    title: {
-      type: String,
-      trim: true,
-      default: ""
-    },
-
     originalName: {
       type: String,
       required: true
     },
 
-    storedName: {
-      type: String,
-      required: true
-    },
 
-    mimeType: {
+    /// mimeType — faila tips, piemēram, application/pdf;
+    mimeType: { 
       type: String,
       required: true
     },
@@ -31,6 +22,11 @@ const fileSchema = new mongoose.Schema(
     uploadedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true
+    },
+
+    data: {
+      type: Buffer,
       required: true
     }
   },

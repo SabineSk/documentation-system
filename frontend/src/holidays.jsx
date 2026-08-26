@@ -1,3 +1,6 @@
+//TODO: change view from table to calendar. Displaying selected days in colors
+
+
 import { useState } from 'react';
 import HolidayTable from './holidayTable.jsx';
 import { useTranslation } from "react-i18next";
@@ -54,8 +57,8 @@ function Holidays() {
       console.log(message);
 
       if (status === 'error') {
-            setError("Kļūda, pievienojot dienu");
-            return;
+        setError("Kļūda, pievienojot dienu");
+        return;
       }
       
       setNewName('');
@@ -78,7 +81,7 @@ function Holidays() {
     
   return ( 
     <div className="content">
-      <div className="nav">
+      <div className="container">
       
         <button onClick={() => {
           setShowHolidays(true);
@@ -196,6 +199,7 @@ function Holidays() {
             <button id='close-button' onClick={() => setShowAddNewHoliday(false)}>{t('close')}</button>
           </div>
           </form>
+      
         </div>
       )}
       </div>
