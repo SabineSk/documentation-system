@@ -131,8 +131,13 @@ useEffect(() => {
 }, []);
 
 
-const handleFileSelect = async()=>{
-
+const handleFileSelect = async(event)=>{
+  const checkedIds = event.target.value;
+if(event.target.checked){
+  setCheckedFiles([...checkedFiles, checkedIds])
+}else{
+  setCheckedFiles(checkedFiles.filter(id=>id!==checkedIds))
+}
 }
 
 const handleDelete = async(fileID)=>{
@@ -144,92 +149,118 @@ const handleDelete = async(fileID)=>{
     if(data.status == 'success'){
       //atjauno ekrānu ar filtru
       setFile((prevUsers) => prevUsers.filter((file) =>file._id !== fileID));
+      setCheckedFiles([])
     }
 };
 
 
 return (
-<div className="container-fluid p-0" >
-    {/* Galvenais saturs */}
+  <div className="container-fluid p-0" >
     <main className="col-12">
-    
-    <div className="d-flex align-items-start gap-5 mb-4 py-3 flex-wrap">
+      <div className="row align-items-start mb-4 py-3">
 
-    
-      {/* KREISĀ PUSE */}
-      <div className="d-flex gap-4">
+        {/******************************************* KREISĀ PUSE UPLOAD ********************************************/}
+        <div className="col-6 mt-1">
+          <div className="row g-3">
 
-        <div className="simple-box">
-          <form onSubmit={onSubmit}>
-            <label htmlFor="file-upload">
-              <IoCloudUploadOutline />
+            <div className='col-12 col-md-12 col-lg-6 col-xl-6 '>
+              <div className="simple-box h-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center">
+                <form onSubmit={onSubmit} className="d-flex flex-column align items-center">
+                  <label htmlFor="file-upload">
+                    <IoCloudUploadOutline />
+                    <h6>Upload file</h6>
+                    <input
+                      id="file-upload"
+                      type="file"
+                      className="file-input"
+                      onChange={(e) => setSelectedFile(e.target.files[0])}
+                    />
+                  </label>
+                  {selectedFile && (
+                    <small>{selectedFile.name}</small>
+                  )}
+                  <button
+                    type="submit"
+                    className="upload-button w-100"
+                    disabled={!selectedFile || processing}
+                  >
+                    {processing ? "Uploading..." : "Upload"}
+                  </button>
+                </form>
+              </div>
+            </div>
 
-              <h6>Upload file</h6>
-
-              <input
-                id="file-upload"
-                type="file"
-                className="file-input"
-                onChange={(e) => setSelectedFile(e.target.files[0])}
-              />
-            </label>
-
-            {selectedFile && (
-              <small>{selectedFile.name}</small>
-            )}
-
-            <button
-              type="submit"
-              className="upload-button"
-              disabled={!selectedFile || processing}
-            >
-              {processing ? "Uploading..." : "Upload"}
-            </button>
-          </form>
+            <div className='col-12 col-md-12 col-lg-6 col-xl-6 '>
+              <div className="simple-box h-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center">
+                <HiOutlineFolderAdd />
+                <h6>New folder</h6>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="simple-box">
-          <HiOutlineFolderAdd />
-          <h6>New folder</h6>
-        </div>
+        {/************************* LABĀ PUSE CATEGORIES **************************/}
+        <div className="col-6">
+          <h4>Categories</h4>
 
+          <div className="row g-3 mt-2">
+            <div className="col-12 col-md-12 col-lg-4 col-xxl-4">
+              <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center">
+                <FcPicture className="fs-2 me-2" />
+                <h6 className="mb-0 text-nowrap">Photos</h6>
+              </div>
+            </div>
+
+            <div className="col-12 col-md-12 col-lg-4 col-xxl-4">
+              <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center">
+                <FcVideoCall className="fs-2 me-2" />
+                <h6 className="mb-0 text-nowrap">Videos</h6>
+              </div>
+            </div>
+
+                      
+            <div className="col-12 col-md-12 col-lg-4 col-xxl-4">
+              <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center">
+                <FcDocument className="fs-2 me-2" />
+                <h6 className="m-0 text-nowrap">Documents</h6>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-
-      {/* LABĀ PUSE */}
-      <div className="categories-container">
-        <h4>Categories</h4>
-
-        <div className="d-flex gap-4 mt-4">
-
-          <div className="file-box p-4 rounded-4 shadow-sm">
-            <FcPicture className="fs-2 me-2" />
-            <h6 className="d-inline-block">Photos</h6>
-          </div>
-
-          <div className="file-box p-4 rounded-4 shadow-sm">
-            <FcVideoCall className="fs-2 me-2" />
-            <h6 className="d-inline-block">Videos</h6>
-          </div>
-
-          <div className="file-box p-4 rounded-4 shadow-sm">
-            <FcDocument className="fs-2 me-2" />
-            <h6 className="d-inline-block">Documents</h6>
-          </div>
-        </div>
-      </div>
-
-    </div>
+      {/****************************FAILU SARAKSTS******************************* */}
 
       <h4 className="pb-3 ">All files</h4>
 
       <div className="file-list shadow-sm ">
-        <div className="file-header">
-          <span>
+        <div className=" file-header-first row align-items-center px-4 py-2 border-bottom">
+          <div className="col-auto">
             <input 
-            type="checkbox">
+              type="checkbox"
+              style={{ width: "20px", height: "20px" }}>
             </input>
-          </span>
+          </div>
+          {checkedFiles.length > 0 && (
+            <>            
+              <div className="col-auto">
+                Move
+              </div>
+
+              <div 
+                className="col-auto" 
+                type="button" 
+                onClick={() => {
+                console.log("Deleted file:", checkedFiles.id);
+                  handleDelete(checkedFiles.id);
+                }}>
+                Delete
+              </div>
+          </>
+          )}
+        </div>
+        <div className="file-header">
+          <span></span>
           <span>Name</span>
           <span>Size</span>
           <span>Modified</span>
@@ -238,20 +269,19 @@ return (
 
         {file?.map((val) => (
           <div className="file-row" key={val._id}>
-            
             <input
               type="checkbox"
+              value={val._id}
               checked={checkedFiles.includes(val._id)}
-              onChange={() => handleFileSelect(val._id)}
-            />
+              onChange={(event) => {handleFileSelect(event)}}
+              style={{ width: "20px", height: "20px" }}>
+            </input>
             <div>
               {val.originalName}
             </div>
-
             <span>
               {(val.size / 1024).toFixed(1)} KB
             </span>
-
             <span>
               {new Date(val.createdAt).toLocaleDateString('en-EN', {
                 year: 'numeric',
@@ -261,7 +291,6 @@ return (
                 minute: '2-digit'
               })}
             </span>
-
             <div>
               <button
                 type="button"
@@ -269,69 +298,15 @@ return (
                 onClick={() => {
                   console.log("Deleted file:", val);
                   handleDelete(val._id);
-                }}
-              >
+                }}>
                 <RiDeleteBinLine />
               </button>
             </div>
-
           </div>
         ))}
-
-
-
-      </div>
-
-
-
-
-  {/* <div className="file-list">
-  <div className="file-header">
-    <span></span>
-    <span>Name</span>
-    <span>Size</span>
-    <span>Modified</span>
-    <span>Actions</span>
-  </div>
-
-  {file?.map((val) => (
-    <div className="file-row" key={val._id}>
-      <input
-        type="checkbox"
-        checked={checkedFiles.includes(val._id)}
-        onChange={() => handleFileSelect(val._id)}
-      />
-
-      <span>{val.originalName}</span>
-
-      <span>
-        {(val.size / 1024).toFixed(1)} KB
-      </span>
-
-      <span>
-        {new Date(val.createdAt).toLocaleDateString('en-EN', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        })}
-      </span>
-
-      <button
-        type="button"
-        className="btn btn-secondary btn-sm"
-        onClick={() => handleDelete(val._id)}
-      >
-        <RiDeleteBinLine />
-      </button>
-    </div>
-  ))}
-</div> */}
-          
+      </div> 
     </main>
   </div>
 );
-
 }
 export default Home;

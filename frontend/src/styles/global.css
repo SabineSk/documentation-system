@@ -38,10 +38,8 @@ main {
   display: grid;
   grid-template-columns: 40px 2fr 1fr 2fr 80px;
   align-items: center;
-  padding: 12px 16px;
+  padding: 8px 12px;
 }
-
-
 
 
 .file-header > *,
@@ -52,10 +50,16 @@ main {
 
 
 
-.file-header, .file-header-second {
+.file-header {
   font-weight: 600;
-  background: #f8f9fa;
+  background: #a2b1bd65;
   border-bottom: 1px solid #ddd;
+}
+
+.file-header-first{
+  font-weight: 600;
+  background: #a2b1bd65;
+  margin-bottom: 1px;
 }
 
 .file-row {

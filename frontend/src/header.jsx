@@ -72,7 +72,7 @@ function Header(){
         <nav className="navbar navbar-expand-lg px-3 bg-dark" data-bs-theme="dark">
         <div className="container-fluid">
             {/* Lapas nosaukums */}
-            <span className="navbar-brand mb-0 h1" style={{ fontSize: '2rem' }}>
+            <span className="navbar-brand mb-0 h1 justify-content-start" style={{ fontSize: '2rem' }}>
             {pageTitle}
             </span>
 
