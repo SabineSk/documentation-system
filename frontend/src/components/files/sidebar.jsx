@@ -4,15 +4,15 @@ function Sidebar() {
   return (
 
     <aside
-      className="sidebar p-3 min-vh-100"
+      className="sidebar p-3 h-100"
       style={{ width: "200px", flexShrink: 0 }}
     >
-
+    
       <p className="small mb-2">FILES</p>
 
       <ul className="nav flex-column mb-4">
         <li className="nav-item">
-          <Link className="nav-link text-light">
+          <Link className="nav-link">
             My Files
           </Link>
         </li>
@@ -61,7 +61,7 @@ function Sidebar() {
         </li>
       </ul>
 
-      <p className="text-muted small mb-2">OTHER</p>
+      <p className="small mb-2">OTHER</p>
 
       <ul className="nav flex-column">
         <li className="nav-item">

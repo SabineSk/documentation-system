@@ -8,6 +8,9 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { FcPicture } from "react-icons/fc";
 import { FcVideoCall } from "react-icons/fc";
 import { FcDocument } from "react-icons/fc";
+import { HiDotsHorizontal } from "react-icons/hi";
+import { HiOutlineDownload } from "react-icons/hi";
+import { useTranslation } from "react-i18next";
 
 function Home() {
 
@@ -19,6 +22,7 @@ const [status, setStatus] = useState("");
 const [file, setFile] = useState([]);
 const [checkedFiles, setCheckedFiles] = useState([]);
 const [slectedCategory, setSelectedCategory] = useState();
+const { t, i18n } = useTranslation();
 
 
 
@@ -153,6 +157,13 @@ const handleDelete = async(fileID)=>{
     }
 };
 
+//Test for unchecking files. 
+// useEffect(() => {
+//   console.log("checkedFiles changed:", checkedFiles);
+// }, [checkedFiles]);
+
+
+
 
 return (
   <div className="container-fluid p-0" >
@@ -164,8 +175,8 @@ return (
           <div className="row g-3">
 
             <div className='col-12 col-md-12 col-lg-6 col-xl-6 '>
-              <div className="simple-box h-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center">
-                <form onSubmit={onSubmit} className="d-flex flex-column align items-center">
+              <div className="simple-box h-100 w-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center m-0 p-0" style={{ backgroundColor: '#e0a4f255' }}>
+                <form onSubmit={onSubmit} className="w-100 flex-column align-items-center p-3" >
                   <label htmlFor="file-upload">
                     <IoCloudUploadOutline />
                     <h6>Upload file</h6>
@@ -191,13 +202,14 @@ return (
             </div>
 
             <div className='col-12 col-md-12 col-lg-6 col-xl-6 '>
-              <div className="simple-box h-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center">
+              <div className="simple-box h-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center" style={{ backgroundColor: '#e0a4f255' }}>
                 <HiOutlineFolderAdd />
                 <h6>New folder</h6>
               </div>
             </div>
           </div>
         </div>
+        
 
         {/************************* LABĀ PUSE CATEGORIES **************************/}
         <div className="col-6">
@@ -205,14 +217,14 @@ return (
 
           <div className="row g-3 mt-2">
             <div className="col-12 col-md-12 col-lg-4 col-xxl-4">
-              <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center">
+              <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#ff7e3955' }} >
                 <FcPicture className="fs-2 me-2" />
                 <h6 className="mb-0 text-nowrap">Photos</h6>
               </div>
             </div>
 
             <div className="col-12 col-md-12 col-lg-4 col-xxl-4">
-              <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center">
+              <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#30cd0555' }}>
                 <FcVideoCall className="fs-2 me-2" />
                 <h6 className="mb-0 text-nowrap">Videos</h6>
               </div>
@@ -220,7 +232,7 @@ return (
 
                       
             <div className="col-12 col-md-12 col-lg-4 col-xxl-4">
-              <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center">
+              <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#39dbff55' }}>
                 <FcDocument className="fs-2 me-2" />
                 <h6 className="m-0 text-nowrap">Documents</h6>
               </div>
@@ -238,7 +250,9 @@ return (
           <div className="col-auto">
             <input 
               type="checkbox"
-              style={{ width: "20px", height: "20px" }}>
+              style={{ width: "20px", height: "20px" }}
+              // onClick={() =>} 
+              >
             </input>
           </div>
           {checkedFiles.length > 0 && (
@@ -250,11 +264,16 @@ return (
               <div 
                 className="col-auto" 
                 type="button" 
+                //checkedFiles is an array. Need to iterate through each
                 onClick={() => {
-                console.log("Deleted file:", checkedFiles.id);
-                  handleDelete(checkedFiles.id);
+                  checkedFiles.forEach((id)=>{
+                  handleDelete(id);
+                  })
+                  console.log("Deleted files:", checkedFiles);  
+                  //  setCheckedFiles([]); nevajag, johandle delete jau noņem.
+               
                 }}>
-                Delete
+                {t("Delete")}
               </div>
           </>
           )}
@@ -265,6 +284,7 @@ return (
           <span>Size</span>
           <span>Modified</span>
           <span>Actions</span>
+          
         </div>
 
         {file?.map((val) => (
@@ -291,8 +311,39 @@ return (
                 minute: '2-digit'
               })}
             </span>
-            <div>
-              <button
+            {/* <div
+            className="collapse navbar-collapse justify-content-end"
+           >
+              <ul className="">
+                <li className="nav-item dropdown">
+                  <button
+                    type="button"
+                    className="btn btn-light">
+                    <HiDotsHorizontal />
+                  </button>
+                </li>
+              </ul>
+            </div> */}
+            <div className="dropdown">
+                <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  <HiDotsHorizontal />
+                </button>
+                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item d-flex align-items-center gap-3"><HiOutlineDownload /> {t("Download")}</a></li>
+                  <li><a 
+                  type="button" 
+                  className="dropdown-item d-flex align-items-center gap-3"
+                  onClick={() => {
+                  console.log("Deleted file:", val);
+                  handleDelete(val._id);
+                }}><RiDeleteBinLine />{t("Delete")}</a></li>
+                <li><a class="dropdown-item" href="#">{t("Open in new tab")}</a></li>
+                
+                </ul>
+            </div>
+            
+
+              {/* <button
                 type="button"
                 className="btn btn-secondary"
                 onClick={() => {
@@ -300,8 +351,8 @@ return (
                   handleDelete(val._id);
                 }}>
                 <RiDeleteBinLine />
-              </button>
-            </div>
+              </button> */}
+
           </div>
         ))}
       </div> 

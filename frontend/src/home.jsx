@@ -1,5 +1,5 @@
 import FileUpload from "./components/files/FileUpload";
-import Footer from "./footer.jsx";
+// import Footer from "./footer.jsx";
 import Sidebar from "./components/files/sidebar";
 
 function Home() {
@@ -8,9 +8,10 @@ function Home() {
 
       <div className="d-flex flex-grow-1">
         <div>
-          <Sidebar />
+          
+          <Sidebar/>
+          
         </div>
-
         <main className="flex-grow-1 px-4">
           <FileUpload />
         </main>

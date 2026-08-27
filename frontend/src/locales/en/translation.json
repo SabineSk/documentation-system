@@ -53,7 +53,9 @@
     "Clear Filter": "Clear Filter",
     "Add user": "Add user",
     "Filter name": "Filter name",
-    "Save Filter": "Save filter"
-
+    "Save Filter": "Save filter",
+    "Categories": "Categories",
+    "Download":"Download",
+    "Open in new tab": "Open in new tab"
 
 }
