@@ -53,7 +53,17 @@
     "Add user": "Pievienot lietotāju",
     "Filter name": "Filtra nosaukums",
     "Save Filter": "Saglabāt filtru",
-    "Categories": "kategorijas",
-    "Download":"Lejupielādēt"
+    "Categories": "Kategorijas",
+    "Download":"Lejupielādēt",
+    "Open in new tab": "Atvērt jaunā cilnē",
+    "Documents": "Dokumenti",
+    "Videos": "Video",
+    "Photos": "Attēli",
+    "Move": "Pārvietot",
+    "All files": "Visi faili",
+    "New folder": "Izveidot jaunu mapi",
+     "Choose file": "Izvēlēties failu",
+     "Upload": "Augšupielādēt",
+    "Uploading...": "Augšupielādē..."
 
 }

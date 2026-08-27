@@ -36,7 +36,7 @@ main {
 .file-header,
 .file-row {
   display: grid;
-  grid-template-columns: 40px 2fr 1fr 2fr 80px;
+  grid-template-columns: 40px 50px 2fr 1fr 2fr 80px;
   align-items: center;
   padding: 8px 12px;
 }

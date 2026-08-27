@@ -141,4 +141,52 @@ router.delete("/:id", async(req, res)=>{
   }
 });
 
+router.get("/view/:id", async (req, res) =>{
+  console.log("View ROUTE CALLED");
+  console.log("ID:", req.params.id);
+  //backend ņem id no url, ko nosūta frontends no failu saraksta
+  const {id} = req.params;
+  try{
+    const file = await File.findById({_id: id});
+    if(!file){
+      return res.send.status(404).json({message: "File not found"});
+    }
+    res.setHeader("Content-type", file.mimeType);
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename="${file.originalName}"`
+    );
+
+    res.send(file.data);
+  }catch (err) {
+  console.error("View file error:", err);
+  res.status(500).json({ message: "Could not open file" });
+}
+});
+
+
+router.get("/download/:id", async (req, res) =>{
+  const {id} = req.params;
+  try{
+    const file = await File.findById({_id: id});
+    if(!file){
+      return res.send.status(404).json({message: "File not found"});
+    }
+    res.setHeader("Content-type", file.mimeType);
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${file.originalName}"`
+    );
+
+    res.send(file.data);
+  }catch (err) {
+  console.error("View file error:", err);
+  res.status(500).json({ message: "Could not download file" });
+}
+});
+
+
+
+
+
 module.exports = router;

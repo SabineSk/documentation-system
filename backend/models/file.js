@@ -7,7 +7,6 @@ const fileSchema = new mongoose.Schema(
       required: true
     },
 
-
     /// mimeType — faila tips, piemēram, application/pdf;
     mimeType: { 
       type: String,
@@ -25,10 +24,16 @@ const fileSchema = new mongoose.Schema(
       required: true
     },
 
+    starred: {
+      type: Boolean,
+      default: false
+    },
+
     data: {
       type: Buffer,
       required: true
     }
+
   },
   {
     timestamps: true

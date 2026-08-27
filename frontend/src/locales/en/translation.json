@@ -56,6 +56,15 @@
     "Save Filter": "Save filter",
     "Categories": "Categories",
     "Download":"Download",
-    "Open in new tab": "Open in new tab"
+    "Open in new tab": "Open in new tab",
+    "Documents": "Documents",
+    "Videos": "Videos",
+    "Photos": "Photos",
+    "Move": "Move",
+    "All files": "All files",
+    "New folder": "Create New Folder",
+    "Choose file": "Choose a file",
+    "Upload": "Upload",
+    "Uploading...": "Uploading..."
 
 }

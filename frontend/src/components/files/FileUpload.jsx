@@ -10,6 +10,11 @@ import { FcVideoCall } from "react-icons/fc";
 import { FcDocument } from "react-icons/fc";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { HiOutlineDownload } from "react-icons/hi";
+// import { MdOutlineStarRate } from "react-icons/md";
+// import { MdStarRate } from "react-icons/md";
+import { ImStarEmpty } from "react-icons/im";
+import { ImStarFull } from "react-icons/im";
+
 import { useTranslation } from "react-i18next";
 
 function Home() {
@@ -157,6 +162,15 @@ const handleDelete = async(fileID)=>{
     }
 };
 
+const handleView = (id) => {
+  window.open(`/api/files/view/${id}`, "_blank")
+};
+
+
+const handleDownload = (id) => {
+  window.open(`/api/files/download/${id}`, "_blank")
+}
+
 //Test for unchecking files. 
 // useEffect(() => {
 //   console.log("checkedFiles changed:", checkedFiles);
@@ -179,7 +193,7 @@ return (
                 <form onSubmit={onSubmit} className="w-100 flex-column align-items-center p-3" >
                   <label htmlFor="file-upload">
                     <IoCloudUploadOutline />
-                    <h6>Upload file</h6>
+                    <h6>{t("Choose file")}</h6>
                     <input
                       id="file-upload"
                       type="file"
@@ -188,14 +202,20 @@ return (
                     />
                   </label>
                   {selectedFile && (
-                    <small>{selectedFile.name}</small>
+                    <div className="d-flex gap-3">                    
+                      <small>{selectedFile.name}</small>
+                      <small>
+                        {(selectedFile.size / 1024).toFixed(1)} KB
+                      </small>
+                    </div>
+
                   )}
                   <button
                     type="submit"
                     className="upload-button w-100"
                     disabled={!selectedFile || processing}
                   >
-                    {processing ? "Uploading..." : "Upload"}
+                    {processing ? t("Uploading..."): t("Upload") }
                   </button>
                 </form>
               </div>
@@ -204,7 +224,7 @@ return (
             <div className='col-12 col-md-12 col-lg-6 col-xl-6 '>
               <div className="simple-box h-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center" style={{ backgroundColor: '#e0a4f255' }}>
                 <HiOutlineFolderAdd />
-                <h6>New folder</h6>
+                <h6>{t("New folder")}</h6>
               </div>
             </div>
           </div>
@@ -213,20 +233,20 @@ return (
 
         {/************************* LABĀ PUSE CATEGORIES **************************/}
         <div className="col-6">
-          <h4>Categories</h4>
+          <h4>{t("Categories")}</h4>
 
           <div className="row g-3 mt-2">
             <div className="col-12 col-md-12 col-lg-4 col-xxl-4">
               <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#ff7e3955' }} >
                 <FcPicture className="fs-2 me-2" />
-                <h6 className="mb-0 text-nowrap">Photos</h6>
+                <h6 className="mb-0 text-nowrap">{t("Photos")}</h6>
               </div>
             </div>
 
             <div className="col-12 col-md-12 col-lg-4 col-xxl-4">
               <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#30cd0555' }}>
                 <FcVideoCall className="fs-2 me-2" />
-                <h6 className="mb-0 text-nowrap">Videos</h6>
+                <h6 className="mb-0 text-nowrap">{t("Videos")}</h6>
               </div>
             </div>
 
@@ -234,7 +254,7 @@ return (
             <div className="col-12 col-md-12 col-lg-4 col-xxl-4">
               <div className="file-box py-4 rounded-4 shadow-sm h-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#39dbff55' }}>
                 <FcDocument className="fs-2 me-2" />
-                <h6 className="m-0 text-nowrap">Documents</h6>
+                <h6 className="m-0 text-nowrap">{t("Documents")}</h6>
               </div>
             </div>
           </div>
@@ -243,7 +263,7 @@ return (
 
       {/****************************FAILU SARAKSTS******************************* */}
 
-      <h4 className="pb-3 ">All files</h4>
+      <h4 className="pb-3 ">{t("All files")}</h4>
 
       <div className="file-list shadow-sm ">
         <div className=" file-header-first row align-items-center px-4 py-2 border-bottom">
@@ -251,14 +271,22 @@ return (
             <input 
               type="checkbox"
               style={{ width: "20px", height: "20px" }}
-              // onClick={() =>} 
+              checked={file.length > 0 && checkedFiles.length === file.length}
+              onChange={(e) =>{
+                if(e.target.checked) {
+                  setCheckedFiles(file.map((val) => val._id))//From files array  [  { _id: "123", originalName: "apple.webp" },  { _id: "456", originalName: "bird.jpg" }] makes["123", "456", "789"]
+                }else {
+                  setCheckedFiles([]);
+                }
+              }}
               >
             </input>
+            
           </div>
           {checkedFiles.length > 0 && (
             <>            
               <div className="col-auto">
-                Move
+                {t("Move")}
               </div>
 
               <div 
@@ -280,7 +308,8 @@ return (
         </div>
         <div className="file-header">
           <span></span>
-          <span>Name</span>
+          <span></span>
+          <span>{t("tableName")}</span>
           <span>Size</span>
           <span>Modified</span>
           <span>Actions</span>
@@ -296,6 +325,11 @@ return (
               onChange={(event) => {handleFileSelect(event)}}
               style={{ width: "20px", height: "20px" }}>
             </input>
+            <div className="d-flex justify-content-center alin-items-center">
+                <ImStarEmpty size={20}/>
+                <ImStarFull  size={20} />
+            </div>
+                       
             <div>
               {val.originalName}
             </div>
@@ -311,25 +345,15 @@ return (
                 minute: '2-digit'
               })}
             </span>
-            {/* <div
-            className="collapse navbar-collapse justify-content-end"
-           >
-              <ul className="">
-                <li className="nav-item dropdown">
-                  <button
-                    type="button"
-                    className="btn btn-light">
-                    <HiDotsHorizontal />
-                  </button>
-                </li>
-              </ul>
-            </div> */}
+
             <div className="dropdown">
                 <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                   <HiDotsHorizontal />
                 </button>
                  <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li><a class="dropdown-item d-flex align-items-center gap-3"><HiOutlineDownload /> {t("Download")}</a></li>
+                  <li>
+                    <a className="dropdown-item d-flex align-items-center gap-3" onClick={() => handleDownload(val._id)}><HiOutlineDownload /> {t("Download")}</a>
+                  </li>
                   <li><a 
                   type="button" 
                   className="dropdown-item d-flex align-items-center gap-3"
@@ -337,21 +361,20 @@ return (
                   console.log("Deleted file:", val);
                   handleDelete(val._id);
                 }}><RiDeleteBinLine />{t("Delete")}</a></li>
-                <li><a class="dropdown-item" href="#">{t("Open in new tab")}</a></li>
+                 <li>
+                  <a className="dropdown-item" type="button" onClick={() => handleView(val._id)}>
+                    {t("Open here")}
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" type="button" onClick={() => handleView(val._id)}>
+                    {t("Open in new tab")}
+                  </a>
+                </li>
                 
                 </ul>
             </div>
-            
 
-              {/* <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => {
-                  console.log("Deleted file:", val);
-                  handleDelete(val._id);
-                }}>
-                <RiDeleteBinLine />
-              </button> */}
 
           </div>
         ))}
