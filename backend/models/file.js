@@ -29,6 +29,13 @@ const fileSchema = new mongoose.Schema(
       default: false
     },
 
+    folder: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Folder",
+      required: false
+
+    },
+
     data: {
       type: Buffer,
       required: true

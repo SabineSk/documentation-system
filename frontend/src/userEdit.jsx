@@ -79,7 +79,7 @@ function UserEdit() {
             });
             const {data, status, message} = await response.json();
                 setMessage(message);
-                setStatus(status)
+                setStatus(status);
 
             if (status === 'error') {
                 setError("Kļūda, labojot lietotāju");

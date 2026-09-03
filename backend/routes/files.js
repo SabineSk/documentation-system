@@ -185,6 +185,23 @@ router.get("/download/:id", async (req, res) =>{
 }
 });
 
+//"Starred" funkctionality.
+router.patch("/:fileID", authMiddleware, async (req, res) =>{
+  //editing file metadata (starred)
+  const {fileID} = req.params;
+  const {editStarred} = req.body;
+  const updateData = {};
+  if (editStarred !== undefined) updateData.starred = editStarred;
+
+  const updatedFile = await File.findByIdAndUpdate(fileID, updateData, {new: true});
+  return res.send({
+    data: updatedFile,
+    status: "success",
+    message: "File updated"
+  });
+  
+})
+
 
 
 

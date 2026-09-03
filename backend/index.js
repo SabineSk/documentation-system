@@ -11,6 +11,7 @@ const userRoutes = require("./routes/users");
 const holidayRoutes = require('./routes/holidays');
 const filterRoutes = require('./routes/filters');
 const fileRoutes = require('./routes/files');
+const folderRoutes = require('./routes/folders');
 console.log(process.env.MONGO_URI);
 
 
@@ -28,6 +29,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/holidays", holidayRoutes);
 app.use("/api/filters", filterRoutes);
 app.use("/api/files", fileRoutes);
+app.use("/api/folders", folderRoutes);
+
 
 
 

@@ -26,10 +26,10 @@ const [message, setMessage] = useState("");
 const [status, setStatus] = useState("");
 const [file, setFile] = useState([]);
 const [checkedFiles, setCheckedFiles] = useState([]);
+const [folderName, setFolderName] = useState("");
+
 const [slectedCategory, setSelectedCategory] = useState();
 const { t, i18n } = useTranslation();
-
-
 
 
 const onSubmit =  async (e) => {
@@ -75,7 +75,32 @@ const onSubmit =  async (e) => {
   }finally{
     setProcessing(false);
   }
-  
+}
+
+const handleAddFolder = async (e) => {
+  e.preventDefault();
+
+  try{
+    const response = await fetch('/api/folders/create', {
+      method: "POST",
+      headers:{
+          "Content-Type": "application/json"
+    },  
+    credentials:'include',
+    body: JSON.stringify({
+      folderName: folderName,
+      parent: null
+    })
+    });
+
+    const {data, status, message} = await response.json();
+    setMessage(message);
+    setStatus(status);
+
+    }catch(err){
+      console.log(err);
+      setError("Kļūda, pievienojot mapi");
+    }
 }
 
 // const fetchFiles = async (category) => {
@@ -106,7 +131,7 @@ const onSubmit =  async (e) => {
 
 // };
 
-//strādājošais bez kategorijām
+
 const fetchFiles = async () => {
   try {
     const response = await fetch('/api/files/list', {
@@ -132,7 +157,6 @@ const fetchFiles = async () => {
     console.log(err);
     setFile([]);
   }
-
 };
 
 useEffect(() => {
@@ -140,12 +164,12 @@ useEffect(() => {
 }, []);
 
 
-const handleFileSelect = async(event)=>{
-  const checkedIds = event.target.value;
-if(event.target.checked){
-  setCheckedFiles([...checkedFiles, checkedIds])
+const handleFileSelect = async(event) => {
+  const checkedIds = event.target.value; // Gets the value (ID) of the checkbox that was clicked
+if(event.target.checked){ //If checkbox is checked(true), 
+  setCheckedFiles([...checkedFiles, checkedIds]) //...checkedFiles is the previous state, and shecedIds is the new value to be added to the array
 }else{
-  setCheckedFiles(checkedFiles.filter(id=>id!==checkedIds))
+  setCheckedFiles(checkedFiles.filter(id=>id!==checkedIds)) //if checkbox is unchecked, remove the id from the checkedFiles array by filtering out the unchecked id
 }
 }
 
@@ -176,13 +200,59 @@ const handleDownload = (id) => {
 //   console.log("checkedFiles changed:", checkedFiles);
 // }, [checkedFiles]);
 
-const [starred, setStarred] = useState(false);
+const [starred, setStarred] = useState();
+const [starredFiles, setStarredFiles] = useState([]);
+
+// const toggleStar = () => {
+//   setStarred(!starred);
+// }
 
 
-const toggleStar = () => {
-  setStarred(!starred);
+const handleStarred = async (event, fileID, currentStarredStatus) => {
+    event.preventDefault();
+    setProcessing(true);
+    setError(null);
+
+    // const starredFileIds = event.target.value; 
+    //   if (starredFileIds) {
+    //     setStarredFiles([...starredFiles, starredFileIds]);
+    //   }else {
+    //     setStarredFiles(starredFiles.filter(id => id !== starredFileIds))
+    //   }
+
+    const value = event.currentTarget.dataset.value; 
+    console.log(value); 
+
+    try{
+      console.log('fileID value:', fileID);
+      const response = await fetch(`/api/files/${fileID}`,{
+        method: "PATCH",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        credentials:'include',
+        body: JSON.stringify({
+          editStarred: !currentStarredStatus
+        })
+      });
+
+      const {data, status, message} = await response.json();
+      setMessage(message);
+      setStatus(status);
+    
+      if (status === 'success') {
+        setStarred(!currentStarredStatus);
+        fetchFiles(); // Refresh the file list to show the updated starred status
+        console.log(message); 
+      }
+
+    }catch(err){
+      console.log(err);
+      setError("Kļūda, atjauninot failu");
+    }finally{
+      setProcessing(false);
+    }
 }
-
 
 
 // const handleFileSelect = async(event)=>{
@@ -202,7 +272,6 @@ return (
         {/******************************************* KREISĀ PUSE UPLOAD ********************************************/}
         <div className="col-6 mt-1">
           <div className="row g-3">
-
             <div className='col-12 col-md-12 col-lg-6 col-xl-6 '>
               <div className="simple-box h-100 w-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center m-0 p-0" style={{ backgroundColor: '#e0a4f255' }}>
                 <form onSubmit={onSubmit} className="w-100 flex-column align-items-center p-3" >
@@ -223,7 +292,6 @@ return (
                         {(selectedFile.size / 1024).toFixed(1)} KB
                       </small>
                     </div>
-
                   )}
                   <button
                     type="submit"
@@ -235,11 +303,46 @@ return (
                 </form>
               </div>
             </div>
-
             <div className='col-12 col-md-12 col-lg-6 col-xl-6 '>
               <div className="simple-box h-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center" style={{ backgroundColor: '#e0a4f255' }}>
-                <HiOutlineFolderAdd />
-                <h6>{t("New folder")}</h6>
+                <label 
+                  type="button" 
+                  className="btn h-100 w-100 d-flex flex-column align-items-center justify-content-center"
+                  htmlFor="folder-name"
+                  data-bs-toggle="modal"
+                  data-bs-target="#newFolderModal"
+                  style={{ cursor: "pointer" }}
+                  >
+                    <HiOutlineFolderAdd />
+                    <h6>{t("New folder")}</h6>
+                  </label>
+              </div>
+              <div className="modal fade" id="newFolderModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h1 className="modal-title fs-5" id="exampleModalLabel">New folder</h1>
+                      <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div className="modal-body">
+                        <form onSubmit={handleAddFolder} className="w-100 d-flex flex-column align-items-center p-3" >
+                          <input
+                            type="text"
+                            id="folder-name"
+                            value={folderName}
+                            onChange={(e) => setFolderName(e.target.value)}
+                            placeholder={t("Enter folder name")}
+                            className="form-control"
+                            required
+                          />
+                        </form>
+                    </div>
+                    <div className="modal-footer">
+                      <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" className="btn btn-primary" onClick={handleAddFolder}>Save changes</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -340,15 +443,14 @@ return (
               onChange={(event) => {handleFileSelect(event)}}
               style={{ width: "20px", height: "20px" }}>
             </input>
-
-            {starred ? (
-              <ImStarFull size={20} type="checkbox"  checked={checkedFiles.includes(val._id)} onClick={(event) => toggleStar(event)}/>
+            {val.starred ? (
+              <ImStarFull size={20} onClick={(event) => handleStarred(event, val._id, val.starred)}/>
             ) : (
-              <ImStarEmpty size={20} onClick={(event) => toggleStar(event)}/>
+              <ImStarEmpty size={20}  onClick={(event) => handleStarred(event, val._id, val.starred)}/>
             )}
 
             <div>
-              {val.originalName}K
+              {val.originalName}
             </div>
             <span>
               {(val.size / 1024).toFixed(1)} KB
