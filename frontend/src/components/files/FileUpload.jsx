@@ -176,8 +176,23 @@ const handleDownload = (id) => {
 //   console.log("checkedFiles changed:", checkedFiles);
 // }, [checkedFiles]);
 
+const [starred, setStarred] = useState(false);
 
 
+const toggleStar = () => {
+  setStarred(!starred);
+}
+
+
+
+// const handleFileSelect = async(event)=>{
+//   const checkedIds = event.target.value;
+// if(event.target.checked){
+//   setCheckedFiles([...checkedFiles, checkedIds])
+// }else{
+//   setCheckedFiles(checkedFiles.filter(id=>id!==checkedIds))
+// }
+// }
 
 return (
   <div className="container-fluid p-0" >
@@ -310,9 +325,9 @@ return (
           <span></span>
           <span></span>
           <span>{t("tableName")}</span>
-          <span>Size</span>
-          <span>Modified</span>
-          <span>Actions</span>
+          <span>{t("Size")}</span>
+          <span>{t("Modified")}</span>
+          <span>{t("Actions")}</span>
           
         </div>
 
@@ -325,13 +340,15 @@ return (
               onChange={(event) => {handleFileSelect(event)}}
               style={{ width: "20px", height: "20px" }}>
             </input>
-            <div className="d-flex justify-content-center alin-items-center">
-                <ImStarEmpty size={20}/>
-                <ImStarFull  size={20} />
-            </div>
-                       
+
+            {starred ? (
+              <ImStarFull size={20} type="checkbox"  checked={checkedFiles.includes(val._id)} onClick={(event) => toggleStar(event)}/>
+            ) : (
+              <ImStarEmpty size={20} onClick={(event) => toggleStar(event)}/>
+            )}
+
             <div>
-              {val.originalName}
+              {val.originalName}K
             </div>
             <span>
               {(val.size / 1024).toFixed(1)} KB

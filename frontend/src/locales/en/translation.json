@@ -65,6 +65,9 @@
     "New folder": "Create New Folder",
     "Choose file": "Choose a file",
     "Upload": "Upload",
-    "Uploading...": "Uploading..."
+    "Uploading...": "Uploading...",
+    "Size": "Size",
+    "Modified": "Modified",
+    "Actions": "Actions"
 
 }

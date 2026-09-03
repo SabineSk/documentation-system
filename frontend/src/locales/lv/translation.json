@@ -64,6 +64,9 @@
     "New folder": "Izveidot jaunu mapi",
      "Choose file": "Izvēlēties failu",
      "Upload": "Augšupielādēt",
-    "Uploading...": "Augšupielādē..."
+    "Uploading...": "Augšupielādē...",
+    "Size": "Lielums",
+    "Modified": "Labots",
+    "Actions": "Darbības"
 
 }
