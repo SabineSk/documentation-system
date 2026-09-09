@@ -1,6 +1,58 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+
 
 function Sidebar() {
+  const [folders, setFolders] = useState([]);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+
+
+  const fetchFolders = async () => {
+    try{
+      const response = await fetch('/api/folders/list', {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: 'include' 
+      });
+      const { data, status, message } = await response.json();
+  
+      setMessage(message);
+      setStatus(status);
+  
+      if (status === 'success'){
+        setFolders(data);
+  
+      }else{
+        setFolders([]);
+      }
+  
+    }catch(error){
+      console.log(error);
+      setFolders([]);
+    }
+  };
+  
+  useEffect(() => {
+     const loadData = async () => {
+      await Promise.all([fetchFolders()]);
+    };
+    loadData();
+  }, []);
+
+  const handleFolderExpand = () => {
+    setIsVisible(!isVisible);
+  }
+
+  //This shows error that it can trigger cascading renders
+//   useEffect(() => {
+//   fetchFolders();
+// }, []);
+
+
   return (
 
     <aside
@@ -19,8 +71,18 @@ function Sidebar() {
 
         <li className="nav-item">
           <Link className="nav-link" to="/folders">
-            Folders
+            All folders
           </Link>
+          {folders?.map((val) => (
+            <Link key={val._id} className="nav-link" to={`/folders/${val._id}`} onClick={() => handleFolderExpand(val._id)}>
+              {val.folderName}
+            </Link>
+          ))}
+
+
+          {/* <Link className="nav-link" to="/folders">
+            Folders
+          </Link> */}
         </li>
 
         <li className="nav-item">

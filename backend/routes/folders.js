@@ -43,4 +43,24 @@ router.post('/create',authMiddleware, async (req, res) => {
     }
 });
 
+
+router.get(`/list`, authMiddleware, async (req, res) => {
+    const { id: userId } = req.user;
+    const folders = await Folder.find({createdBy: req.user.id});
+    try{
+    res.send({
+        data: folders,
+        status: 'success',
+        message: 'Folders retrieved successfully'
+    });
+    }catch (error) {
+        console.log(error);
+        res.send({
+            data:null,
+            status:'error',
+            message: "Error retrieving folders"
+        })
+    }
+})
+
 module.exports = router;

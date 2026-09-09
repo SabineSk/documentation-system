@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 //import {useAuth} from './auth/useAuth';
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { HiOutlineFolderAdd } from "react-icons/hi";
-import { RiTeamLine } from "react-icons/ri";
+// import { RiTeamLine } from "react-icons/ri";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FcPicture } from "react-icons/fc";
 import { FcVideoCall } from "react-icons/fc";
@@ -27,10 +27,73 @@ const [status, setStatus] = useState("");
 const [file, setFile] = useState([]);
 const [checkedFiles, setCheckedFiles] = useState([]);
 const [folderName, setFolderName] = useState("");
+const [folders, setFolders] = useState([]);
+const [isVisible, setIsVisible] = useState(false);
+const [isExpanded, setIsExpanded] = useState({});
+const [parentFolder, setParentFolder] = useState();
 
-const [slectedCategory, setSelectedCategory] = useState();
+const [selectedCategory, setSelectedCategory] = useState();
 const { t, i18n } = useTranslation();
 
+
+//Folder expand/collapse toggle
+//prev is callback function for the previous IsExpanded state (true or false).
+//...prev copies all previous state values into the new state object
+//[folderId]: takes the folderId 
+//At first !prev[folderId] does not contain the specific folderId yet, it is undefined. !undefined is true. 
+//Allows to toggle the state of each folder individually, without affecting the others.
+// const toggleExpand = (folderId) => {
+//   setIsExpanded((prev) => ({...prev, [folderId]: !prev[folderId]}))
+// }
+
+// const handleAdd = (parentId, isFpolder) => {
+//   const name = prompt(`Enter ${isFolder ? "folder" : "file"} name:`);
+//     if (name) onAdd(parentId, name, isFolder);
+  
+// }
+
+const fetchFolders = async () => {
+    try{
+      const response = await fetch('/api/folders/list', {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: 'include' 
+      });
+      const { data, status, message } = await response.json();
+  
+      setMessage(message);
+      setStatus(status);
+  
+      if (status === 'success'){
+        setFolders(data);
+  
+      }else{
+        setFolders([]);
+      }
+  
+    }catch(error){
+      console.log(error);
+      setFolders([]);
+    }
+  };  
+  
+  useEffect(() => {
+     const loadData = async () => {
+      await Promise.all([fetchFolders()]);
+    };
+    loadData();
+  }, []);
+
+  // const handleFolderExpand = () => {
+  //   setIsVisible(!isVisible);
+  // }
+
+  const toggleExpand = (folderId) => {
+    setIsExpanded((prev) => ({...prev, [folderId]: !prev[folderId]}))
+  }
+  
 
 const onSubmit =  async (e) => {
   e.preventDefault();
@@ -89,7 +152,7 @@ const handleAddFolder = async (e) => {
     credentials:'include',
     body: JSON.stringify({
       folderName: folderName,
-      parent: null
+      parent: parentFolder || null
     })
     });
 
@@ -102,34 +165,6 @@ const handleAddFolder = async (e) => {
       setError("Kļūda, pievienojot mapi");
     }
 }
-
-// const fetchFiles = async (category) => {
-//   try {
-//     const response = await fetch('/api/files/list', {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json"
-//       },
-//       credentials: 'include'
-//     });
-
-//     const { data, status, message } = await response.json();
-
-//     setMessage(message);
-//     setStatus(status);
-
-//     if (status === 'success') {
-//       setFile(data);
-//     } else {
-//       setFile([]);
-//     }
-
-//   } catch (err) {
-//     console.log(err);
-//     setFile([]);
-//   }
-
-// };
 
 
 const fetchFiles = async () => {
@@ -159,10 +194,53 @@ const fetchFiles = async () => {
   }
 };
 
-useEffect(() => {
-  fetchFiles();
-}, []);
 
+
+// useEffect(() => {
+//   fetchFiles();
+// }, []);
+
+// const fetchFolders = async () => {
+//   try{
+//     const response = await fetch('/api/folders/list', {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json"
+//       },
+//       credentials: 'include' 
+//     });
+//     const { data, status, message } = await response.json();
+
+//     setMessage(message);
+//     setStatus(status);
+
+//     if (status === 'success'){
+//       setFolders(data);
+
+//     }else{
+//       setFolders([]);
+//     }
+
+//   }catch(error){
+//     console.log(error);
+//     setFolders([]);
+//   }
+// };
+
+// useEffect(() => {
+//    const loadData = async () => {
+//     await Promise.all([fetchFiles(), fetchFolders()]);
+//   };
+//   loadData();
+// }, []);
+
+
+useEffect(() => {
+   const loadData = async () => {
+    await Promise.all([fetchFiles()]);
+  };
+  loadData();
+}, []);
 
 const handleFileSelect = async(event) => {
   const checkedIds = event.target.value; // Gets the value (ID) of the checkbox that was clicked
@@ -195,30 +273,14 @@ const handleDownload = (id) => {
   window.open(`/api/files/download/${id}`, "_blank")
 }
 
-//Test for unchecking files. 
-// useEffect(() => {
-//   console.log("checkedFiles changed:", checkedFiles);
-// }, [checkedFiles]);
-
 const [starred, setStarred] = useState();
-const [starredFiles, setStarredFiles] = useState([]);
-
-// const toggleStar = () => {
-//   setStarred(!starred);
-// }
+// const [starredFiles, setStarredFiles] = useState([]);
 
 
 const handleStarred = async (event, fileID, currentStarredStatus) => {
     event.preventDefault();
     setProcessing(true);
     setError(null);
-
-    // const starredFileIds = event.target.value; 
-    //   if (starredFileIds) {
-    //     setStarredFiles([...starredFiles, starredFileIds]);
-    //   }else {
-    //     setStarredFiles(starredFiles.filter(id => id !== starredFileIds))
-    //   }
 
     const value = event.currentTarget.dataset.value; 
     console.log(value); 
@@ -254,16 +316,6 @@ const handleStarred = async (event, fileID, currentStarredStatus) => {
     }
 }
 
-
-// const handleFileSelect = async(event)=>{
-//   const checkedIds = event.target.value;
-// if(event.target.checked){
-//   setCheckedFiles([...checkedFiles, checkedIds])
-// }else{
-//   setCheckedFiles(checkedFiles.filter(id=>id!==checkedIds))
-// }
-// }
-
 return (
   <div className="container-fluid p-0" >
     <main className="col-12">
@@ -272,6 +324,7 @@ return (
         {/******************************************* KREISĀ PUSE UPLOAD ********************************************/}
         <div className="col-6 mt-1">
           <div className="row g-3">
+             {/******************************************* File UPLOAD ********************************************/}
             <div className='col-12 col-md-12 col-lg-6 col-xl-6 '>
               <div className="simple-box h-100 w-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center m-0 p-0" style={{ backgroundColor: '#e0a4f255' }}>
                 <form onSubmit={onSubmit} className="w-100 flex-column align-items-center p-3" >
@@ -303,6 +356,7 @@ return (
                 </form>
               </div>
             </div>
+            {/******************************************* Create folder ********************************************/}
             <div className='col-12 col-md-12 col-lg-6 col-xl-6 '>
               <div className="simple-box h-100 rounded-4 shadow-sm d-flex flex-column align-items-center justify-content-center" style={{ backgroundColor: '#e0a4f255' }}>
                 <label 
@@ -320,17 +374,62 @@ return (
               <div className="modal fade" id="newFolderModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                   <div className="modal-content">
+                    
                     <div className="modal-header">
-                      <h1 className="modal-title fs-5" id="exampleModalLabel">New folder</h1>
+                        <h1 className="modal-title fs-5" id="exampleModalLabel">New folder
+                        </h1>
                       <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    
+
                     <div className="modal-body">
+                      <div>
+                        {folders?.filter((parentFolder) => parentFolder.parent === null).map((val) => (
+                          <div className=' col-8' key={val._id} >
+
+                            {val.parent === null &&(
+                              <div className="d-flex">
+                                <span className="d-flex" onClick={() => toggleExpand(val._id)}>
+                                  {isExpanded[val._id] ? '-' : '+'}
+                                </span> 
+                                <span className="cursor-pointer "onClick={() => setParentFolder(val._id)}>
+                                  {val.folderName}
+                                </span>
+                              </div>
+                            )
+                            }
+
+                            {isExpanded [val._id] && (
+                              <div>
+                                {folders?.filter((subFolder) => subFolder.parent == val._id).map((subFolder) => (
+                                  <div key={subFolder._id} >
+                                    <div className="d-flex" onClick={() => toggleExpand(subFolder._id)}>
+                                      <span className="d-flex ">{isExpanded[subFolder._id] ? '-' : '+'} </span>
+                                      <span className="d-flex  cursor-pointer" onClick={() => setParentFolder(subFolder._id)}> {subFolder.folderName}
+
+                                      </span>
+                                    </div>
+                                      {/* <div className="d-flex col-3 cursor-pointer" onClick={() => setParentFolder(subFolder._id)}>
+                                        {subFolder.folderName}
+                                      </div> */}
+                                  </div>
+
+                                ))}
+                              </div>
+                            )}
+                            
+
+
+                          </div>
+                        ))}
+                      </div>
+
                         <form onSubmit={handleAddFolder} className="w-100 d-flex flex-column align-items-center p-3" >
                           <input
                             type="text"
                             id="folder-name"
                             value={folderName}
-                            onChange={(e) => setFolderName(e.target.value)}
+                            onChange={(e) => setFolderName(e.target.value) }
                             placeholder={t("Enter folder name")}
                             className="form-control"
                             required
@@ -339,7 +438,7 @@ return (
                     </div>
                     <div className="modal-footer">
                       <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" className="btn btn-primary" onClick={handleAddFolder}>Save changes</button>
+                      <button type="submit" className="btn btn-primary" onClick={handleAddFolder}>Create Folder</button>
                     </div>
                   </div>
                 </div>
@@ -347,7 +446,6 @@ return (
             </div>
           </div>
         </div>
-        
 
         {/************************* LABĀ PUSE CATEGORIES **************************/}
         <div className="col-6">
@@ -392,7 +490,8 @@ return (
               checked={file.length > 0 && checkedFiles.length === file.length}
               onChange={(e) =>{
                 if(e.target.checked) {
-                  setCheckedFiles(file.map((val) => val._id))//From files array  [  { _id: "123", originalName: "apple.webp" },  { _id: "456", originalName: "bird.jpg" }] makes["123", "456", "789"]
+                  setCheckedFiles(file.map((val) => val._id))
+                  //From files array  [  { _id: "123", originalName: "apple.webp" },  { _id: "456", originalName: "bird.jpg" }] makes["123", "456", "789"]
                 }else {
                   setCheckedFiles([]);
                 }
@@ -493,7 +592,6 @@ return (
                 
                 </ul>
             </div>
-
 
           </div>
         ))}
