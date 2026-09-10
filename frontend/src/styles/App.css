@@ -120,7 +120,8 @@
    
 }
 
-.file-item div, span{
+.file-item div,
+.file-item span{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -142,6 +143,9 @@ cursor:pointer;
   cursor: pointer !important;
 }
 
-.cursor-pointer:focus {
-  background:red;
+.folder-toggle{
+    width: 30px;
+    display: inline-flex;
+    cursor: pointer;
+
 }

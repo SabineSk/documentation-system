@@ -47,7 +47,7 @@ function Sidebar() {
     setIsVisible(!isVisible);
   }
 
-  //This shows error that it can trigger cascading renders
+//This shows error that it can trigger cascading renders
 //   useEffect(() => {
 //   fetchFolders();
 // }, []);
@@ -60,21 +60,12 @@ function Sidebar() {
       style={{ width: "200px", flexShrink: 0 }}
     >
     
-      <p className="small mb-2">FILES</p>
+      <p className="small mb-2">Folders</p>
 
       <ul className="nav flex-column mb-4">
         <li className="nav-item">
-          <Link className="nav-link">
-            My Files
-          </Link>
-        </li>
-
-        <li className="nav-item">
-          <Link className="nav-link" to="/folders">
-            All folders
-          </Link>
           {folders?.map((val) => (
-            <Link key={val._id} className="nav-link" to={`/folders/${val._id}`} onClick={() => handleFolderExpand(val._id)}>
+            <Link key={val._id} className="nav-link"  onClick={() => handleFolderExpand(val._id)}>
               {val.folderName}
             </Link>
           ))}

@@ -14,8 +14,10 @@ import { HiOutlineDownload } from "react-icons/hi";
 // import { MdStarRate } from "react-icons/md";
 import { ImStarEmpty } from "react-icons/im";
 import { ImStarFull } from "react-icons/im";
-
+import { RiArrowRightSLine } from "react-icons/ri";
+import { RiArrowDownSLine } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
+import { FcFolder } from "react-icons/fc";
 
 function Home() {
 
@@ -51,6 +53,33 @@ const { t, i18n } = useTranslation();
 //     if (name) onAdd(parentId, name, isFolder);
   
 // }
+const handleAddFolder = async (e) => {
+  e.preventDefault();
+
+  try{
+    const response = await fetch('/api/folders/create', {
+      method: "POST",
+      headers:{
+          "Content-Type": "application/json"
+    },  
+    credentials:'include',
+    body: JSON.stringify({
+      folderName: folderName,
+      parent: parentFolder || null
+    })
+    });
+
+    const {data, status, message} = await response.json();
+    setMessage(message);
+    setStatus(status);
+    setFolderName("");
+
+    }catch(err){
+      console.log(err);
+      setError("Kļūda, pievienojot mapi");
+    }
+}
+
 
 const fetchFolders = async () => {
     try{
@@ -84,7 +113,7 @@ const fetchFolders = async () => {
       await Promise.all([fetchFolders()]);
     };
     loadData();
-  }, []);
+  }, [folders]);
 
   // const handleFolderExpand = () => {
   //   setIsVisible(!isVisible);
@@ -140,31 +169,6 @@ const onSubmit =  async (e) => {
   }
 }
 
-const handleAddFolder = async (e) => {
-  e.preventDefault();
-
-  try{
-    const response = await fetch('/api/folders/create', {
-      method: "POST",
-      headers:{
-          "Content-Type": "application/json"
-    },  
-    credentials:'include',
-    body: JSON.stringify({
-      folderName: folderName,
-      parent: parentFolder || null
-    })
-    });
-
-    const {data, status, message} = await response.json();
-    setMessage(message);
-    setStatus(status);
-
-    }catch(err){
-      console.log(err);
-      setError("Kļūda, pievienojot mapi");
-    }
-}
 
 
 const fetchFiles = async () => {
@@ -376,38 +380,69 @@ return (
                   <div className="modal-content">
                     
                     <div className="modal-header">
-                        <h1 className="modal-title fs-5" id="exampleModalLabel">New folder
+                        <h1 className="modal-title fs-5" id="exampleModalLabel">
+                          {/* parentFolder only stores filder _id. To get folderName, find folder object by ID */}
+                          {/* parentFolder === null
+                          ? "My Files"
+                          : ... */}
+                          {folders.find(folder => folder._id ===parentFolder)?.folderName} <RiArrowRightSLine />  New folder
                         </h1>
                       <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    
 
-                    <div className="modal-body">
-                      <div>
+
+
+                    <div className="modal-body col-12">
+                      <div className=" col-12" >                    
+                        
+                        <div className="d-flex flex-column w-100"> 
+                          <span className="folder-toggle align-items-center cursor-pointer text-nowrap" onClick={() => setParentFolder(null)}>
+                            My files
+                          </span> 
+                        </div>
+
                         {folders?.filter((parentFolder) => parentFolder.parent === null).map((val) => (
-                          <div className=' col-8' key={val._id} >
+                          // flex-column: Stacks elements vertically.align-items-start: Controls the horizontal alignment in a column layout, pushing your stacked items tightly to the left side.
+                          <div className="d-flex flex-column w-100" key={val._id} > 
+
 
                             {val.parent === null &&(
-                              <div className="d-flex">
-                                <span className="d-flex" onClick={() => toggleExpand(val._id)}>
-                                  {isExpanded[val._id] ? '-' : '+'}
+                              <div className="d-flex justify-content-start w-100">
+                                <span className="folder-toggle align-items-center" onClick={() => toggleExpand(val._id)}>
+                                  {isExpanded[val._id] ? <RiArrowDownSLine /> : <RiArrowRightSLine />}
                                 </span> 
-                                <span className="cursor-pointer "onClick={() => setParentFolder(val._id)}>
+                                {/*                                 
+                                <span className="cursor-pointer mb-2" onClick={() => setParentFolder(val._id)}>
+                                  {val.folderName}
+                                </span> */}
+                                {parentFolder!== val._id && (
+                                <span className="cursor-pointer  text-nowrap" onClick={() => setParentFolder(val._id)}>
                                   {val.folderName}
                                 </span>
+                                )}
+                                {parentFolder=== val._id && (
+                                <span className="cursor-pointer fw-bold text-nowrap">
+                                  {val.folderName}
+                                </span>
+                                )}
                               </div>
                             )
                             }
 
                             {isExpanded [val._id] && (
-                              <div>
-                                {folders?.filter((subFolder) => subFolder.parent == val._id).map((subFolder) => (
+                              <div className="mb-3">
+                                {folders?.filter((subFolder) => subFolder.parent === val._id).map((subFolder) => (
                                   <div key={subFolder._id} >
-                                    <div className="d-flex" onClick={() => toggleExpand(subFolder._id)}>
-                                      <span className="d-flex ">{isExpanded[subFolder._id] ? '-' : '+'} </span>
-                                      <span className="d-flex  cursor-pointer" onClick={() => setParentFolder(subFolder._id)}> {subFolder.folderName}
-
+                                    <div className="d-flex align-items-center ms-4" >
+                                      <span className="d-flex p-0 folder-toggle align-items-center"  onClick={() => toggleExpand(subFolder._id)}>{isExpanded[subFolder._id] ? <RiArrowDownSLine /> : <RiArrowRightSLine />} </span>
+                                      {parentFolder!==subFolder._id && (
+                                      <span className="cursor-pointer text-nowrap" onClick={() => setParentFolder(subFolder._id)}> {subFolder.folderName}
                                       </span>
+                                      )}
+                                      {parentFolder===subFolder._id && (
+                                      <span className="cursor-pointer fw-bold text-nowrap"> {subFolder.folderName}
+                                      </span>
+                                      )}
                                     </div>
                                       {/* <div className="d-flex col-3 cursor-pointer" onClick={() => setParentFolder(subFolder._id)}>
                                         {subFolder.folderName}
@@ -417,13 +452,9 @@ return (
                                 ))}
                               </div>
                             )}
-                            
-
-
                           </div>
                         ))}
                       </div>
-
                         <form onSubmit={handleAddFolder} className="w-100 d-flex flex-column align-items-center p-3" >
                           <input
                             type="text"
@@ -476,6 +507,56 @@ return (
           </div>
         </div>
       </div>
+      {/* Mapju konteineri */}
+
+
+ <div className=" container-fluid mb-4">
+
+
+  <h5 className="mb-3">Mapes</h5>
+
+  <div className="row g-3">
+
+    {folders?.filter((parentFolder) => parentFolder.parent === null).map((val) => (
+      <div
+        className="col-12 col-sm-6 col-md-4 col-lg-3 "
+        key={val._id}
+      >
+        <div
+          className=" d-flex align-items-center px-3 py-3 rounded-4 bg-light cursor-pointer"
+        >
+
+          <FcFolder size={30} />
+
+          <span className="ms-3 flex-grow-1 text-start">
+            {val.folderName}
+          </span>
+
+          <button className="btn border-0">
+            ...
+          </button>
+
+        </div>
+      </div>
+    ))}
+
+  </div>
+</div>
+{/* 
+      <div className="container ms-0 me-auto text-center mb-5">
+        <div className="row row-cols-6 justify-content-start " >
+
+          <div className="col-2">
+            <div className="card rounded-4 overflow-hidden">
+              <div className="card-body d-flex align-items-center justify-content-center gap-3">
+                <FcFolder size="44px"  />
+                <span>Nosaukums</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div> */}
 
       {/****************************FAILU SARAKSTS******************************* */}
 
@@ -530,7 +611,6 @@ return (
           <span>{t("Size")}</span>
           <span>{t("Modified")}</span>
           <span>{t("Actions")}</span>
-          
         </div>
 
         {file?.map((val) => (
@@ -547,7 +627,6 @@ return (
             ) : (
               <ImStarEmpty size={20}  onClick={(event) => handleStarred(event, val._id, val.starred)}/>
             )}
-
             <div>
               {val.originalName}
             </div>
@@ -563,33 +642,33 @@ return (
                 minute: '2-digit'
               })}
             </span>
-
             <div className="dropdown">
                 <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                   <HiDotsHorizontal />
                 </button>
                  <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                   <li>
-                    <a className="dropdown-item d-flex align-items-center gap-3" onClick={() => handleDownload(val._id)}><HiOutlineDownload /> {t("Download")}</a>
+                    <a className="dropdown-item d-flex align-items-center gap-3" onClick={() => handleDownload(val._id)}><HiOutlineDownload/> {t("Download")}</a>
                   </li>
-                  <li><a 
+                  <li>
+                  <a 
                   type="button" 
                   className="dropdown-item d-flex align-items-center gap-3"
                   onClick={() => {
                   console.log("Deleted file:", val);
                   handleDelete(val._id);
-                }}><RiDeleteBinLine />{t("Delete")}</a></li>
-                 <li>
-                  <a className="dropdown-item" type="button" onClick={() => handleView(val._id)}>
-                    {t("Open here")}
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" type="button" onClick={() => handleView(val._id)}>
-                    {t("Open in new tab")}
-                  </a>
-                </li>
-                
+                  }}><RiDeleteBinLine />{t("Delete")}</a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" type="button" onClick={() => handleView(val._id)}>
+                      {t("Open here")}
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" type="button" onClick={() => handleView(val._id)}>
+                      {t("Open in new tab")}
+                    </a>
+                  </li>
                 </ul>
             </div>
 
