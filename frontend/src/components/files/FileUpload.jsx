@@ -33,6 +33,7 @@ const [folders, setFolders] = useState([]);
 const [isVisible, setIsVisible] = useState(false);
 const [isExpanded, setIsExpanded] = useState({});
 const [parentFolder, setParentFolder] = useState();
+const [clickedFolder, setClickedFolder] = useState();
 
 const [selectedCategory, setSelectedCategory] = useState();
 const { t, i18n } = useTranslation();
@@ -320,6 +321,53 @@ const handleStarred = async (event, fileID, currentStarredStatus) => {
     }
 }
 
+const RecursiveFolder = ({ folder, folders}) => {
+  const children = folders.filter((parentFolder) => parentFolder.parent === folder._id);
+  return (
+    <div
+      className="col-12 col-sm-6 col-md-4 col-lg-3 "
+      key={folder._id}      
+    >
+      <div
+        className=" d-flex align-items-center px-3 py-3 rounded-4 bg-light cursor-pointer"
+      >
+        <FcFolder size={30} />
+        <span className="ms-3 flex-grow-1 text-start" >
+          {folder.folderName}
+        </span>
+        <div className="dropdown">
+          <button className="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <HiDotsHorizontal />
+          </button>
+
+          <ul className="dropdown-menu" >
+                <li>
+                  <a className="dropdown-item d-flex align-items-center gap-3">
+                    <HiOutlineDownload/> {t("Download")}
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item d-flex align-items-center gap-3">
+                    <RiDeleteBinLine/> {t("Delete")}
+                  </a>
+                </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* {children.map((child) => (
+        <div key={child._id} style={{ marginLeft: "20px" }}>
+          <RecursiveFolder
+            folder={child}
+            folders={folders}
+          />
+        </div>
+      ))} */}
+    </div>
+
+  );
+}
+
 return (
   <div className="container-fluid p-0" >
     <main className="col-12">
@@ -507,41 +555,61 @@ return (
           </div>
         </div>
       </div>
-      {/* Mapju konteineri */}
 
+      {/****************************MAPJU KONTEINERI******************************* */}
 
- <div className=" container-fluid mb-4">
+      <div className=" container-fluid mb-4">
+        <h5 className="mb-3">Mapes</h5>
+        <div className="row g-3">
 
+        {folders
+          .filter((folder) => folder.parent === null)
+          .map((folder) => (
+            <RecursiveFolder
+              key={folder._id}
+              folder={folder}
+              folders={folders}
+            />
+          ))}
 
-  <h5 className="mb-3">Mapes</h5>
+          {/* {folders?.filter((parentFolder) => parentFolder.parent === null).map((val) => (
+            <div
+              className="col-12 col-sm-6 col-md-4 col-lg-3 "
+              key={val._id}
+            >
+              <div
+                className=" d-flex align-items-center px-3 py-3 rounded-4 bg-light cursor-pointer"
+              >
 
-  <div className="row g-3">
+                <FcFolder size={30} />
 
-    {folders?.filter((parentFolder) => parentFolder.parent === null).map((val) => (
-      <div
-        className="col-12 col-sm-6 col-md-4 col-lg-3 "
-        key={val._id}
-      >
-        <div
-          className=" d-flex align-items-center px-3 py-3 rounded-4 bg-light cursor-pointer"
-        >
+                <span className="ms-3 flex-grow-1 text-start">
+                  {val.folderName}
+                </span>
+                <div className="dropdown">
+                  <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <HiDotsHorizontal />
+                  </button>
+                  <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                          <a className="dropdown-item d-flex align-items-center gap-3">
+                            <HiOutlineDownload/> {t("Download")}
+                          </a>
+                        </li>
+                        <li>
+                          <a className="dropdown-item d-flex align-items-center gap-3">
+                            <RiDeleteBinLine/> {t("Delete")}
+                          </a>
+                        </li>
+                  </ul>
+                </div>
 
-          <FcFolder size={30} />
-
-          <span className="ms-3 flex-grow-1 text-start">
-            {val.folderName}
-          </span>
-
-          <button className="btn border-0">
-            ...
-          </button>
+              </div>
+            </div>
+          ))} */}
 
         </div>
       </div>
-    ))}
-
-  </div>
-</div>
 {/* 
       <div className="container ms-0 me-auto text-center mb-5">
         <div className="row row-cols-6 justify-content-start " >

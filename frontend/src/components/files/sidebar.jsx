@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import { RiArrowRightSLine } from "react-icons/ri";
 
 function Sidebar() {
   const [folders, setFolders] = useState([]);
@@ -52,36 +52,47 @@ function Sidebar() {
 //   fetchFolders();
 // }, []);
 
-
+const RecursiveFolderSide = ({ folder, folders}) => {
+  const children = folders.filter((parentFolder) => parentFolder.parent === folder._id);
   return (
+    <ul className="list-unstyled">
+      <li className="">
+        <div className="">
+            <button className="bg-dark border-0  ">
+                <RiArrowRightSLine className="text-white" />
+            </button>
+           {folder.folderName}
+        </div>
+        {children?.map((child) => (
+          <div key={child._id} className="ms-3" onClick={() => handleFolderExpand(child._id)}>
+            
+            <RecursiveFolderSide
+              folder={child}
+              folders={folders}
+            />
+          </div>
+        ))}
+      </li>
+    </ul>
+  )
+}
 
+return (
     <aside
       className="sidebar p-3 h-100"
       style={{ width: "200px", flexShrink: 0 }}
     >
-    
-      <p className="small mb-2">Folders</p>
-
-      <ul className="nav flex-column mb-4">
-        <li className="nav-item">
-          {folders?.map((val) => (
-            <Link key={val._id} className="nav-link"  onClick={() => handleFolderExpand(val._id)}>
-              {val.folderName}
-            </Link>
+      <p className="small">Folders</p>
+        {/* renders only highest level maps. then calls recursive function for child */}
+        {folders
+          .filter((folder) => folder.parent === null)
+          .map((folder) => (
+            <RecursiveFolderSide
+              key={folder._id}
+              folder={folder}
+              folders={folders}
+            />
           ))}
-
-
-          {/* <Link className="nav-link" to="/folders">
-            Folders
-          </Link> */}
-        </li>
-
-        <li className="nav-item">
-          <Link className="nav-link" to="/recent">
-            Recent
-          </Link>
-        </li>
-      </ul>
 
       <p className=" small mb-2">SHARING</p>
 
