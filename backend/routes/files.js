@@ -190,8 +190,10 @@ router.patch("/:fileID", authMiddleware, async (req, res) =>{
   //editing file metadata (starred)
   const {fileID} = req.params;
   const {editStarred} = req.body;
+  const {editLocation} = req.body;
   const updateData = {};
   if (editStarred !== undefined) updateData.starred = editStarred;
+  if (editLocation !== undefined) updateData.folder = editLocation;
 
   const updatedFile = await File.findByIdAndUpdate(fileID, updateData, {new: true});
   return res.send({

@@ -1,0 +1,37 @@
+"filename", "language", "JavaScript", "JavaScript JSX", "PostCSS", "JSON", "XML", "comment", "blank", "total"
+"c:\Users\Admin\documentation-system\backend\routes\auth.js", "JavaScript", 48, 0, 0, 0, 0, 11, 17, 76
+"c:\Users\Admin\documentation-system\backend\routes\files.js", "JavaScript", 146, 0, 0, 0, 0, 26, 39, 211
+"c:\Users\Admin\documentation-system\backend\routes\filters.js", "JavaScript", 28, 0, 0, 0, 0, 2, 5, 35
+"c:\Users\Admin\documentation-system\backend\routes\folders.js", "JavaScript", 58, 0, 0, 0, 0, 0, 8, 66
+"c:\Users\Admin\documentation-system\backend\routes\holidays.js", "JavaScript", 61, 0, 0, 0, 0, 4, 13, 78
+"c:\Users\Admin\documentation-system\backend\routes\me.js", "JavaScript", 14, 0, 0, 0, 0, 2, 8, 24
+"c:\Users\Admin\documentation-system\backend\routes\users.js", "JavaScript", 253, 0, 0, 0, 0, 55, 79, 387
+"c:\Users\Admin\documentation-system\frontend\src\App.jsx", "JavaScript JSX", 0, -53, 0, 0, 0, -5, -17, -75
+"c:\Users\Admin\documentation-system\frontend\src\assets\react.svg", "XML", 0, 0, 0, 0, -1, 0, 0, -1
+"c:\Users\Admin\documentation-system\frontend\src\assets\vite.svg", "XML", 0, 0, 0, 0, -1, 0, -1, -2
+"c:\Users\Admin\documentation-system\frontend\src\auth\useAuth.js", "JavaScript", -28, 0, 0, 0, 0, 0, -7, -35
+"c:\Users\Admin\documentation-system\frontend\src\components\files\FileUpload.jsx", "JavaScript JSX", 0, -529, 0, 0, 0, -136, -97, -762
+"c:\Users\Admin\documentation-system\frontend\src\components\files\sidebar.jsx", "JavaScript JSX", 0, -120, 0, 0, 0, -11, -27, -158
+"c:\Users\Admin\documentation-system\frontend\src\components\protectedRoute.jsx", "JavaScript JSX", 0, -14, 0, 0, 0, -3, -2, -19
+"c:\Users\Admin\documentation-system\frontend\src\footer.jsx", "JavaScript JSX", 0, -11, 0, 0, 0, 0, -2, -13
+"c:\Users\Admin\documentation-system\frontend\src\header.jsx", "JavaScript JSX", 0, -215, 0, 0, 0, -31, -54, -300
+"c:\Users\Admin\documentation-system\frontend\src\holidayTable.jsx", "JavaScript JSX", 0, -124, 0, 0, 0, -2, -21, -147
+"c:\Users\Admin\documentation-system\frontend\src\holidays.jsx", "JavaScript JSX", 0, -178, 0, 0, 0, -1, -32, -211
+"c:\Users\Admin\documentation-system\frontend\src\home.jsx", "JavaScript JSX", 0, -17, 0, 0, 0, -1, -9, -27
+"c:\Users\Admin\documentation-system\frontend\src\i18n.js", "JavaScript", -22, 0, 0, 0, 0, 0, -6, -28
+"c:\Users\Admin\documentation-system\frontend\src\locales\en\translation.json", "JSON", 0, 0, 0, -72, 0, 0, -1, -73
+"c:\Users\Admin\documentation-system\frontend\src\locales\lv\translation.json", "JSON", 0, 0, 0, -71, 0, 0, -1, -72
+"c:\Users\Admin\documentation-system\frontend\src\login.jsx", "JavaScript JSX", 0, -86, 0, 0, 0, -1, -19, -106
+"c:\Users\Admin\documentation-system\frontend\src\main.jsx", "JavaScript JSX", 0, -14, 0, 0, 0, 0, -7, -21
+"c:\Users\Admin\documentation-system\frontend\src\middlewares\authMiddleware.js", "JavaScript", 0, 0, 0, 0, 0, 0, -1, -1
+"c:\Users\Admin\documentation-system\frontend\src\profile.jsx", "JavaScript JSX", 0, -101, 0, 0, 0, -3, -37, -141
+"c:\Users\Admin\documentation-system\frontend\src\styles\App.css", "PostCSS", 0, 0, -119, 0, 0, -2, -30, -151
+"c:\Users\Admin\documentation-system\frontend\src\styles\forms.css", "PostCSS", 0, 0, -389, 0, 0, -19, -124, -532
+"c:\Users\Admin\documentation-system\frontend\src\styles\global.css", "PostCSS", 0, 0, -58, 0, 0, -1, -16, -75
+"c:\Users\Admin\documentation-system\frontend\src\styles\layout.css", "PostCSS", 0, 0, 0, 0, 0, 0, -1, -1
+"c:\Users\Admin\documentation-system\frontend\src\styles\popup.css", "PostCSS", 0, 0, -18, 0, 0, 0, -1, -19
+"c:\Users\Admin\documentation-system\frontend\src\styles\table.css", "PostCSS", 0, 0, -85, 0, 0, 0, -24, -109
+"c:\Users\Admin\documentation-system\frontend\src\userEdit.jsx", "JavaScript JSX", 0, -171, 0, 0, 0, -16, -37, -224
+"c:\Users\Admin\documentation-system\frontend\src\userTable.jsx", "JavaScript JSX", 0, -518, 0, 0, 0, -27, -111, -656
+"c:\Users\Admin\documentation-system\frontend\src\users.jsx", "JavaScript JSX", 0, -65, 0, 0, 0, -84, -41, -190
+"Total", "-", 558, -2216, -669, -143, -2, -243, -557, -3272

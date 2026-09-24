@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { RiArrowRightSLine } from "react-icons/ri";
+import { RiArrowDownSLine } from "react-icons/ri";
 
 function Sidebar() {
   const [folders, setFolders] = useState([]);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [isExpanded, setIsExpanded] = useState({});
 
 
   const fetchFolders = async () => {
@@ -43,33 +45,46 @@ function Sidebar() {
     loadData();
   }, []);
 
-  const handleFolderExpand = () => {
-    setIsVisible(!isVisible);
-  }
+  // const handleFolderExpand = () => {
+  //   setIsVisible(!isVisible);
+  // }
 
 //This shows error that it can trigger cascading renders
 //   useEffect(() => {
 //   fetchFolders();
 // }, []);
 
+  const toggleExpand = (folderId) => {
+    setIsExpanded((prev) => ({...prev, [folderId]: !prev[folderId]}))
+  }
+
 const RecursiveFolderSide = ({ folder, folders}) => {
   const children = folders.filter((parentFolder) => parentFolder.parent === folder._id);
   return (
+    
     <ul className="list-unstyled">
       <li className="">
-        <div className="">
-            <button className="bg-dark border-0  ">
+        <div className="cursor-pointer">
+            {/* <button className="bg-dark border-0  ">
                 <RiArrowRightSLine className="text-white" />
-            </button>
+            </button> */}
+
+            <span className=" bg-dark border-0 folder-toggle align-items-center" onClick={() => toggleExpand(folder._id)}>
+              {isExpanded[folder._id] ? <RiArrowDownSLine className="text-white"/> : <RiArrowRightSLine className="text-white"/>}
+            </span>
+            
            {folder.folderName}
         </div>
         {children?.map((child) => (
-          <div key={child._id} className="ms-3" onClick={() => handleFolderExpand(child._id)}>
-            
+          <div key={child._id} className="ms-3">
+            {isExpanded [folder._id] && (
             <RecursiveFolderSide
               folder={child}
               folders={folders}
             />
+            )
+            }
+
           </div>
         ))}
       </li>

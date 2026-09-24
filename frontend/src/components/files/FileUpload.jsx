@@ -269,6 +269,46 @@ const handleDelete = async(fileID)=>{
     }
 };
 
+
+const [location, setLocation] = useState();
+
+const handleMove = async(event, fileID, currentLocation) => {
+  event.preventDefault();
+  setProcessing(true);
+  setError(null);
+
+  const value = event.currentTarget.dataset.value;
+  console.log(value); 
+
+  try{
+    console.log('fileID value for moving:', fileID);
+    const response = await fetch(`/api/files/${fileID}`, {
+      method: "PATCH",
+      headers:{
+          "Content-Type": "application/json"
+      },
+      credentials:'include',
+      body: JSON.stringify({
+        editLocation: !currentLocation
+      })
+    });
+    const {data, status, message} = await response.json();
+      setMessage(message);
+      setStatus(status);
+    
+      if (status === 'success') {
+        setLocation(!currentLocation);
+        fetchFiles(); // Refresh the file list to show the updated starred status
+        console.log(message); 
+      }
+
+    }catch(err){
+      console.log(err);
+      setError("Kļūda, atjauninot faila atrašanās vietu");
+    }finally{
+      setProcessing(false);
+    }
+}
 const handleView = (id) => {
   window.open(`/api/files/view/${id}`, "_blank")
 };
@@ -331,7 +371,7 @@ const RecursiveFolder = ({ folder, folders}) => {
       <div
         className=" d-flex align-items-center px-3 py-3 rounded-4 bg-light cursor-pointer"
       >
-        <FcFolder size={30} />
+        <FcFolder size={30} onClick={() => {setClickedFolder(folder._id)}} />
         <span className="ms-3 flex-grow-1 text-start" >
           {folder.folderName}
         </span>
@@ -354,7 +394,7 @@ const RecursiveFolder = ({ folder, folders}) => {
           </ul>
         </div>
       </div>
-
+    
       {/* {children.map((child) => (
         <div key={child._id} style={{ marginLeft: "20px" }}>
           <RecursiveFolder
@@ -438,8 +478,6 @@ return (
                       <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-
-
                     <div className="modal-body col-12">
                       <div className=" col-12" >                    
                         
@@ -452,8 +490,6 @@ return (
                         {folders?.filter((parentFolder) => parentFolder.parent === null).map((val) => (
                           // flex-column: Stacks elements vertically.align-items-start: Controls the horizontal alignment in a column layout, pushing your stacked items tightly to the left side.
                           <div className="d-flex flex-column w-100" key={val._id} > 
-
-
                             {val.parent === null &&(
                               <div className="d-flex justify-content-start w-100">
                                 <span className="folder-toggle align-items-center" onClick={() => toggleExpand(val._id)}>
@@ -519,6 +555,23 @@ return (
                       <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                       <button type="submit" className="btn btn-primary" onClick={handleAddFolder}>Create Folder</button>
                     </div>
+
+                    
+                    {/* Mēģinājums pārtaisīt par recursive function */}
+
+                    <div className="modal-header">
+                        <h1 className="modal-title fs-5" id="exampleModalLabel">
+                          {/* parentFolder only stores filder _id. To get folderName, find folder object by ID */}
+                          {/* parentFolder === null
+                          ? "My Files"
+                          : ... */}
+                          {folders.find(folder => folder._id ===parentFolder)?.folderName} <RiArrowRightSLine />  New folder
+                        </h1>
+                      <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+
+
                   </div>
                 </div>
               </div>
@@ -650,9 +703,33 @@ return (
             
           </div>
           {checkedFiles.length > 0 && (
-            <>            
-              <div className="col-auto">
+          <div className="col">
+            <div className="">            
+              <div className=""
+              type="button"
+              htmlFor="move-item"
+              data-bs-toggle="modal"
+              data-bs-target="#moveFolderModal"
+              style={{ cursor: "pointer" }}
+              onClick={() => 
+                checkedFiles.forEach((id)=>{
+                  handleMove(id);
+                })              
+              }
+              >
                 {t("Move")}
+              </div>
+            </div>
+            
+
+              <div className="modal fade" id="moveFolderModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div  className="modal-header">
+                  <h1 className="modal-title fs-5" id="exampleModalLabel">
+                    Šis ir parvietošanas logs
+                  </h1>
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
               </div>
 
               <div 
@@ -669,7 +746,7 @@ return (
                 }}>
                 {t("Delete")}
               </div>
-          </>
+          </div>
           )}
         </div>
         <div className="file-header">
