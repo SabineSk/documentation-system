@@ -51,6 +51,7 @@ function App() {
             </Route>
             <Route path='/userTable' element={<UserTable/>}/>
 
+
             <Route 
             path="/home" 
             element={
@@ -58,7 +59,17 @@ function App() {
                     <Home />
                 </ProtectedRoute>
             } 
+            />             
+            
+            <Route 
+            path="/home/:id" 
+            element={
+                <ProtectedRoute>
+                    <Home />
+                </ProtectedRoute>
+            } 
             /> 
+            
             
           </Routes>
          

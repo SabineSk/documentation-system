@@ -61,6 +61,41 @@ router.get(`/list`, authMiddleware, async (req, res) => {
             message: "Error retrieving folders"
         })
     }
-})
+});
+
+
+router.delete("/:id", async(req, res)=>{
+  console.log("DELETE ROUTE CALLED");
+  console.log("ID:", req.params.id);
+  //backend ņem id no url, ko nosūta frontends no failu saraksta
+  const {id} = req.params;
+
+  try{
+    const deleteFolder = await Folder.deleteOne({_id: id});
+    // console.log("Delete result:", deleteFile);
+
+    if (deleteFolder.deletedCount === 0) {
+      return res.send({
+        data: null,
+        status: "error",
+        message: "Folder not found"
+      });
+    }
+
+    return res.send({
+      data:null,
+      status: "success",
+      message: "Folder deleted"
+    })
+  }catch(err){
+    console.log(err);
+
+    return res.send({
+      data:null,
+      status: "error",
+      message: "Folder deletion failed"
+    });
+  }
+});
 
 module.exports = router;

@@ -32,8 +32,8 @@ const fileSchema = new mongoose.Schema(
     folder: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Folder",
-      required: false
-
+      required: true,
+      default: "6a99672f71e6dd56da7800aa"
     },
 
     data: {

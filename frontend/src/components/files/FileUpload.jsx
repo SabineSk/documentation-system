@@ -1,4 +1,5 @@
 import {Link, Outlet} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 //import {useAuth} from './auth/useAuth';
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -18,8 +19,9 @@ import { RiArrowRightSLine } from "react-icons/ri";
 import { RiArrowDownSLine } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { FcFolder } from "react-icons/fc";
+import { MdOutlineDriveFileMove } from "react-icons/md";
 
-function Home() {
+function Home({ folderId }){
 
 const [error, setError] = useState(null);
 const [processing, setProcessing] = useState(false);
@@ -74,6 +76,8 @@ const handleAddFolder = async (e) => {
     setMessage(message);
     setStatus(status);
     setFolderName("");
+    fetchFolders(); //Nepieciešams, lai renderētu skatu par jaunu
+    
 
     }catch(err){
       console.log(err);
@@ -83,6 +87,7 @@ const handleAddFolder = async (e) => {
 
 
 const fetchFolders = async () => {
+  console.log('fetch')
     try{
       const response = await fetch('/api/folders/list', {
         method: "GET",
@@ -114,7 +119,7 @@ const fetchFolders = async () => {
       await Promise.all([fetchFolders()]);
     };
     loadData();
-  }, [folders]);
+  }, []);
 
   // const handleFolderExpand = () => {
   //   setIsVisible(!isVisible);
@@ -269,11 +274,24 @@ const handleDelete = async(fileID)=>{
     }
 };
 
+const handleDeleteFolder = async(folderID)=>{
+    const response = await fetch(`/api/folders/${folderID}`, {
+      method: "DELETE",
+      credentials: 'include'
+    });
+    const data= await response.json();
+    if(data.status == 'success'){
+      //atjauno ekrānu ar filtru
+      setFile((prevFolders) => prevFolders.filter((folder) =>folder._id !== folderID));
+      fetchFolders(); //Nepieciešams, lai renderētu skatu par jaunu
+    }
+};
+
 
 const [location, setLocation] = useState();
 
-const handleMove = async(event, fileID, currentLocation) => {
-  event.preventDefault();
+const handleMove = async( fileID, currentLocation) => {
+
   setProcessing(true);
   setError(null);
 
@@ -309,6 +327,8 @@ const handleMove = async(event, fileID, currentLocation) => {
       setProcessing(false);
     }
 }
+
+
 const handleView = (id) => {
   window.open(`/api/files/view/${id}`, "_blank")
 };
@@ -361,8 +381,41 @@ const handleStarred = async (event, fileID, currentStarredStatus) => {
     }
 }
 
-const RecursiveFolder = ({ folder, folders}) => {
+const RecursiveFolderMove = ({ folder, folders}) => {
   const children = folders.filter((parentFolder) => parentFolder.parent === folder._id);
+  return (
+    <ul className="list-unstyled">
+      <li className="">
+        <div className="cursor-pointer">
+            {/* <button className="bg-dark border-0  ">
+                <RiArrowRightSLine className="text-white" />
+            </button> */}
+
+            <span className=" folder-toggle align-items-center" onClick={() => toggleExpandMove(folder._id)}>
+              {isExpanded[folder._id] ? <RiArrowDownSLine className=""/> : <RiArrowRightSLine className=""/>}
+            </span>
+            
+           {folder.folderName}
+        </div>
+        {children?.map((child) => (
+          <div key={child._id} className="ms-3">
+            {isExpanded [folder._id] && (
+            <RecursiveFolderMove
+              folder={child}
+              folders={folders}
+            />
+          )}
+
+          </div>
+        ))}
+      </li>
+    </ul>
+  )
+}
+
+const navigate = useNavigate();
+
+const RecursiveFolder = ({ folder, folders}) => {
   return (
     <div
       className="col-12 col-sm-6 col-md-4 col-lg-3 "
@@ -371,10 +424,12 @@ const RecursiveFolder = ({ folder, folders}) => {
       <div
         className=" d-flex align-items-center px-3 py-3 rounded-4 bg-light cursor-pointer"
       >
-        <FcFolder size={30} onClick={() => {setClickedFolder(folder._id)}} />
-        <span className="ms-3 flex-grow-1 text-start" >
-          {folder.folderName}
-        </span>
+        <div  className=" d-flex align-items-center col" onClick={() => navigate(`/home/${folder._id}`)}>
+          <FcFolder size={30}/>
+          <span className="ms-3 flex-grow-1 text-start" >
+            {folder.folderName}
+          </span>
+        </div>
         <div className="dropdown">
           <button className="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             <HiDotsHorizontal />
@@ -387,26 +442,39 @@ const RecursiveFolder = ({ folder, folders}) => {
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item d-flex align-items-center gap-3">
+                  <a 
+                  className="dropdown-item d-flex align-items-center gap-3"
+                  type="button"
+                  onClick={()=> {
+                    handleDeleteFolder(folder._id);
+                  }}
+                  >
                     <RiDeleteBinLine/> {t("Delete")}
+                  </a>
+                    <a className="dropdown-item d-flex align-items-center gap-3">
+                     <MdOutlineDriveFileMove /> {t("Move")}
                   </a>
                 </li>
           </ul>
         </div>
       </div>
-    
-      {/* {children.map((child) => (
-        <div key={child._id} style={{ marginLeft: "20px" }}>
-          <RecursiveFolder
-            folder={child}
-            folders={folders}
-          />
-        </div>
-      ))} */}
+
     </div>
 
   );
 }
+
+// const visibleFolders = folders.filter(
+//   folder => folder.parent === folderId
+// );
+
+const visibleFolders = folders.filter(folder => {
+  if (!folderId) {
+    return folder.parent === null;
+  }
+
+  return folder.parent === folderId;
+});
 
 return (
   <div className="container-fluid p-0" >
@@ -475,7 +543,7 @@ return (
                           : ... */}
                           {folders.find(folder => folder._id ===parentFolder)?.folderName} <RiArrowRightSLine />  New folder
                         </h1>
-                      <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setIsExpanded("")}></button>
                     </div>
 
                     <div className="modal-body col-12">
@@ -615,15 +683,27 @@ return (
         <h5 className="mb-3">Mapes</h5>
         <div className="row g-3">
 
-        {folders
-          .filter((folder) => folder.parent === null)
-          .map((folder) => (
-            <RecursiveFolder
-              key={folder._id}
-              folder={folder}
-              folders={folders}
-            />
-          ))}
+
+          {/* IEPRIEKŠĒJAIS KAS ĢENERĒJA TIKAI PIRMO LIMENI */}
+          
+          {folders
+            .filter((folder) => folder.parent === null)
+            .map((folder) => (
+              <RecursiveFolder
+                key={folder._id}
+                folder={folder}
+                folders={folders}
+              />
+            ))}
+
+            <p> Ģenerētās apakšmapes</p>
+
+        {visibleFolders.map(folder => (
+          <RecursiveFolder
+            key={folder._id}
+            folder={folder}
+          />
+        ))}
 
           {/* {folders?.filter((parentFolder) => parentFolder.parent === null).map((val) => (
             <div
@@ -720,17 +800,48 @@ return (
                 {t("Move")}
               </div>
             </div>
+
+            <div className="modal fade" tabIndex="-1" id="moveFolderModal">
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title ">Faila pārvietošana</h5>
+                    
+                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div className="modal-body">
+                    <h6 className="modal-title ">Pašreizējā atrašanās vieta: {checkedFiles.folder} </h6>
+                    <p>Mapju saraksts</p>
+
+                    {folders
+                      .filter((folder) => folder.parent === null)
+                      .map((folder) => (
+                        <RecursiveFolderMove
+                          key={folder._id}
+                          folder={folder}
+                          folders={folders}
+                        />
+                      ))}
+
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" className="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             
 
-              <div className="modal fade" id="moveFolderModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div  className="modal-header">
-                  <h1 className="modal-title fs-5" id="exampleModalLabel">
-                    Šis ir parvietošanas logs
-                  </h1>
-                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
+            {/* <div className="modal fade" id="moveFolderModal" tabIndex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+              <div  className="modal-header">
+                <h1 className="modal-title fs-5" id="exampleModalLabel1">
+                  Šis ir parvietošanas logs
+                </h1>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+
+            </div> */}
 
               <div 
                 className="col-auto" 
